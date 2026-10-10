@@ -1,10 +1,12 @@
-import { Outlet } from "react-router";
+import { type RouteObject } from "react-router";
+import { Layout } from "./Layout";
+import { RouteError } from "./RouteError";
 
-export const routes = [
+export const routes: RouteObject[] = [
   {
     path: "/",
-    element: <Outlet />,
-    errorElement: <div>No index route found</div>,
+    element: <Layout />,
+    errorElement: <RouteError />,
     children: [
       {
         index: true,
@@ -24,5 +26,5 @@ export const routes = [
   {
     path: "*",
     element: <div>Global Page not found</div>,
-  }
+  },
 ];
