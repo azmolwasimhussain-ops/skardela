@@ -21,7 +21,7 @@ export function RouteError() {
   return (
     <main className={styles.main}>
       <title>{`${text.routeError.title} | ${text.siteName}`}</title>
-      <h1>{text.routeError.title}</h1>
+      <h1 data-testid="route-error-title">{text.routeError.title}</h1>
       <p>{text.routeError.body}</p>
       <p>
         <Link to="/">{text.routeError.homeLink}</Link>

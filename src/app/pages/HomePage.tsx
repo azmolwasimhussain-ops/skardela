@@ -5,12 +5,16 @@ export function HomePage() {
   return (
     <>
       <title>{text.siteName}</title>
-      <h1>{text.home.title}</h1>
+      <h1 data-testid="home-page-title">{text.home.title}</h1>
       <p>{text.home.intro}</p>
 
-      <section aria-labelledby="puzzle-types-heading" className={styles.section}>
+      <section
+        aria-labelledby="puzzle-types-heading"
+        className={styles.section}
+        data-testid="puzzle-types-section"
+      >
         <h2 id="puzzle-types-heading">{text.home.puzzleTypesHeading}</h2>
-        <ul className={styles.list}>
+        <ul className={styles.list} data-testid="puzzle-types-list">
           {text.home.puzzleTypes.map((puzzleType) => (
             <li key={puzzleType.name} className={styles.card}>
               <h3>{puzzleType.name}</h3>
