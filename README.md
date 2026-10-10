@@ -1,1 +1,1 @@
-# skardela
+# Skardela - Puzzle WebApp
