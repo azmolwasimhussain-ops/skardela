@@ -44,5 +44,5 @@ export function PuzzlePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
