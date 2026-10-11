@@ -4,6 +4,8 @@ import { getLogger } from "./logger";
 type Props = { fallback: ReactNode; children: ReactNode };
 type State = { hasError: boolean };
 
+// This boundary catches a render error inside a child component.
+// It then shows a safe fallback and logs the issue for later review.
 export class ErrorBoundary extends Component<Props, State> {
   override state: State = { hasError: false };
 

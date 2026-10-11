@@ -3,6 +3,8 @@ import { text } from "../../text/en";
 import type { homeLoader } from "../puzzles";
 import styles from "./HomePage.module.css";
 
+// This page shows the daily puzzle list for each puzzle type.
+// It keeps the home screen simple and easy to scan for a contributor.
 export function HomePage() {
   const cards = useLoaderData<typeof homeLoader>();
   return (

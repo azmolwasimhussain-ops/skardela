@@ -1,3 +1,5 @@
+// This helper makes a repeatable random source from a seed value.
+// It is useful when a daily puzzle or board must stay the same for the same input.
 export function makeRandom(seed: number): () => number {
   let state = seed >>> 0;
   return () => {

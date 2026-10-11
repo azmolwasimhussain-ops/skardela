@@ -9,6 +9,7 @@ const words = text["colour-binary"];
 
 type GridStyle = CSSProperties & { "--size": number };
 
+// The status text tells the user if the board is solved, ready to play, or waiting for a hint.
 function statusText(isSolved: boolean, hint: Hint | undefined | null, size: number): string {
   if (isSolved) return words.status.solved;
   if (hint === null) return words.status.start;
@@ -33,6 +34,7 @@ type SquareProps = {
   onTap: () => void;
 };
 
+// Each square is a button so the user can tap a cell and cycle its colour.
 function SquareButton({ square, index, size, isFixed, isHint, isSolved, onTap }: SquareProps) {
   const label = words.square({
     row: Math.floor(index / size) + 1,
@@ -58,6 +60,8 @@ function SquareButton({ square, index, size, isFixed, isHint, isSolved, onTap }:
   );
 }
 
+// The board keeps the start layout and the current player state in one place.
+// The puzzle is solved when the board matches the rule set.
 export function Board({ puzzle }: { puzzle: ColourBinaryPuzzle }) {
   const start = toSquares(puzzle.start);
   const [squares, setSquares] = useState(start);

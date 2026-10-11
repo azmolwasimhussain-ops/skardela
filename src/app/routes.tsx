@@ -7,6 +7,8 @@ import { text } from "../text/en";
 import { PuzzlePage } from "./pages/PuzzlePage";
 import { homeLoader, puzzleLoader } from "./puzzles";
 
+// The route tree keeps the app shell and each page in one place.
+// This makes it easy to follow the main flow for the home page and puzzle pages.
 export const routes: RouteObject[] = [
   {
     path: "/",

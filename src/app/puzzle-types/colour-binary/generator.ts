@@ -4,8 +4,12 @@ import { countSolutions, findAnswers } from "./solver";
 
 export type Board = { start: string[]; answer: string[] };
 
+// The board keeps a share of the answer for each difficulty.
+// This keeps the puzzle fair but still gives the solver a real challenge.
 const keptPart: Record<Difficulty, number> = { easy: 0.5, medium: 0.45, hard: 0.4 };
 
+// The board generator creates one valid answer and then hides some cells.
+// It must keep the puzzle unique, so any removal that makes more than one answer is reverted.
 export function generateBoard(difficulty: Difficulty, random: () => number): Board {
   const size = sizes[difficulty];
   const empty = Array.from({ length: size * size }, (): Square => ".");

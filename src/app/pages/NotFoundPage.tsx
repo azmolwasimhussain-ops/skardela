@@ -1,6 +1,8 @@
 import { Link } from "react-router";
 import { text } from "../../text/en";
 
+// This page tells the user that the path does not exist.
+// It gives a direct route back to the start page.
 export function NotFoundPage() {
   return (
     <>

@@ -11,6 +11,8 @@ const ColourBinaryBoard = lazy(() =>
   import("../puzzle-types/colour-binary/Board").then((module) => ({ default: module.Board })),
 );
 
+// Each puzzle type has its own rule panel.
+// This keeps the page layout stable while the content changes by puzzle type.
 function PuzzleRules({ loaded }: { loaded: LoadedPuzzle }) {
   switch (loaded.type) {
     case "colour-binary":
@@ -18,6 +20,8 @@ function PuzzleRules({ loaded }: { loaded: LoadedPuzzle }) {
   }
 }
 
+// The board is loaded only when the user opens the puzzle page.
+// This keeps the first page load smaller and helps slow devices.
 function PuzzleBoard({ loaded }: { loaded: LoadedPuzzle }) {
   switch (loaded.type) {
     case "colour-binary":
