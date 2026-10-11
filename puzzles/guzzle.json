@@ -1,0 +1,122 @@
+[
+  {
+    "id": "guzzle-0001",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["RBP", "CAT", "MGN"]
+  },
+  {
+    "id": "guzzle-0002",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["BHP", "DOG", "TTX"]
+  },
+  {
+    "id": "guzzle-0003",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["LBT", "PEN", "JDG"]
+  },
+  {
+    "id": "guzzle-0004",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["CBG", "SUN", "RSP"]
+  },
+  {
+    "id": "guzzle-0005",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["FSD", "PIG", "LTN"]
+  },
+  {
+    "id": "guzzle-0006",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["G.B.E", ".REK.", "PLANT", ".NCP.", "S.H.E"]
+  },
+  {
+    "id": "guzzle-0007",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["F.C.T", ".LLS.", "STONE", ".HUO.", "G.D.R"]
+  },
+  {
+    "id": "guzzle-0008",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["B.S.T", ".RHS.", "GREEN", ".HEA.", "C.P.D"]
+  },
+  {
+    "id": "guzzle-0009",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["W.S.D", ".HHL.", "BRICK", ".HRT.", "C.T.E"]
+  },
+  {
+    "id": "guzzle-0010",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["F.B.D", ".RRN.", "TRUCK", ".OSI.", "R.H.T"]
+  },
+  {
+    "id": "guzzle-0011",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["S..T..D", ".P.H.E.", "..EES..", "BALANCE", "..ETK..", ".L.R.E.", "P..E..R"]
+  },
+  {
+    "id": "guzzle-0012",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["F..C..D", ".O.A.E.", "..RRR..", "FREEDOM", "..VFV..", ".O.U.E.", "C..L..R"]
+  },
+  {
+    "id": "guzzle-0013",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["M..C..Y", ".A.A.A.", "..GPD..", "CABINET", "..LTC..", ".O.A.A.", "H..L..L"]
+  },
+  {
+    "id": "guzzle-0014",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["D..R..S", ".E.E.R.", "..VMU..", "COLOURS", "..VVT..", ".A.E.E.", "F..D..D"]
+  },
+  {
+    "id": "guzzle-0015",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["F..N..S", ".I.A.E.", "..GTM..", "MINUTES", "..LRR..", ".O.A.E.", "V..L..S"]
+  }
+]

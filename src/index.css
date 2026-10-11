@@ -31,6 +31,10 @@
   --red: #c8322c;
   --blue: #2f6fdc;
   --on-colour: #ffffff;
+  /* The guzzle squares use green and yellow. Yellow needs dark text for contrast. */
+  --green: #2e7d32;
+  --yellow: #f2c037;
+  --on-yellow: #1f1b18;
 
   --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;

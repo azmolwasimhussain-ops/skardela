@@ -1,0 +1,105 @@
+import type { Difficulty } from "../../../shared/difficulty";
+
+export type { Difficulty };
+
+export type GuzzlePuzzle = {
+  readonly id: string;
+  readonly type: "guzzle";
+  readonly difficulty: Difficulty;
+  readonly author: string;
+  readonly license: "CC-BY-4.0";
+  // Each row has one letter for each square. A "." is a square that is not on a word.
+  readonly answer: readonly string[];
+};
+
+// The four words cross at the center square.
+// "diagonalDown" starts at the top left. "diagonalUp" starts at the bottom left.
+export type Line = "across" | "down" | "diagonalDown" | "diagonalUp";
+
+export const lineNames: readonly Line[] = ["across", "down", "diagonalDown", "diagonalUp"];
+
+// The word length is set by level. The length is odd, so each board has one center square.
+export const sizes: Record<Difficulty, number> = { easy: 3, medium: 5, hard: 7 };
+
+// The puzzle data is stored as row strings.
+// This helper turns the rows into a flat array, so each square has one index.
+export function toSquares(rows: readonly string[]): string[] {
+  return [...rows.join("")];
+}
+
+// This helper finds the word that goes through a square.
+// The center square is on all four words, thus it gets no single word.
+// A square that is not on a word gets no word.
+export function lineOf(index: number, size: number): Line | undefined {
+  const row = Math.floor(index / size);
+  const column = index % size;
+  const middle = (size - 1) / 2;
+  if (row === middle && column === middle) return undefined;
+  if (row === middle) return "across";
+  if (column === middle) return "down";
+  if (row === column) return "diagonalDown";
+  if (row + column === size - 1) return "diagonalUp";
+  return undefined;
+}
+
+// This helper gives the square indexes of a word, in reading order.
+// All words read from left to right. The down word reads from top to bottom.
+export function lineIndexes(line: Line, size: number): number[] {
+  const steps = Array.from({ length: size }, (_, step) => step);
+  const middle = (size - 1) / 2;
+  switch (line) {
+    case "across":
+      return steps.map((column) => middle * size + column);
+    case "down":
+      return steps.map((row) => row * size + middle);
+    case "diagonalDown":
+      return steps.map((step) => step * size + step);
+    case "diagonalUp":
+      return steps.map((step) => (size - 1 - step) * size + step);
+  }
+}
+
+// This helper reads the four words from the answer rows.
+export function wordsOf(answer: readonly string[]): Record<Line, string> {
+  const squares = toSquares(answer);
+  const size = answer.length;
+  const read = (line: Line) =>
+    lineIndexes(line, size)
+      .map((index) => squares[index] ?? "")
+      .join("");
+  return {
+    across: read("across"),
+    down: read("down"),
+    diagonalDown: read("diagonalDown"),
+    diagonalUp: read("diagonalUp"),
+  };
+}
+
+// This check catches broken puzzle data before the app renders the board.
+export function findPuzzleProblems(puzzle: GuzzlePuzzle): string[] {
+  const problems: string[] = [];
+  const size = sizes[puzzle.difficulty];
+  const rows = puzzle.answer;
+
+  if (rows.length !== size || rows.some((row) => row.length !== size)) {
+    problems.push(
+      `"answer" must have ${size} rows of ${size} squares for the level "${puzzle.difficulty}".`,
+    );
+    return problems;
+  }
+
+  for (const [index, square] of toSquares(rows).entries()) {
+    const row = Math.floor(index / size);
+    const column = index % size;
+    const isCenter = index === (size * size - 1) / 2;
+    const isOnWord = isCenter || lineOf(index, size) !== undefined;
+    if (isOnWord && !/^[A-Z]$/u.test(square)) {
+      problems.push(`Row ${row + 1}, column ${column + 1} must have a letter from A to Z.`);
+    }
+    if (!isOnWord && square !== ".") {
+      problems.push(`Row ${row + 1}, column ${column + 1} is not on a word. It must be ".".`);
+    }
+  }
+
+  return problems;
+}

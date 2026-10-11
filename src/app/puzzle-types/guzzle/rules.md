@@ -19,3 +19,5 @@ Answer: CAT across, BAG down, RAN on the diagonal from the top left, MAP on the 
 3. The player puts N in the top-left square. RAN has N in a different square, so the square shows yellow ↔. Mistakes: 2.
 4. The player puts N in the bottom-right square. The square shows green ✓. The N stays there.
 5. The player continues until all 8 squares are green. The result is "With bank, 2 mistakes".
+
+`examples/guzzle-0000.json` has this example as a puzzle file.

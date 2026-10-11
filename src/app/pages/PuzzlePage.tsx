@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { useLoaderData } from "react-router";
 import { Rules as ColourBinaryRules } from "../puzzle-types/colour-binary/Rules";
+import { Rules as GuzzleRules } from "../puzzle-types/guzzle/Rules";
 import { ErrorBoundary } from "../../shared/ErrorBoundary";
 import { text } from "../../text/en";
 import { type LoadedPuzzle, type puzzleLoader } from "../puzzles";
@@ -11,12 +12,18 @@ const ColourBinaryBoard = lazy(() =>
   import("../puzzle-types/colour-binary/Board").then((module) => ({ default: module.Board })),
 );
 
+const GuzzleBoard = lazy(() =>
+  import("../puzzle-types/guzzle/Board").then((module) => ({ default: module.Board })),
+);
+
 // Each puzzle type has its own rule panel.
 // This keeps the page layout stable while the content changes by puzzle type.
 function PuzzleRules({ loaded }: { loaded: LoadedPuzzle }) {
   switch (loaded.type) {
     case "colour-binary":
       return <ColourBinaryRules />;
+    case "guzzle":
+      return <GuzzleRules />;
   }
 }
 
@@ -26,6 +33,8 @@ function PuzzleBoard({ loaded }: { loaded: LoadedPuzzle }) {
   switch (loaded.type) {
     case "colour-binary":
       return <ColourBinaryBoard puzzle={loaded.puzzle} />;
+    case "guzzle":
+      return <GuzzleBoard puzzle={loaded.puzzle} />;
   }
 }
 

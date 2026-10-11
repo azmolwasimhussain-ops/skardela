@@ -1,12 +1,15 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { dayNumber, localDate, puzzlesForDay } from "./daily";
 import type { ColourBinaryPuzzle } from "./puzzle-types/colour-binary/puzzle";
+import type { GuzzlePuzzle } from "./puzzle-types/guzzle/puzzle";
 
 // Each puzzle type has a loader that reads the JSON data for that type.
 // This keeps the route logic simple and lets the app add new puzzle types with little work.
 const puzzleFiles = {
   "colour-binary": async () =>
     (await import("../../puzzles/colour-binary.json")).default as readonly ColourBinaryPuzzle[],
+  guzzle: async () =>
+    (await import("../../puzzles/guzzle.json")).default as readonly GuzzlePuzzle[],
 };
 
 type PuzzleType = keyof typeof puzzleFiles;

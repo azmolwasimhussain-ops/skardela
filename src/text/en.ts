@@ -64,6 +64,62 @@ export const text = {
     },
     noHint: "No hints available",
   },
+  guzzle: {
+    name: "Guzzle",
+    summary: "Find four words that cross at the center letter. Make the fewest mistakes.",
+    rules: [
+      "Four words cross at the center letter: across, down and two diagonals.",
+      "All words have the same length. The diagonals read from left to right.",
+      "Put a letter in a square.",
+      "Green ✓: the letter is correct.",
+      "Yellow ↔: this word has the letter in a different square.",
+      "Red ✗: this word does not have the letter.",
+      "Make all squares green with the fewest mistakes.",
+    ],
+    boardLabel: "Guzzle board",
+    modeLabel: "How do you want to play?",
+    modes: { bank: "With bank", noBank: "Without bank" },
+    bankLabel: "Letter bank",
+    keysLabel: "Letters",
+    key: (letter: string) => `Put ${letter} in the selected square`,
+    marks: {
+      correct: "green, correct",
+      present: "yellow, in a different square",
+      absent: "red, not in this word",
+    },
+    symbols: { correct: "✓", present: "↔", absent: "✗" },
+    lines: {
+      across: "across word",
+      down: "down word",
+      diagonalDown: "diagonal from the top left",
+      diagonalUp: "diagonal from the bottom left",
+    },
+    square: (square: {
+      row: number;
+      column: number;
+      letter: string;
+      mark: string;
+      isFixed: boolean;
+    }) =>
+      [
+        `Row ${square.row}, column ${square.column}`,
+        square.letter === "" ? "empty" : square.letter,
+        square.mark,
+        square.isFixed ? "fixed" : "",
+      ]
+        .filter((part) => part !== "")
+        .join(", "),
+    mistakes: (count: number) => `Mistakes: ${count}`,
+    status: {
+      choose: "Select a mode to start.",
+      start: "Select a square. Then type a letter or select a letter.",
+      correct: (letter: string) => `${letter} is correct.`,
+      present: (letter: string, line: string) => `The ${line} has ${letter} in a different square.`,
+      absent: (letter: string, line: string) => `The ${line} does not have ${letter}.`,
+      solved: (mode: string, mistakes: number) =>
+        `You solved the puzzle. ${mode}, ${mistakes} ${mistakes === 1 ? "mistake" : "mistakes"}.`,
+    },
+  },
   notFound: {
     title: "Page Not Found",
     body: "The page you are looking for does not exist.",
