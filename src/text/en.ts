@@ -27,6 +27,19 @@ export const text = {
     ],
     comingSoon: "Coming soon",
   },
+  puzzlePage: {
+    title: (puzzleTypeName: string, id: string, siteName: string) =>
+      `${puzzleTypeName} ${id} | ${siteName}`,
+    detailsLabel: "Puzzle details",
+    level: (level: string) => `Level: ${level}`,
+    puzzleId: (id: string) => `Puzzle ${id}`,
+    author: (author: string) => `Author: ${author}`,
+    levels: { easy: "easy", medium: "medium", hard: "hard" },
+    rulesHeading: "Rules",
+    loading: "The puzzle is loading...",
+    loadingBoard: "The board is loading...",
+    boardError: "An error stopped the board. Reload the page to try again.",
+  },
   notFound: {
     title: "Page Not Found",
     body: "The page you are looking for does not exist.",
