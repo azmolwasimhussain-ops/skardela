@@ -21,7 +21,7 @@ export const text = {
     },
   },
   footer: {
-    content: (year: number) => `© ${year} Skardela`,
+    content: (year: number) => `© ${year} Skardela. This website uses analytics.`,
   },
   home: {
     title: "Today's puzzles",
