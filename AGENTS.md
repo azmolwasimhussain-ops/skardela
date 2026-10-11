@@ -19,6 +19,14 @@ Rules for AI agents working in the Skardela project.
 - Keep UI text simple and accessible.
 - Prefer the existing stack and patterns over new abstractions.
 
+## Adding a new puzzle type
+
+- Create a new folder in `src/app/puzzle-types/` with the puzzle type name.
+- Read the `rules.md` file explaining the rules of the puzzle.
+- Add an example puzzle file in the `examples/` folder.
+- Implement the puzzle logic in a TypeScript file within the puzzle type folder.
+- Ensure the UI components follow the existing patterns and are accessible.
+
 ## Code quality
 
 - Use strict TypeScript.
