@@ -1,13 +1,13 @@
-import { useState, type CSSProperties } from "react";
+import { useState } from "react";
+import { gridStyle } from "../../../shared/grid";
 import styles from "./Board.module.css";
+import shared from "../../../shared/Board.module.css";
 import { findHint, type Hint } from "./hint";
 import { toSquares, type ColourBinaryPuzzle, type Square } from "./puzzle";
 import { nextSquare, obeysRules } from "./rules-check";
 import { text } from "../../../text/en";
 
 const words = text["colour-binary"];
-
-type GridStyle = CSSProperties & { "--size": number };
 
 // The status text tells the user if the board is solved, ready to play, or waiting for a hint.
 function statusText(isSolved: boolean, hint: Hint | undefined | null, size: number): string {
@@ -45,7 +45,7 @@ function SquareButton({ square, index, size, isFixed, isHint, isSolved, onTap }:
   return (
     <button
       type="button"
-      className={styles.square}
+      className={`${shared.square} ${styles.square}`}
       data-colour={square}
       data-fixed={isFixed}
       data-hint={isHint}
@@ -68,13 +68,12 @@ export function Board({ puzzle }: { puzzle: ColourBinaryPuzzle }) {
   const [hint, setHint] = useState<Hint | undefined | null>(null);
   const isSolved = obeysRules(squares);
   const size = puzzle.start.length;
-  const gridStyle: GridStyle = { "--size": size };
 
   return (
-    <div className={styles.game}>
-      <fieldset className={styles.board}>
+    <div className={shared.game}>
+      <fieldset className={shared.board}>
         <legend className="visually-hidden">{words.boardLabel}</legend>
-        <div className={styles.grid} style={gridStyle}>
+        <div className={shared.grid} style={gridStyle(size)}>
           {squares.map((square, index) => (
             <SquareButton
               // oxlint-disable-next-line react/no-array-index-key -- the index is the identity of a square. The squares never move.
@@ -94,13 +93,13 @@ export function Board({ puzzle }: { puzzle: ColourBinaryPuzzle }) {
         </div>
       </fieldset>
 
-      <output className={styles.status} data-solved={isSolved}>
+      <output className={shared.status} data-solved={isSolved}>
         {statusText(isSolved, hint, size)}
       </output>
 
       <button
         type="button"
-        className={styles.hintButton}
+        className={`${shared.button} ${shared.boxed}`}
         disabled={isSolved}
         onClick={() => {
           setHint(findHint(squares));

@@ -1,13 +1,8 @@
 import type { Difficulty } from "../../../shared/difficulty";
+import type { PuzzleBase } from "../../../shared/puzzle";
 
-export type { Difficulty };
-
-export type GuzzlePuzzle = {
-  readonly id: string;
+export type GuzzlePuzzle = PuzzleBase & {
   readonly type: "guzzle";
-  readonly difficulty: Difficulty;
-  readonly author: string;
-  readonly license: "CC-BY-4.0";
   // Each row has one letter for each square. A "." is a square that is not on a word.
   readonly answer: readonly string[];
 };

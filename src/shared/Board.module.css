@@ -1,0 +1,122 @@
+/* These styles are the same for each puzzle board. Each puzzle type adds its own square styles. */
+
+.game {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.board {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* The board component sets "--size" to the number of squares in one row. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--size), minmax(0, 1fr));
+  gap: clamp(0.25rem, 1.2vw, 0.4rem);
+  width: min(100%, calc(var(--size) * 4.5rem), 32rem);
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
+/* The base of each square. A puzzle type sets the colours of a square with three values:
+   "--fill" (the background), "--fill-edge" (the border) and "--on-fill" (the text and the symbol). */
+.square {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  min-width: 0;
+  border: 2px solid var(--fill-edge, var(--line));
+  border-radius: var(--radius-md);
+  background-color: var(--fill, var(--surface));
+  color: var(--on-fill, var(--text-h));
+  font-size: clamp(0.9rem, calc(40cqi / var(--size)), 1.75rem);
+  font-weight: 600;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+/* A fixed square has a thin light line inside its edge, so the player can see that it does not change.
+   The line shows on each fill colour in the light theme and in the dark theme. */
+.square[data-fixed="true"] {
+  box-shadow:
+    inset 0 0 0 2px var(--fill, var(--surface)),
+    inset 0 0 0 4px rgb(255 255 255 / 0.6);
+}
+
+/* The selected square, the hint square and the keyboard focus use the same ring.
+   The ring is not a square colour, so it shows clearly on each square. */
+.square:focus-visible,
+.square[data-selected="true"],
+.square[data-hint="true"] {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.square[aria-disabled="true"] {
+  cursor: default;
+}
+
+.square[aria-disabled="false"]:hover {
+  border-color: var(--ring);
+}
+
+/* The status text is in a box. It has a minimum height, so the page does not move when the text changes. */
+.status {
+  justify-self: center;
+  width: min(100%, 32rem);
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--surface);
+  text-align: center;
+}
+
+/* When the puzzle is solved, the box has the accent colour. */
+.status[data-solved="true"] {
+  border-color: var(--accent-border);
+  background-color: var(--accent-bg);
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+/* A secondary button has a soft fill and no border. */
+.button {
+  justify-self: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 1.25rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-muted);
+  color: var(--text-h);
+  font-weight: 600;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+.button:hover:enabled {
+  background-color: var(--surface-muted-hover);
+}
+
+.button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* A secondary button with a box, for example the Hint button. The board uses both "button" and "boxed". */
+.boxed {
+  border: 1px solid var(--line);
+  background-color: var(--surface);
+}
+
+.boxed:hover:enabled {
+  border-color: var(--accent);
+  background-color: var(--surface);
+}

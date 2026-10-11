@@ -40,18 +40,18 @@ describe("guzzle board feedback", () => {
 
     // Step 2: T in the top-left square is red.
     await user.click(square(1, 1));
-    await user.click(screen.getByRole("button", { name: words.key("T") }));
+    await user.click(screen.getByRole("button", { name: words.key("T", 1) }));
     expect(square(1, 1)).toHaveAttribute("data-mark", "absent");
     expect(screen.getByText(words.mistakes(1))).toBeInTheDocument();
 
     // Step 3: N in the top-left square is yellow.
-    await user.click(screen.getByRole("button", { name: words.key("N") }));
+    await user.click(screen.getByRole("button", { name: words.key("N", 1) }));
     expect(square(1, 1)).toHaveAttribute("data-mark", "present");
     expect(screen.getByText(words.mistakes(2))).toBeInTheDocument();
 
     // Step 4: N in the bottom-right square is green. The bank does not show N now.
     await user.click(square(3, 3));
-    await user.click(screen.getByRole("button", { name: words.key("N") }));
+    await user.click(screen.getByRole("button", { name: words.key("N", 1) }));
     expect(square(3, 3)).toHaveAttribute("data-mark", "correct");
     expect(bank).toHaveTextContent("BCGMPRT");
   });
@@ -91,5 +91,18 @@ describe("guzzle board result", () => {
     expect(
       screen.getByText(words.status.absent("T", words.lines.diagonalDown)),
     ).toBeInTheDocument();
+  });
+});
+
+describe("guzzle board keyboard", () => {
+  it("moves the focus to the next open square after a correct letter", async () => {
+    const user = userEvent.setup();
+    render(<Board puzzle={puzzle} />);
+    await user.click(screen.getByRole("button", { name: words.modes.noBank }));
+    await user.click(square(1, 1));
+    await user.keyboard("r");
+    // R is correct in row 1, column 1. The next open square is row 1, column 2.
+    expect(square(1, 2)).toHaveFocus();
+    expect(square(1, 2)).toHaveAttribute("aria-pressed", "true");
   });
 });

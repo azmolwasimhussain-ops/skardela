@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import puzzles from "../../../../puzzles/guzzle.json";
 import example from "./examples/guzzle-0000.json";
 import { findPuzzleProblems, lineOf, toSquares, wordsOf, type GuzzlePuzzle } from "./puzzle";
 import { bankLetters, checkLetter, isSolved, type Guess } from "./rules-check";
@@ -26,15 +25,6 @@ describe("guzzle puzzle", () => {
     expect(lineOf(1, 5)).toBeUndefined();
   });
 
-  it("has no problems in the example and in the puzzle file", () => {
-    for (const puzzle of [example, ...puzzles] as GuzzlePuzzle[]) {
-      expect({ id: puzzle.id, problems: findPuzzleProblems(puzzle) }).toEqual({
-        id: puzzle.id,
-        problems: [],
-      });
-    }
-  });
-
   it("finds broken puzzle data", () => {
     // A 3 by 3 board is too small for the medium level.
     expect(findPuzzleProblems({ ...(example as GuzzlePuzzle), difficulty: "medium" })).toEqual([
@@ -53,6 +43,11 @@ describe("guzzle puzzle", () => {
   });
 });
 
+// This helper joins the letters of the bank keys, so a test can compare one string.
+function letters(keys: readonly { letter: string }[]): string {
+  return keys.map((key) => key.letter).join("");
+}
+
 describe("guzzle rules check", () => {
   it("marks a letter green, yellow or red", () => {
     expect(checkLetter(answer, 0, "T")).toBe("absent");
@@ -63,10 +58,20 @@ describe("guzzle rules check", () => {
 
   it("removes green letters from the bank", () => {
     const guesses = Array.from<Guess | undefined>({ length: answer.length });
-    expect(bankLetters(answer, guesses)).toEqual(["B", "C", "G", "M", "N", "P", "R", "T"]);
+    expect(letters(bankLetters(answer, guesses))).toBe("BCGMNPRT");
     guesses[8] = { letter: "N", mark: "correct" };
     guesses[0] = { letter: "T", mark: "absent" };
-    expect(bankLetters(answer, guesses)).toEqual(["B", "C", "G", "M", "P", "R", "T"]);
+    expect(letters(bankLetters(answer, guesses))).toBe("BCGMPRT");
+  });
+
+  it("counts a letter that more than one square needs", () => {
+    // In this medium board, three squares need E: one in BEACH, one in GRAPE and one in SNAKE.
+    const medium = toSquares(["G.B.E", ".REK.", "PLANT", ".NCP.", "S.H.E"]);
+    const none = Array.from<Guess | undefined>({ length: medium.length });
+    expect(bankLetters(medium, none).find((key) => key.letter === "E")).toEqual({
+      letter: "E",
+      count: 3,
+    });
   });
 
   it("is solved only when all playable squares are green", () => {

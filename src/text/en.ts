@@ -1,28 +1,41 @@
+import type { Rule } from "../shared/RuleList";
+import { symbols } from "./symbols";
+
+// "1 mistake", "2 mistakes". More than one text uses it.
+const mistakeCount = (count: number) => `${count} ${count === 1 ? "mistake" : "mistakes"}`;
+
 export const text = {
   siteName: "Skardela",
   skipLink: "Skip to main content",
   nav: {
     label: "Main",
-    home: "Home",
+  },
+  // The name of each level. The home page and the puzzle page both use it.
+  levels: { easy: "Easy", medium: "Medium", hard: "Hard" },
+  theme: {
+    label: "Theme",
+    options: {
+      system: `${symbols.theme.system} System`,
+      light: `${symbols.theme.light} Light`,
+      dark: `${symbols.theme.dark} Dark`,
+    },
   },
   footer: {
-    content: "© 2026 Skardela. All rights reserved.",
+    content: (year: number) => `© ${year} Skardela`,
   },
   home: {
-    title: "Skardela",
-    intro: "Free daily puzzles. You do not need an account or a download.",
+    title: "Today's puzzles",
+    intro: "New puzzles each day. They are free. You do not need an account or a download.",
     puzzleTypesHeading: "Puzzle types",
     levelsHeading: (puzzleTypeName: string) => `Today's ${puzzleTypeName}`,
-    level: { easy: "Easy", medium: "Medium", hard: "Hard" },
   },
   puzzlePage: {
     title: (puzzleTypeName: string, id: string, siteName: string) =>
       `${puzzleTypeName} ${id} | ${siteName}`,
     detailsLabel: "Puzzle details",
-    level: (level: string) => `Level: ${level}`,
-    puzzleId: (id: string) => `Puzzle ${id}`,
-    author: (author: string) => `Author: ${author}`,
-    levels: { easy: "easy", medium: "medium", hard: "hard" },
+    // The details under the title have no labels. The words "#" and "by" are enough.
+    puzzleNumber: (number: string) => `#${number}`,
+    author: (author: string) => `by ${author}`,
     rulesHeading: "Rules",
     loading: "The puzzle is loading...",
     loadingBoard: "The board is loading...",
@@ -38,7 +51,7 @@ export const text = {
     ],
     boardLabel: "Colour Binary board",
     colours: { R: "red", B: "blue", ".": "empty" },
-    symbols: { R: "\u25CF", B: "\u25A0", ".": "" },
+    symbols: symbols["colour-binary"],
     square: (square: { row: number; column: number; colour: string; isFixed: boolean }) =>
       `Row ${square.row}, column ${square.column}, ${square.colour}${square.isFixed ? ", fixed" : ""}`,
     status: {
@@ -71,23 +84,35 @@ export const text = {
       "Four words cross at the center letter: across, down and two diagonals.",
       "All words have the same length. The diagonals read from left to right.",
       "Put a letter in a square.",
-      "Green ✓: the letter is correct.",
-      "Yellow ↔: this word has the letter in a different square.",
-      "Red ✗: this word does not have the letter.",
+      {
+        text: "Green: the letter is correct.",
+        sample: { fill: "green", symbol: symbols.guzzle.correct },
+      },
+      {
+        text: "Yellow: this word has the letter in a different square.",
+        sample: { fill: "yellow", symbol: symbols.guzzle.present },
+      },
+      {
+        text: "Red: this word does not have the letter.",
+        sample: { fill: "red", symbol: symbols.guzzle.absent },
+      },
       "Make all squares green with the fewest mistakes.",
-    ],
+    ] satisfies Rule[],
     boardLabel: "Guzzle board",
     modeLabel: "How do you want to play?",
     modes: { bank: "With bank", noBank: "Without bank" },
     bankLabel: "Letter bank",
     keysLabel: "Letters",
-    key: (letter: string) => `Put ${letter} in the selected square`,
+    key: (letter: string, count?: number) =>
+      count === undefined
+        ? `Put ${letter} in the selected square`
+        : `Put ${letter} in the selected square. ${count} left`,
     marks: {
       correct: "green, correct",
       present: "yellow, in a different square",
       absent: "red, not in this word",
     },
-    symbols: { correct: "✓", present: "↔", absent: "✗" },
+    symbols: symbols.guzzle,
     lines: {
       across: "across word",
       down: "down word",
@@ -109,7 +134,7 @@ export const text = {
       ]
         .filter((part) => part !== "")
         .join(", "),
-    mistakes: (count: number) => `Mistakes: ${count}`,
+    mistakes: mistakeCount,
     status: {
       choose: "Select a mode to start.",
       start: "Select a square. Then type a letter or select a letter.",
@@ -117,7 +142,7 @@ export const text = {
       present: (letter: string, line: string) => `The ${line} has ${letter} in a different square.`,
       absent: (letter: string, line: string) => `The ${line} does not have ${letter}.`,
       solved: (mode: string, mistakes: number) =>
-        `You solved the puzzle. ${mode}, ${mistakes} ${mistakes === 1 ? "mistake" : "mistakes"}.`,
+        `You solved the puzzle. ${mode}, ${mistakeCount(mistakes)}.`,
     },
   },
   notFound: {

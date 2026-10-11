@@ -1,0 +1,33 @@
+.rules {
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 1.25rem;
+}
+
+/* A small sample of a game square, in the line of the text. */
+.sample {
+  display: inline-grid;
+  place-items: center;
+  width: 1.25em;
+  height: 1.25em;
+  margin-right: 0.4em;
+  border-radius: var(--radius-sm);
+  color: var(--on-colour);
+  font-size: 0.875em;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: -0.2em;
+}
+
+.sample[data-fill="green"] {
+  background-color: var(--green);
+}
+
+.sample[data-fill="yellow"] {
+  background-color: var(--yellow);
+  color: var(--on-yellow);
+}
+
+.sample[data-fill="red"] {
+  background-color: var(--red);
+}

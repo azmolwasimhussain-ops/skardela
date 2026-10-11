@@ -1,42 +1,27 @@
-.game {
-  display: grid;
-  gap: 1.25rem;
-}
-
-.board {
-  min-inline-size: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(var(--size), minmax(0, 1fr));
-  gap: clamp(0.25rem, 1.2vw, 0.4rem);
-  width: min(100%, calc(var(--size) * 4.5rem), 32rem);
-  margin-inline: auto;
-  container-type: inline-size;
-}
-
 /* A gap is a square that is not on a word. It keeps the grid shape. */
 .gap {
   aspect-ratio: 1;
 }
 
-.square {
-  position: relative;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  min-width: 0;
-  border: 2px solid var(--line);
-  border-radius: var(--radius-md);
-  background-color: var(--surface);
-  color: var(--text-h);
-  font-size: clamp(0.9rem, calc(40cqi / var(--size)), 1.75rem);
-  font-weight: 600;
-  transition: background-color 150ms ease;
+/* The base and the states of a square are in "src/shared/Board.module.css".
+   This file sets only the colours. The board uses both "square" classes. */
+.square[data-mark="correct"],
+.square[data-fixed="true"] {
+  --fill: var(--green);
+  --fill-edge: var(--green-edge);
+  --on-fill: var(--on-colour);
+}
+
+.square[data-mark="present"] {
+  --fill: var(--yellow);
+  --fill-edge: var(--yellow-edge);
+  --on-fill: var(--on-yellow);
+}
+
+.square[data-mark="absent"] {
+  --fill: var(--red);
+  --fill-edge: var(--red-edge);
+  --on-fill: var(--on-colour);
 }
 
 .symbol {
@@ -47,67 +32,12 @@
   line-height: 1;
 }
 
-.square[data-mark="correct"] {
-  border-color: var(--green);
-  background-color: var(--green);
-  color: var(--on-colour);
-}
-
-.square[data-mark="present"] {
-  border-color: var(--yellow);
-  background-color: var(--yellow);
-  color: var(--on-yellow);
-}
-
-.square[data-mark="absent"] {
-  border-color: var(--red);
-  background-color: var(--red);
-  color: var(--on-colour);
-}
-
-.square[data-fixed="true"] {
-  border-color: var(--green);
-  background-color: var(--green);
-  color: var(--on-colour);
-  box-shadow: inset 0 0 0 3px var(--text-h);
-  cursor: default;
-}
-
-.square[data-selected="true"] {
-  outline: 4px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.square[aria-disabled="true"] {
-  cursor: default;
-}
-
-.square[aria-disabled="false"]:hover {
-  border-color: var(--accent);
-}
-
+/* Numbers of the same width, so the text does not move when the count changes. */
 .mistakes {
   justify-self: center;
   color: var(--text-h);
   font-weight: 600;
-}
-
-.status {
-  justify-self: center;
-  width: min(100%, 32rem);
-  min-height: 2.75rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background-color: var(--surface);
-  text-align: center;
-}
-
-.status[data-solved="true"] {
-  border-color: var(--accent-border);
-  background-color: var(--accent-bg);
-  color: var(--text-h);
-  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .modes,
@@ -125,19 +55,6 @@
   gap: 0.75rem;
 }
 
-.button {
-  min-height: 2.75rem;
-  padding: 0.5rem 1.25rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background-color: var(--surface);
-  color: var(--text-h);
-}
-
-.button:hover {
-  border-color: var(--accent);
-}
-
 .keys {
   display: flex;
   flex-wrap: wrap;
@@ -147,21 +64,19 @@
   margin-inline: auto;
 }
 
+/* A letter key is a shared button with a square size. The board uses both classes. */
 .key {
+  position: relative;
   min-width: 2.75rem;
-  min-height: 2.75rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background-color: var(--surface);
-  color: var(--text-h);
-  font-weight: 600;
+  padding: 0;
 }
 
-.key:hover:enabled {
-  border-color: var(--accent);
-}
-
-.key:disabled {
-  cursor: default;
-  opacity: 0.6;
+/* A small number at the bottom right of a key: how many squares still need the letter. */
+.count {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 0.125rem;
+  color: var(--text-muted);
+  font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
 }

@@ -1,15 +1,10 @@
 import type { Difficulty } from "../../../shared/difficulty";
-
-export type { Difficulty };
+import type { PuzzleBase } from "../../../shared/puzzle";
 
 export type Square = "R" | "B" | ".";
 
-export type ColourBinaryPuzzle = {
-  readonly id: string;
+export type ColourBinaryPuzzle = PuzzleBase & {
   readonly type: "colour-binary";
-  readonly difficulty: Difficulty;
-  readonly author: string;
-  readonly license: "CC-BY-4.0";
   readonly start: readonly string[];
   readonly answer: readonly string[];
 };
@@ -43,6 +38,14 @@ export function findPuzzleProblems(puzzle: ColourBinaryPuzzle): string[] {
         `"${field}" must have ${size} rows of ${size} squares for the level "${puzzle.difficulty}".`,
       );
     }
+  }
+
+  // The answer has only red and blue squares. The start can also have empty squares.
+  if (puzzle.answer.some((row) => !/^[RB]*$/u.test(row))) {
+    problems.push('"answer" must have only "R" and "B".');
+  }
+  if (puzzle.start.some((row) => !/^[RB.]*$/u.test(row))) {
+    problems.push('"start" must have only "R", "B" and ".".');
   }
 
   const answer = toSquares(puzzle.answer);

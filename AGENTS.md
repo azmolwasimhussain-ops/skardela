@@ -17,6 +17,8 @@ Rules for AI agents working in the Skardela project.
 - Follow the current project structure in `src/`.
 - Keep the puzzle logic browser-safe and pure.
 - Keep UI text simple and accessible.
+- Put all UI text in `src/text/en.ts` and all emoji symbols in `src/text/symbols.ts`.
+- Use the shared code in `src/shared/` before you write new code.
 - Prefer the existing stack and patterns over new abstractions.
 
 ## Adding a new puzzle type
@@ -26,6 +28,8 @@ Rules for AI agents working in the Skardela project.
 - Add an example puzzle file in the `examples/` folder.
 - Implement the puzzle logic in a TypeScript file within the puzzle type folder.
 - Ensure the UI components follow the existing patterns and are accessible.
+- Register the puzzle type in `src/app/puzzle-types/registry.ts`. Then follow the TypeScript errors.
+- Follow all steps in "Add a new puzzle type" in `CONTRIBUTING.md`.
 
 ## Code quality
 

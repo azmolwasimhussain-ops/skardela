@@ -20,7 +20,10 @@ export function HomePage() {
         aria-labelledby="puzzle-types-heading"
         className={styles.section}
       >
-        <h2 id="puzzle-types-heading">{text.home.puzzleTypesHeading}</h2>
+        {/* The cards show the puzzle types clearly, so this heading is only for screen readers. */}
+        <h2 id="puzzle-types-heading" className="visually-hidden">
+          {text.home.puzzleTypesHeading}
+        </h2>
         <ul className={styles.list}>
           {cards.map(({ type, levels }) => (
             <li key={type} className={styles.card}>
@@ -31,7 +34,7 @@ export function HomePage() {
                   {levels.map(({ id, difficulty }) => (
                     <li key={id}>
                       <Link className={styles.play} to={`/puzzles/${id}`}>
-                        {text.home.level[difficulty]}
+                        {text.levels[difficulty]}
                       </Link>
                     </li>
                   ))}

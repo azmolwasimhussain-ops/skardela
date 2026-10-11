@@ -27,8 +27,8 @@
   display: grid;
   gap: 0.5rem;
   padding: 1.25rem;
+  /* Like the rules panel: no border, only a background and a shadow. */
   background-color: var(--surface);
-  border: 1px solid var(--accent-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
 }
@@ -49,6 +49,8 @@
   list-style: none;
 }
 
+/* The level links have a light tint and no border, so the three links do not compete for attention.
+   On hover, a link fills with the accent colour. */
 .play {
   display: inline-flex;
   align-items: center;
@@ -56,13 +58,16 @@
   min-height: 2.75rem;
   padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
-  background-color: var(--accent);
-  color: var(--on-accent);
+  background-color: var(--accent-bg);
+  color: var(--accent-text);
   font-weight: 600;
   text-decoration: none;
-  transition: background-color 150ms ease;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
 }
 
 .play:hover {
-  background-color: var(--accent-hover);
+  background-color: var(--accent);
+  color: var(--on-accent);
 }

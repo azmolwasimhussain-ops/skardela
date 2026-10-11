@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { isRouteErrorResponse, Link, useRouteError } from "react-router";
 import { text } from "../text/en";
 import styles from "./RouteError.module.css";
-import { getLogger } from "@utk09/ui-observability";
+import { getLogger } from "../shared/logger";
 
 // This view shows a simple page when a route fails.
 // It keeps the user in the app and gives the team useful error data in the log.

@@ -10,6 +10,13 @@
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Skardela</title>
+    <!-- This sets the saved theme before the page shows, so the page does not flash. It must use the same key and values as "src/shared/theme.ts". -->
+    <script>
+      try {
+        var theme = localStorage.getItem("skardela-theme");
+        if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+      } catch (error) {}
+    </script>
   </head>
 
   <body>

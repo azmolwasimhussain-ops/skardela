@@ -7,23 +7,32 @@
 }
 
 :root {
-  --text: #59524c;
-  --text-muted: #736a63;
-  --text-h: #1f1b18;
-  --bg: #fdfbf7;
-  --surface: #ffffff;
-  --border: #e6dfd5;
-  --line: #8f8780;
-  --code-bg: #f1ebdf;
-  --accent: #e05a2b;
-  --accent-hover: #c94c20;
-  --accent-text: #b3461b;
-  --on-accent: #1f1b18;
-  --accent-bg: rgba(224, 90, 43, 0.1);
-  --accent-border: rgba(224, 90, 43, 0.45);
-  --shadow-sm: 0 1px 2px rgba(45, 30, 15, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(45, 30, 15, 0.07), 0 2px 4px -2px rgba(45, 30, 15, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(45, 30, 15, 0.08), 0 4px 6px -4px rgba(45, 30, 15, 0.04);
+  /* Each colour has a light value and a dark value: light-dark(light, dark).
+     The browser selects the value from "color-scheme". The theme switcher changes "color-scheme". */
+  --text: light-dark(#59524c, #a8a29e);
+  --text-muted: light-dark(#736a63, #9a918a);
+  --text-h: light-dark(#1f1b18, #fafaf9);
+  --bg: light-dark(#fdfbf7, #151413);
+  --surface: light-dark(#ffffff, #1c1a17);
+  --border: light-dark(#e6dfd5, #2a2724);
+  --line: light-dark(#8f8780, #7a716a);
+  /* A soft fill for secondary buttons and code. Hover makes it a little darker. */
+  --surface-muted: light-dark(#f1ebdf, #26231f);
+  --surface-muted-hover: light-dark(#e6dfd5, #322e29);
+  /* The light accent is dark enough for white text (5.2:1). */
+  --accent: light-dark(#c2410c, #fb923c);
+  --accent-hover: light-dark(#9a3412, #fdba74);
+  --accent-text: light-dark(#c2410c, #fb923c);
+  --on-accent: light-dark(#ffffff, #151413);
+  --accent-bg: light-dark(rgba(194, 65, 12, 0.08), rgba(251, 146, 60, 0.15));
+  --accent-border: light-dark(rgba(194, 65, 12, 0.4), rgba(251, 146, 60, 0.5));
+  --shadow-sm: 0 1px 2px light-dark(rgba(45, 30, 15, 0.05), rgba(0, 0, 0, 0.3));
+  --shadow-md:
+    0 4px 6px -1px light-dark(rgba(45, 30, 15, 0.07), rgba(0, 0, 0, 0.4)),
+    0 2px 4px -2px light-dark(rgba(45, 30, 15, 0.05), rgba(0, 0, 0, 0.3));
+  --shadow-lg:
+    0 10px 15px -3px light-dark(rgba(45, 30, 15, 0.08), rgba(0, 0, 0, 0.5)),
+    0 4px 6px -4px light-dark(rgba(45, 30, 15, 0.04), rgba(0, 0, 0, 0.3));
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -35,6 +44,14 @@
   --green: #2e7d32;
   --yellow: #f2c037;
   --on-yellow: #1f1b18;
+  /* A darker edge for each square colour. It keeps the square clear on a light page. */
+  --red-edge: color-mix(in srgb, var(--red) 75%, #000000);
+  --blue-edge: color-mix(in srgb, var(--blue) 75%, #000000);
+  --green-edge: color-mix(in srgb, var(--green) 75%, #000000);
+  --yellow-edge: color-mix(in srgb, var(--yellow) 70%, #000000);
+  /* The ring for a selected square, a hint and the keyboard focus on a board.
+     It has high contrast on the page and is not one of the square colours, so it shows on each square. */
+  --ring: var(--text-h);
 
   --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -42,27 +59,13 @@
   color-scheme: light dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --text: #a8a29e;
-    --text-muted: #9a918a;
-    --text-h: #fafaf9;
-    --bg: #151413;
-    --surface: #1c1a17;
-    --border: #2a2724;
-    --line: #7a716a;
-    --code-bg: #201e1b;
-    --accent: #fb923c;
-    --accent-hover: #f97316;
-    --accent-text: #fb923c;
-    --on-accent: #151413;
-    --accent-bg: rgba(251, 146, 60, 0.15);
-    --accent-border: rgba(251, 146, 60, 0.5);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
-  }
+/* The theme switcher sets "data-theme" on <html>. Without it, the app uses the system theme. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 html {
@@ -162,7 +165,7 @@ code {
   font-size: 0.875em;
   line-height: 1.35;
   padding: 0.2em 0.4em;
-  background-color: var(--code-bg);
+  background-color: var(--surface-muted);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-h);

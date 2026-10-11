@@ -1,0 +1,36 @@
+/* The label holds the list and draws the arrow, so the arrow has space inside the box. */
+.switcher {
+  position: relative;
+  display: inline-flex;
+}
+
+/* The arrow is two borders of a turned square. It has the text colour, so it follows the theme. */
+.switcher::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0.875rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 2px solid var(--text-muted);
+  border-bottom: 2px solid var(--text-muted);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.select {
+  min-height: 2.5rem;
+  padding: 0.25rem 2.25rem 0.25rem 0.75rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-muted);
+  color: var(--text-h);
+  cursor: pointer;
+  appearance: none;
+  transition: background-color 150ms ease;
+}
+
+/* The same soft fill and hover as a secondary button. */
+.select:hover {
+  background-color: var(--surface-muted-hover);
+}

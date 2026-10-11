@@ -10,11 +10,17 @@
 @media (min-width: 60rem) {
   .layout {
     grid-template-columns: minmax(16rem, 21rem) 1fr;
+    grid-template-areas: "rules play";
     align-items: start;
     gap: 2.5rem;
   }
 
+  .play {
+    grid-area: play;
+  }
+
   .rules {
+    grid-area: rules;
     position: sticky;
     top: 1rem;
   }
@@ -24,44 +30,58 @@
   min-width: 0;
 }
 
+/* The title and its details are one group, so they are close together. */
 .header {
-  margin-block: clamp(1rem, 3vw, 1.75rem) 1.25rem;
+  margin-block: clamp(1rem, 3vw, 1.5rem) clamp(1.25rem, 3vw, 2rem);
 }
 
 .title {
-  margin-block: 0 0.5rem;
+  margin-block: 0 0.375rem;
   font-size: clamp(2rem, 3vw + 1rem, 2.75rem);
 }
 
+/* One quiet line of details. Only the level has a colour, because it is the most useful detail. */
 .details {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.625rem;
   padding: 0;
   list-style: none;
   color: var(--text-muted);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
 }
 
-.details li {
-  padding: 0.125rem 0.625rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background-color: var(--surface);
+/* A small dot between two details. It is drawn with CSS, so it is not read by a screen reader. */
+.details li + li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.details li + li::before {
+  content: "";
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0.6;
 }
 
 .details .level {
-  border-color: var(--accent-border);
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
   background-color: var(--accent-bg);
-  color: var(--text-h);
+  color: var(--accent-text);
+  font-weight: 600;
 }
 
+/* The rules panel has no border. Its background and its shadow separate it from the page. */
 .rules {
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
   border-radius: var(--radius-lg);
   background-color: var(--surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .rules h2 {

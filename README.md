@@ -7,6 +7,10 @@
 3. Start the development server using `npm run dev`.
 4. Open your browser and navigate to `http://localhost:5173` to view the application.
 
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before you make a change.
+
 ## Live Site
 
 [skardela.netlify.app](https://skardela.netlify.app/)
