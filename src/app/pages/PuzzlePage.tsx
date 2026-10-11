@@ -1,19 +1,38 @@
+import { lazy, Suspense } from "react";
 import { useLoaderData } from "react-router";
-import { NotFoundPage } from "./NotFoundPage";
-import { text } from "../../text/en";
+import { Rules as ColourBinaryRules } from "../puzzle-types/colour-binary/Rules";
 import { ErrorBoundary } from "../../shared/ErrorBoundary";
-import { Suspense } from "react";
+import { text } from "../../text/en";
+import { type LoadedPuzzle, type puzzleLoader } from "../puzzles";
+import { NotFoundPage } from "./NotFoundPage";
 import styles from "./PuzzlePage.module.css";
 
-export function PuzzlePage() {
-  const loaded = useLoaderData();
-  if (!loaded) {
-    return <NotFoundPage />;
+const ColourBinaryBoard = lazy(() =>
+  import("../puzzle-types/colour-binary/Board").then((module) => ({ default: module.Board })),
+);
+
+function PuzzleRules({ loaded }: { loaded: LoadedPuzzle }) {
+  switch (loaded.type) {
+    case "colour-binary":
+      return <ColourBinaryRules />;
   }
+}
+
+function PuzzleBoard({ loaded }: { loaded: LoadedPuzzle }) {
+  switch (loaded.type) {
+    case "colour-binary":
+      return <ColourBinaryBoard puzzle={loaded.puzzle} />;
+  }
+}
+
+export function PuzzlePage() {
+  const loaded = useLoaderData<typeof puzzleLoader>();
+  if (!loaded) return <NotFoundPage />;
 
   const { puzzle } = loaded;
   const typeText = text[loaded.type];
   const page = text.puzzlePage;
+  const difficulty = puzzle.difficulty as keyof typeof page.levels;
 
   return (
     <div className={styles.page}>
@@ -21,7 +40,7 @@ export function PuzzlePage() {
       <header className={styles.header}>
         <h1 className={styles.title}>{typeText.name}</h1>
         <ul className={styles.details} aria-label={page.detailsLabel}>
-          {/* <li className={styles.level}>{page.level(page.levels[puzzle.difficulty])}</li> */}
+          <li className={styles.level}>{page.level(page.levels[difficulty])}</li>
           <li>{page.puzzleId(puzzle.id)}</li>
           <li>{page.author(puzzle.author)}</li>
         </ul>
@@ -30,15 +49,13 @@ export function PuzzlePage() {
       <div className={styles.layout}>
         <section aria-labelledby="rules-heading" className={styles.rules}>
           <h2 id="rules-heading">{page.rulesHeading}</h2>
-          {/* <PuzzleRules loaded={loaded} /> */}
-          <p>Pendin: Puzzle Rules</p>
+          <PuzzleRules loaded={loaded} />
         </section>
 
         <div className={styles.play}>
           <ErrorBoundary key={puzzle.id} fallback={<p role="alert">{page.boardError}</p>}>
             <Suspense fallback={<p>{page.loadingBoard}</p>}>
-              {/* <PuzzleBoard loaded={loaded} /> */}
-              <p>Pendin: Puzzle Board</p>
+              <PuzzleBoard loaded={loaded} />
             </Suspense>
           </ErrorBoundary>
         </div>

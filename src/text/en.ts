@@ -24,8 +24,8 @@ export const text = {
     author: (author: string) => `Author: ${author}`,
     levels: { easy: "easy", medium: "medium", hard: "hard" },
     rulesHeading: "Rules",
-    loading: "The puzzle loads.",
-    loadingBoard: "The board loads.",
+    loading: "The puzzle is loading...",
+    loadingBoard: "The board is loading...",
     boardError: "An error stopped the board. Reload the page to try again.",
   },
   "colour-binary": {

@@ -5,6 +5,7 @@ import { HomePage } from "./pages/HomePage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { text } from "../text/en";
 import { PuzzlePage } from "./pages/PuzzlePage";
+import { homeLoader, puzzleLoader } from "./puzzles";
 
 export const routes: RouteObject[] = [
   {
@@ -14,18 +15,17 @@ export const routes: RouteObject[] = [
     children: [
       {
         index: true,
+        loader: homeLoader,
         element: <HomePage />,
         hydrateFallbackElement: <p>{text.puzzlePage.loading}</p>,
       },
       {
         path: "puzzles/:puzzleId",
+        loader: puzzleLoader,
         element: <PuzzlePage />,
         hydrateFallbackElement: <p>{text.puzzlePage.loading}</p>,
       },
-      {
-        path: "*",
-        element: <NotFoundPage />,
-      },
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ];

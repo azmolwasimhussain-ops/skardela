@@ -1,0 +1,9 @@
+{
+  "id": "colour-binary-0000",
+  "type": "colour-binary",
+  "difficulty": "easy",
+  "author": "skardela",
+  "license": "CC-BY-4.0",
+  "start": ["..B.", ".R..", "RR..", "...."],
+  "answer": ["RBBR", "BRRB", "RRBB", "BBRR"]
+}
