@@ -14,7 +14,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   override componentDidCatch(error: unknown, info: ErrorInfo) {
-    getLogger("shared.error-boundary").error("A component threw an error", error, {
+    getLogger("shared.error-boundary").error("Component error", error, {
       componentStack: info.componentStack ?? undefined,
     });
   }

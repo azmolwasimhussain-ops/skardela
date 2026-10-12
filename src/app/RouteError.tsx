@@ -11,12 +11,12 @@ export function RouteError() {
   useEffect(() => {
     const log = getLogger("app.route-error");
     if (isRouteErrorResponse(error)) {
-      log.error("A route returned an error response", {
+      log.error("Route error response", {
         status: error.status,
         statusText: error.statusText,
       });
     } else {
-      log.error("A route threw an error", error);
+      log.error("Route error thrown", error);
     }
   }, [error]);
 

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gridStyle } from "../../../shared/grid";
+import { getLogger } from "../../../shared/logger";
 import styles from "./Board.module.css";
 import shared from "../../../shared/Board.module.css";
 import { findHint, type Hint } from "./hint";
@@ -34,6 +35,12 @@ type SquareProps = {
   onTap: () => void;
 };
 
+type LogMeta = {
+  puzzleId: string;
+  puzzleType: ColourBinaryPuzzle["type"];
+  difficulty: ColourBinaryPuzzle["difficulty"];
+};
+
 // Each square is a button so the user can tap a cell and cycle its colour.
 function SquareButton({ square, index, size, isFixed, isHint, isSolved, onTap }: SquareProps) {
   const label = words.square({
@@ -60,15 +67,25 @@ function SquareButton({ square, index, size, isFixed, isHint, isSolved, onTap }:
   );
 }
 
-// The board keeps the start layout and the current player state in one place.
-// The puzzle is solved when the board matches the rule set.
-export function Board({ puzzle }: { puzzle: ColourBinaryPuzzle }) {
-  const start = toSquares(puzzle.start);
-  const [squares, setSquares] = useState(start);
-  const [hint, setHint] = useState<Hint | undefined | null>(null);
-  const isSolved = obeysRules(squares);
-  const size = puzzle.start.length;
+type BoardViewProps = {
+  size: number;
+  squares: Square[];
+  start: Square[];
+  hint: Hint | undefined | null;
+  isSolved: boolean;
+  onTapSquare: (square: Square, index: number) => void;
+  onHintRequest: () => void;
+};
 
+function BoardView({
+  size,
+  squares,
+  start,
+  hint,
+  isSolved,
+  onTapSquare,
+  onHintRequest,
+}: BoardViewProps) {
   return (
     <div className={shared.game}>
       <fieldset className={shared.board}>
@@ -84,10 +101,7 @@ export function Board({ puzzle }: { puzzle: ColourBinaryPuzzle }) {
               isFixed={start[index] !== "."}
               isHint={hint?.index === index}
               isSolved={isSolved}
-              onTap={() => {
-                setSquares(squares.with(index, nextSquare[square]));
-                setHint(null);
-              }}
+              onTap={() => onTapSquare(square, index)}
             />
           ))}
         </div>
@@ -101,12 +115,75 @@ export function Board({ puzzle }: { puzzle: ColourBinaryPuzzle }) {
         type="button"
         className={`${shared.button} ${shared.boxed}`}
         disabled={isSolved}
-        onClick={() => {
-          setHint(findHint(squares));
-        }}
+        onClick={onHintRequest}
       >
         {words.hintButton}
       </button>
     </div>
+  );
+}
+
+function useLifecycleLog(
+  log: ReturnType<typeof getLogger>,
+  meta: LogMeta,
+  size: number,
+  isSolved: boolean,
+) {
+  const solvedLogged = useRef(false);
+  useEffect(() => {
+    log.info("Puzzle started", { ...meta, size });
+  }, [log, meta, size]);
+
+  useEffect(() => {
+    if (!isSolved || solvedLogged.current) return;
+    solvedLogged.current = true;
+    log.info("Puzzle solved", { ...meta, size });
+  }, [isSolved, log, meta, size]);
+}
+
+// The board keeps the start layout and the current player state in one place.
+// The puzzle is solved when the board matches the rule set.
+export function Board({ puzzle }: { puzzle: ColourBinaryPuzzle }) {
+  const start = toSquares(puzzle.start);
+  const [squares, setSquares] = useState(start);
+  const [hint, setHint] = useState<Hint | undefined | null>(null);
+  const isSolved = obeysRules(squares);
+  const size = puzzle.start.length;
+  const log = getLogger("game.colour-binary");
+  const meta: LogMeta = {
+    puzzleId: puzzle.id,
+    puzzleType: puzzle.type,
+    difficulty: puzzle.difficulty,
+  };
+  useLifecycleLog(log, meta, size, isSolved);
+
+  function onTapSquare(square: Square, index: number) {
+    const next = nextSquare[square];
+    log.debug("Square changed", { ...meta, index, from: square, to: next });
+    setSquares(squares.with(index, next));
+    setHint(null);
+  }
+
+  function onHintRequest() {
+    const nextHint = findHint(squares);
+    log.info("Hint requested", {
+      ...meta,
+      foundHint: nextHint !== undefined,
+      hintIndex: nextHint?.index,
+      hintColour: nextHint?.colour,
+    });
+    setHint(nextHint);
+  }
+
+  return (
+    <BoardView
+      size={size}
+      squares={squares}
+      start={start}
+      hint={hint}
+      isSolved={isSolved}
+      onTapSquare={onTapSquare}
+      onHintRequest={onHintRequest}
+    />
   );
 }

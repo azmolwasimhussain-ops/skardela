@@ -10,8 +10,18 @@ export type LastMove = { guess: Guess; index: number } | null;
 
 export type Game = ReturnType<typeof useGame>;
 
+type Hooks = {
+  onModeChosen?: (mode: Mode) => void;
+  onLetterPlaced?: (entry: {
+    index: number;
+    letter: string;
+    result: Guess["mark"];
+    mistakes: number;
+  }) => void;
+};
+
 // This hook keeps the game state: the mode, the guesses, the selected square and the mistakes.
-export function useGame(answer: readonly string[], size: number) {
+export function useGame(answer: readonly string[], size: number, hooks: Hooks = {}) {
   const [mode, setMode] = useState<Mode | null>(null);
   const [guesses, setGuesses] = useState(() =>
     Array.from<Guess | undefined>({ length: answer.length }),
@@ -29,14 +39,22 @@ export function useGame(answer: readonly string[], size: number) {
     if (current?.mark === "correct" || current?.letter === letter) return;
     const guess: Guess = { letter, mark: checkLetter(answer, selected, letter) };
     const next = guesses.with(selected, guess);
+    const nextMistakes = guess.mark === "correct" ? mistakes : mistakes + 1;
+    hooks.onLetterPlaced?.({
+      index: selected,
+      letter,
+      result: guess.mark,
+      mistakes: nextMistakes,
+    });
     setGuesses(next);
     setLastMove({ guess, index: selected });
     if (guess.mark === "correct") setSelected(nextOpenSquare(next, selected, size));
-    else setMistakes(mistakes + 1);
+    else setMistakes(nextMistakes);
   }
 
   // The player selects a mode before the first move. The first open square is then selected.
   function chooseMode(newMode: Mode) {
+    hooks.onModeChosen?.(newMode);
     setMode(newMode);
     setSelected(nextOpenSquare(guesses, -1, size));
   }

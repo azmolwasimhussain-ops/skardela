@@ -19,7 +19,7 @@
     "check": "npm run format:check && npm run lint:check && npm run typecheck && npm run build && npm run test && npm run validate"
   },
   "dependencies": {
-    "@utk09/ui-observability": "0.4.1",
+    "@utk09/ui-observability": "0.7.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-router": "8.4.0"

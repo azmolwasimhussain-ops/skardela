@@ -1,14 +1,18 @@
-import { configure } from "@utk09/ui-observability";
-export { getLogger } from "@utk09/ui-observability";
+import { configure, getLogger as createLogger } from "@utk09/ui-observability";
 
-const level = import.meta.env.DEV ? "DEBUG" : "WARN";
+// Keep one local export so callers use this module for setup and logger access.
+export const getLogger = createLogger;
+
+const isTest = import.meta.env.MODE === "test";
+const level = isTest ? "WARN" : import.meta.env.DEV ? "DEBUG" : "WARN";
 
 configure({
-  endpoint: "",
+  endpoint: null,
   serviceName: "skardela",
   storage: "none",
+  identity: "memory",
   bus: { mode: "off" },
   minLevel: level,
-  console: level,
-  otelLoader: () => Promise.reject(new Error("@opentelemetry/api is not installed")),
+  // Use the object form so level and styles can change independently in later configure calls.
+  console: { level },
 });
