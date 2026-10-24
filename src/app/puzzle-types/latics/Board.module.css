@@ -1,0 +1,102 @@
+/* The base and the states of a square are in "src/shared/Board.module.css".
+   This file sets the pieces and the beam. The board uses both "square" classes. */
+
+/* A wall has a pattern of lines, so the colour is not the only signal. */
+.square[data-square="#"] {
+  --fill: var(--surface-muted);
+  --fill-edge: var(--line);
+  background-image: repeating-linear-gradient(45deg, var(--line) 0 2px, transparent 2px 8px);
+}
+
+/* A mirror from the tray has a dashed edge, so the player can see which mirrors can go back to the tray. */
+.square[data-from-tray="true"] {
+  border-style: dashed;
+}
+
+/* The monster turns green when the beam hits it. The hit symbol shows this as a shape too. */
+.square[data-hit="true"] {
+  --fill: var(--green);
+  --fill-edge: var(--green-edge);
+}
+
+/* The drawing covers the full square, with its edge too. The beam lines go a little past the edge,
+   so the lines of two squares meet in the gap. The drawing does not catch clicks. */
+.art {
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.beam line {
+  stroke: var(--red);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.mirror line {
+  stroke: var(--text-h);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.laser line {
+  stroke: var(--accent);
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+
+.laser circle {
+  fill: var(--accent);
+}
+
+/* The monster is above the beam, so the beam seems to hit it. */
+.monster {
+  position: relative;
+  font-size: 1.4em;
+  line-height: 1;
+}
+
+.hit {
+  position: absolute;
+  top: 0.1em;
+  right: 0.15em;
+  font-size: 0.6em;
+  line-height: 1;
+}
+
+/* The tray count, the misses and the fire button are in one row. They wrap on a small screen. */
+.controls {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+  color: var(--text-h);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.path {
+  justify-self: center;
+  width: min(100%, 32rem);
+}
+
+.path summary {
+  color: var(--text-h);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.path ol {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.5rem 0 0;
+  padding-left: 1.5rem;
+}

@@ -1,13 +1,14 @@
 import { text } from "../../../text/en";
 import { lineOf } from "./puzzle";
-import type { LastMove, Mode } from "./useGame";
+import type { Mode } from "./machine";
+import type { Move as LetterMove } from "./rules-check";
 
 const words = text.guzzle;
 
 // The status text tells the player what to do, what the last letter did, or the result.
 export function statusText(
   mode: Mode | null,
-  lastMove: LastMove,
+  lastMove: LetterMove | null,
   isSolved: boolean,
   mistakes: number,
   size: number,

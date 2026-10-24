@@ -1,0 +1,122 @@
+[
+  {
+    "id": "latics-0001",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".....", "M....", ".-./.", "-...L", ".-..."],
+    "laser": "NW",
+    "tray": 0
+  },
+  {
+    "id": "latics-0002",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".....", "-M...", "/.|..", "..-.L", "....."],
+    "laser": "W",
+    "tray": 0
+  },
+  {
+    "id": "latics-0003",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".....", "..\\#M", "...\\.", "|#|..", "#L..."],
+    "laser": "NW",
+    "tray": 0
+  },
+  {
+    "id": "latics-0004",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["...#..-", "..|.#..", "M......", "#|\\...L", "..#....", "......\\", "......."],
+    "laser": "S",
+    "tray": 2
+  },
+  {
+    "id": "latics-0005",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["....#\\.", "..|#M.\\", "#-...#.", "...#...", "|.#....", "...-...", ".L....."],
+    "laser": "NE",
+    "tray": 2
+  },
+  {
+    "id": "latics-0006",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".......", "L.\\..#.", "....../", "...\\..\\", "..#....", ".....#.", "...-M.."],
+    "laser": "N",
+    "tray": 2
+  },
+  {
+    "id": "latics-0007",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      ".......#.",
+      "#...|..#.",
+      "....#-...",
+      "M.#.#\\..-",
+      ".\\....#.-",
+      "...#.....",
+      "......|..",
+      "..#.#....",
+      "-/.#L...."
+    ],
+    "laser": "NE",
+    "tray": 2
+  },
+  {
+    "id": "latics-0008",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      ".....#...",
+      "#...#....",
+      "M.......#",
+      "...#./..L",
+      "/../..#..",
+      "........#",
+      "/.|\\.....",
+      "#.......-",
+      ".....-..."
+    ],
+    "laser": "NW",
+    "tray": 1
+  },
+  {
+    "id": "latics-0009",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "M...#...\\",
+      ".........",
+      ".|..#....",
+      "....##...",
+      ".........",
+      "..#..#...",
+      "##-#..\\.#",
+      "........\\",
+      ".//#\\.L.."
+    ],
+    "laser": "E",
+    "tray": 2
+  }
+]

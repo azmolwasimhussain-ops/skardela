@@ -4,7 +4,7 @@ import styles from "./Board.module.css";
 import { Clues } from "./Clues";
 import { Controls } from "./Controls";
 import { Grid } from "./Grid";
-import { createHooks, getGuzzleLog, useLifecycleLog, type Meta } from "./log";
+import { createMoveLog, getGuzzleLog, useGuzzleLifecycle, type Meta } from "./log";
 import { toSquares, type GuzzlePuzzle } from "./puzzle";
 import { statusText } from "./status";
 import { useGame } from "./useGame";
@@ -22,8 +22,8 @@ export function Board({ puzzle }: { puzzle: GuzzlePuzzle }) {
     puzzleType: puzzle.type,
     difficulty: puzzle.difficulty,
   };
-  const game = useGame(answer, size, createHooks(log, meta));
-  useLifecycleLog(log, meta, size, game.isSolved, game.mistakes);
+  const game = useGame(answer, size, createMoveLog(log, meta));
+  useGuzzleLifecycle(log, meta, size, game.isSolved, game.mistakes);
 
   return (
     <div className={shared.game}>

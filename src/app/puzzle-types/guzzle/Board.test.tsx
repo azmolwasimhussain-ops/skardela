@@ -147,6 +147,20 @@ describe("guzzle board key hints", () => {
 });
 
 describe("guzzle board keyboard", () => {
+  it("puts a typed letter in the focused square, also when a different square is selected", async () => {
+    const user = userEvent.setup();
+    render(<Board puzzle={puzzle} />);
+    await user.click(screen.getByRole("button", { name: words.modes.noBank }));
+    // Row 1, column 1 is selected. The Tab key moves the focus to row 1, column 2, but not the selection.
+    await user.click(square(1, 1));
+    await user.tab();
+    expect(square(1, 2)).toHaveFocus();
+    await user.keyboard("b");
+    expect(square(1, 2)).toHaveAttribute("data-mark", "correct");
+    expect(square(1, 1)).toHaveAttribute("data-mark", "none");
+    expect(screen.getByText(words.mistakes(0))).toBeInTheDocument();
+  });
+
   it("moves the focus to the next open square after a correct letter", async () => {
     const user = userEvent.setup();
     render(<Board puzzle={puzzle} />);
