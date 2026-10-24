@@ -128,11 +128,13 @@ function GridSquare({ answer, size, game, index }: GameProps & { index: number }
       isSelected={game.selected === index}
       isInWord={selectedLine !== undefined && lineOf(index, size) === selectedLine}
       start={start}
-      isLocked={isCenter || game.mode === null || game.isSolved || guess?.mark === "correct"}
+      isLocked={!game.canSelect(index)}
       onSelect={() => {
-        game.setSelected(index);
+        game.select(index);
       }}
-      onLetter={game.putLetter}
+      onLetter={(typed) => {
+        game.typeLetter(index, typed);
+      }}
     />
   );
 }

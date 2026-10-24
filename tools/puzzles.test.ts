@@ -1,3 +1,5 @@
+// This file checks each puzzle type, thus it imports from each type folder. The import count grows with each type.
+/* oxlint-disable import/max-dependencies */
 import { describe, expect, it } from "vitest";
 import colourBinaryExample from "../src/app/puzzle-types/colour-binary/examples/colour-binary-0000.json";
 import { findPuzzleProblems as findColourBinaryProblems } from "../src/app/puzzle-types/colour-binary/puzzle";
@@ -6,6 +8,9 @@ import { countSolutions } from "../src/app/puzzle-types/colour-binary/solver";
 import { toSquares } from "../src/app/puzzle-types/colour-binary/puzzle";
 import guzzleExample from "../src/app/puzzle-types/guzzle/examples/guzzle-0000.json";
 import { findPuzzleProblems as findGuzzleProblems } from "../src/app/puzzle-types/guzzle/puzzle";
+import laticsExample from "../src/app/puzzle-types/latics/examples/latics-0000.json";
+import { findPuzzleProblems as findLaticsProblems } from "../src/app/puzzle-types/latics/puzzle";
+import { findSolutionProblems as findLaticsSolutionProblems } from "../src/app/puzzle-types/latics/solver";
 import { puzzleTypes, type PuzzleMap, type PuzzleType } from "../src/app/puzzle-types/registry";
 import { levels } from "../src/shared/difficulty";
 
@@ -31,6 +36,15 @@ const checks: {
     ],
   },
   guzzle: { example: guzzleExample, findProblems: findGuzzleProblems },
+  latics: {
+    example: laticsExample,
+    // A latics puzzle must also have a solution that needs each mirror in the tray.
+    // The solver needs valid data, thus it runs only when the data has no problems.
+    findProblems: (puzzle) => {
+      const problems = findLaticsProblems(puzzle);
+      return problems.length > 0 ? problems : findLaticsSolutionProblems(puzzle);
+    },
+  },
 };
 
 // This check finds problems that are the same for all puzzle types.

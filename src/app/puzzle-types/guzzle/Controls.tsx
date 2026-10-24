@@ -2,7 +2,8 @@ import shared from "../../../shared/Board.module.css";
 import { text } from "../../../text/en";
 import styles from "./Board.module.css";
 import { bankLetters, type KeyHint, type LetterKey } from "./rules-check";
-import type { Game, Mode } from "./useGame";
+import type { Mode } from "./machine";
+import type { Game } from "./useGame";
 
 const words = text.guzzle;
 
@@ -67,7 +68,7 @@ export function Controls({ answer, game }: { answer: readonly string[]; game: Ga
 
   const keys = game.mode === "bank" ? bankLetters(answer, game.guesses) : alphabet;
   return (
-    <fieldset className={styles.keys} disabled={game.selected === null || game.isSolved}>
+    <fieldset className={styles.keys} disabled={!game.canUseKeys}>
       <legend className="visually-hidden">
         {game.mode === "bank" ? words.bankLabel : words.keysLabel}
       </legend>

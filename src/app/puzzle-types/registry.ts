@@ -1,5 +1,6 @@
 import type { ColourBinaryPuzzle } from "./colour-binary/puzzle";
 import type { GuzzlePuzzle } from "./guzzle/puzzle";
+import type { LaticsPuzzle } from "./latics/puzzle";
 import { decipherPuzzles } from "../../shared/cipher";
 
 // This file is the list of all puzzle types and their puzzle files.
@@ -12,12 +13,14 @@ import { decipherPuzzles } from "../../shared/cipher";
 export type PuzzleMap = {
   "colour-binary": ColourBinaryPuzzle;
   guzzle: GuzzlePuzzle;
+  latics: LaticsPuzzle;
 };
 
 export type PuzzleType = keyof PuzzleMap;
 
 // This loads all puzzles of the type. The file loads only when the app needs it.
 // The answers in the file are ciphered by the Vite plugin in "vite.config.ts". "decipherPuzzles" decodes them.
+// A puzzle type without an "answer" field, such as Latics, does not need "decipherPuzzles".
 type PuzzleTypeEntry<Puzzle> = { loadPuzzles: () => Promise<readonly Puzzle[]> };
 
 export const puzzleTypes: { [Type in PuzzleType]: PuzzleTypeEntry<PuzzleMap[Type]> } = {
@@ -30,6 +33,10 @@ export const puzzleTypes: { [Type in PuzzleType]: PuzzleTypeEntry<PuzzleMap[Type
   guzzle: {
     loadPuzzles: async () =>
       decipherPuzzles<GuzzlePuzzle>((await import("../../../puzzles/guzzle.json")).default),
+  },
+  latics: {
+    loadPuzzles: async () =>
+      (await import("../../../puzzles/latics.json")).default as LaticsPuzzle[],
   },
 };
 

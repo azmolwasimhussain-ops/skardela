@@ -67,6 +67,8 @@ parts into their own files. See `guzzle/` for an example: `useGame.ts`, `Grid.ts
 3. Add your puzzles to `puzzles/<type>.json`. Add at least one puzzle for each level.
    Put the answer in the field `answer` as readable rows. A Vite plugin in `vite.config.ts` ciphers `answer`,
    so the browser does not get a readable answer. In `registry.ts`, use `decipherPuzzles` to load the file.
+   A puzzle type that checks the moves with its rules can have no `answer`, for example `latics`.
+   Then the plugin does not change the file, and the type does not need `decipherPuzzles`.
 4. In `src/app/puzzle-types/registry.ts`, add your type to `PuzzleMap` and to `puzzleTypes`.
 5. Run `npm run typecheck`. TypeScript then shows each place that needs your type:
    - `src/app/puzzle-types/boards.ts`: your board component.

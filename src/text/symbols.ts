@@ -15,6 +15,11 @@ export const symbols = {
     // An arrow on the first square of a word shows the direction to read the word.
     arrows: { across: "→", down: "↓", diagonalDown: "↘", diagonalUp: "↗" },
   },
+  latics: {
+    monster: "👾",
+    // The monster shows this symbol too when the beam hits it.
+    hit: "💥",
+  },
   theme: {
     system: "💻",
     light: "☀️",

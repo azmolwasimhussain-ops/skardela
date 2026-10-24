@@ -38,6 +38,14 @@ describe("routes", () => {
     expect(await screen.findByRole("button", { name: text.guzzle.modes.bank })).toBeInTheDocument();
   });
 
+  it("shows the latics puzzle page", async () => {
+    renderAt("/puzzles/latics-0001");
+    expect(
+      await screen.findByRole("heading", { level: 1, name: text.latics.name }),
+    ).toBeInTheDocument();
+    expect(await screen.findByRole("group", { name: text.latics.boardLabel })).toBeInTheDocument();
+  });
+
   it.each(["/puzzles/guzzle-9999", "/puzzles/unknown-0001", "/puzzles/guzzle"])(
     "shows the not found page for the puzzle path %s",
     async (path) => {

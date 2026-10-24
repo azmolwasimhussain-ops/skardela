@@ -1,0 +1,44 @@
+import { act, renderHook } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import example from "./examples/guzzle-0000.json";
+import type { Move } from "./machine";
+import { toSquares } from "./puzzle";
+import { useGame } from "./useGame";
+
+// The example from rules.md: CAT across, BAG down, RAN and MAP on the diagonals.
+const answer = toSquares(example.answer);
+
+// In these tests, all calls in one "act" use the same render, as fast clicks or fast typing can do.
+// Each event must still apply to the latest state.
+describe("guzzle game hook with many events in one React batch", () => {
+  it("puts each letter in the square that is selected at the time of the letter", () => {
+    const { result } = renderHook(() => useGame(answer, 3));
+    act(() => {
+      result.current.chooseMode("noBank");
+    });
+    // R is correct in row 1, column 1. Then the selection moves to row 1, column 2, where B is correct.
+    act(() => {
+      result.current.putLetter("R");
+      result.current.putLetter("B");
+    });
+    expect(result.current.guesses.slice(0, 2)).toEqual([
+      { letter: "R", mark: "correct" },
+      { letter: "B", mark: "correct" },
+    ]);
+    expect(result.current).toMatchObject({ selected: 2, mistakes: 0 });
+  });
+
+  it("logs each move once and in order", () => {
+    const onMove = vi.fn<(move: Move) => void>();
+    const { result } = renderHook(() => useGame(answer, 3, onMove));
+    act(() => {
+      result.current.chooseMode("bank");
+      result.current.putLetter("T");
+      result.current.putLetter("T");
+    });
+    expect(onMove.mock.calls.map(([move]) => move)).toEqual([
+      { type: "mode", mode: "bank" },
+      { type: "letter", index: 0, guess: { letter: "T", mark: "absent" }, mistakes: 1 },
+    ]);
+  });
+});

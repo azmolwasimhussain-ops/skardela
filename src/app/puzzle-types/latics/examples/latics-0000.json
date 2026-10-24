@@ -1,0 +1,10 @@
+{
+  "id": "latics-0000",
+  "type": "latics",
+  "difficulty": "easy",
+  "author": "skardela",
+  "license": "CC-BY-4.0",
+  "board": ["L..-.", ".....", ".#...", ".....", "...|M"],
+  "laser": "E",
+  "tray": 0
+}

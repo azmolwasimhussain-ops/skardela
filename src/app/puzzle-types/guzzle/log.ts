@@ -1,9 +1,9 @@
-import { useEffect, useRef } from "react";
 import { getLogger } from "../../../shared/logger";
+import { useLifecycleLog } from "../../../shared/useLifecycleLog";
+import type { Move } from "./machine";
 import type { GuzzlePuzzle } from "./puzzle";
-import type { useGame } from "./useGame";
 
-// The logs of the Guzzle board. This code was in "Board.tsx". It is in its own file, so the board file stays small.
+// The logs of the Guzzle board. They are in their own file, so the board file stays small.
 
 export type Log = ReturnType<typeof getLogger>;
 
@@ -16,36 +16,37 @@ export type Meta = {
   puzzleType: GuzzlePuzzle["type"];
   difficulty: GuzzlePuzzle["difficulty"];
 };
-type Hooks = NonNullable<Parameters<typeof useGame>[2]>;
-type ModeArg = Parameters<NonNullable<Hooks["onModeChosen"]>>[0];
-type LetterEntry = Parameters<NonNullable<Hooks["onLetterPlaced"]>>[0];
 
-export function createHooks(log: Log, meta: Meta): Hooks {
-  return {
-    onModeChosen: (mode: ModeArg) => {
-      log.info("Mode selected", { ...meta, mode });
-    },
-    onLetterPlaced: (entry: LetterEntry) => {
-      log.debug("Letter entered", { ...meta, ...entry });
-    },
+// The log for each move. "useGame" calls it once for each move, in order.
+export function createMoveLog(log: Log, meta: Meta): (move: Move) => void {
+  return (move) => {
+    if (move.type === "mode") {
+      log.info("Mode selected", { ...meta, mode: move.mode });
+    } else {
+      const { index, guess, mistakes } = move;
+      log.debug("Letter entered", {
+        ...meta,
+        index,
+        letter: guess.letter,
+        result: guess.mark,
+        mistakes,
+      });
+    }
   };
 }
 
-export function useLifecycleLog(
+// The start and the solve of a puzzle, with the details for Guzzle. See "src/shared/useLifecycleLog.ts".
+export function useGuzzleLifecycle(
   log: Log,
   meta: Meta,
   size: number,
   isSolved: boolean,
   mistakes: number,
 ) {
-  const solvedLogged = useRef(false);
-  useEffect(() => {
-    log.info("Puzzle started", { ...meta, size });
-  }, [log, meta, size]);
-
-  useEffect(() => {
-    if (!isSolved || solvedLogged.current) return;
-    solvedLogged.current = true;
-    log.info("Puzzle solved", { ...meta, mistakes });
-  }, [isSolved, log, meta, mistakes]);
+  useLifecycleLog(log, {
+    puzzleId: meta.puzzleId,
+    isSolved,
+    started: { ...meta, size },
+    solved: { ...meta, mistakes },
+  });
 }
