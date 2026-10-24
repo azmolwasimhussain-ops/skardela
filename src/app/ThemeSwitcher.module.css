@@ -19,7 +19,7 @@
 }
 
 .select {
-  min-height: 2.5rem;
+  min-height: 2.25rem;
   padding: 0.25rem 2.25rem 0.25rem 0.75rem;
   border: 0;
   border-radius: var(--radius-md);
@@ -33,4 +33,16 @@
 /* The same soft fill and hover as a secondary button. */
 .select:hover {
   background-color: var(--surface-muted-hover);
+}
+
+/* A small screen has little space in the header, thus the list is smaller. */
+@media (max-width: 40rem) {
+  .select {
+    padding: 0.25rem 1.75rem 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .switcher::after {
+    right: 0.625rem;
+  }
 }

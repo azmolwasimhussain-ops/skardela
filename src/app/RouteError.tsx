@@ -23,7 +23,7 @@ export function RouteError() {
   }, [error]);
 
   return (
-    <main className={styles.main}>
+    <main className={`content-width ${styles.main}`}>
       <title>{`${text.routeError.title} | ${text.siteName}`}</title>
       <h1 data-testid="route-error-title">{text.routeError.title}</h1>
       <p>{text.routeError.body}</p>

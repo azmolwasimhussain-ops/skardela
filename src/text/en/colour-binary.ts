@@ -4,8 +4,6 @@ import { symbols } from "../symbols";
 export const colourBinary = {
   name: "Colour Binary",
   summary: "Make each square red or blue. Each line has half of each colour.",
-  // A short label for the kind of puzzle. The home page shows it above the name.
-  tagline: "Logic",
   rules: [
     "Make each square red or blue.",
     "Each row and each column has the same number of red squares and blue squares.",

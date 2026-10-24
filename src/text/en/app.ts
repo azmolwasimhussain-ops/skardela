@@ -6,7 +6,11 @@ export const app = {
   skipLink: "Skip to main content",
   nav: {
     label: "Main",
+    stats: "Your stats",
   },
+  // The streak in the header: the days in a row with at least one solved puzzle.
+  // A small screen shows only the number. A screen reader always reads the full text.
+  streak: { word: "-day streak" },
   // The name of each level. The home page and the puzzle page both use it.
   levels: { easy: "Easy", medium: "Medium", hard: "Hard" },
   theme: {
@@ -17,9 +21,19 @@ export const app = {
       dark: `${symbols.theme.dark} Dark`,
     },
   },
-  // One line for returning players. New players see the analytics notice.
+  // The analytics line is for returning players. New players see the analytics notice.
   footer: {
+    tagline: "Skardela · free daily puzzles · no account, no download",
+    source: { label: "Source on GitHub", href: "https://github.com/utk09-NCL/skardela" },
     content: (year: number) => `© ${year} Skardela. This website uses analytics without cookies.`,
+  },
+  // The message when the browser cannot save data. See "src/app/StorageNotice.tsx".
+  storage: {
+    unavailable:
+      "Your browser does not let Skardela save data. You can play, but your progress is lost when you close the page.",
+    full: 'The browser storage is full, thus Skardela cannot save your new progress. Select "Export my data" under "Your stats", then "Clear my data".',
+    statsLink: "Go to your stats",
+    close: "Close the message",
   },
   analyticsNotice: {
     title: "This website uses analytics",

@@ -1,4 +1,4 @@
-import { lineIndexes, lineOf } from "./puzzle";
+import { lineIndexes, lineNames, lineOf } from "./puzzle";
 
 // "correct" is green, "present" is yellow and "absent" is red.
 export type Mark = "correct" | "present" | "absent";
@@ -59,6 +59,30 @@ export function nextOpenSquare(guesses: Guesses, from: number, size: number): nu
   for (let step = 1; step <= total; step += 1) {
     const index = (from + step) % total;
     if (isPlayable(index, size) && guesses[index]?.mark !== "correct") return index;
+  }
+  return null;
+}
+
+// The square after a correct letter. The cursor follows the word of the square, in its reading direction:
+// right on the across word, down on the down word, down to the right on the diagonal from the top left,
+// and up to the right on the diagonal from the bottom left. The fixed center square and green squares are skipped.
+// After the end of the word, it goes back to an open square before "from" in the same word.
+// When the word is all green, it goes to the first open square of the next word, in the order of the clues.
+// "null": no square is open.
+export function nextSquareInWord(guesses: Guesses, from: number, size: number): number | null {
+  const line = lineOf(from, size);
+  if (line === undefined) return nextOpenSquare(guesses, from, size);
+  const isOpenSquare = (index: number) =>
+    isPlayable(index, size) && guesses[index]?.mark !== "correct";
+  const word = lineIndexes(line, size);
+  const at = word.indexOf(from);
+  const inWord = [...word.slice(at + 1), ...word.slice(0, at)].find((index) => isOpenSquare(index));
+  if (inWord !== undefined) return inWord;
+  const lineAt = lineNames.indexOf(line);
+  const nextLines = [...lineNames.slice(lineAt + 1), ...lineNames.slice(0, lineAt)];
+  for (const next of nextLines) {
+    const open = lineIndexes(next, size).find((index) => isOpenSquare(index));
+    if (open !== undefined) return open;
   }
   return null;
 }

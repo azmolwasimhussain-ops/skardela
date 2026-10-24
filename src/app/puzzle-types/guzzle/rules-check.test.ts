@@ -8,7 +8,16 @@ import {
   wordsOf,
   type GuzzlePuzzle,
 } from "./puzzle";
-import { bankLetters, checkLetter, isSolved, keyHints, type Guess, type Move } from "./rules-check";
+import {
+  bankLetters,
+  checkLetter,
+  isSolved,
+  keyHints,
+  nextSquareInWord,
+  type Guess,
+  type Guesses,
+  type Move,
+} from "./rules-check";
 
 // The example board from rules.md: CAT across, BAG down, RAN and MAP on the diagonals.
 const answer = toSquares(example.answer);
@@ -135,5 +144,46 @@ describe("guzzle key hints", () => {
   it("gives no inWord hint when the center letter can be the cause of the yellow", () => {
     // A is yellow in the top-left square, but the A in RAN is the center letter.
     expect(keyHints(answer, [move(0, "A")], 8).has("A")).toBe(false);
+  });
+});
+
+// A 5 by 5 board. Across: 10 to 14. Down: 2, 7, 12, 17, 22. Diagonal from the top left: 0, 6, 12, 18, 24.
+// Diagonal from the bottom left: 20, 16, 12, 8, 4. Square 12 is the fixed center.
+function greenAt(...indexes: number[]): Guesses {
+  const guesses = Array.from<Guess | undefined>({ length: 25 });
+  for (const index of indexes) guesses[index] = { letter: "A", mark: "correct" };
+  return guesses;
+}
+
+describe("guzzle cursor after a correct letter", () => {
+  it.each([
+    ["the diagonal from the top left", 0, 6],
+    ["the diagonal from the top left, over the fixed center", 6, 18],
+    ["the diagonal from the bottom left, up to the right", 20, 16],
+    ["the diagonal from the bottom left, over the fixed center", 16, 8],
+    ["the across word", 10, 11],
+    ["the across word, over the fixed center", 11, 13],
+    ["the down word", 2, 7],
+    ["the down word, over the fixed center", 7, 17],
+  ])("follows %s", (_, from, next) => {
+    expect(nextSquareInWord(greenAt(from), from, 5)).toBe(next);
+  });
+
+  it("skips the green squares of the word", () => {
+    expect(nextSquareInWord(greenAt(0, 6), 0, 5)).toBe(18);
+  });
+
+  it("goes back to an open square before the square in the same word", () => {
+    expect(nextSquareInWord(greenAt(6, 18, 24), 24, 5)).toBe(0);
+  });
+
+  it("goes to the next word in the order of the clues when the word is all green", () => {
+    expect(nextSquareInWord(greenAt(10, 11, 13, 14), 14, 5)).toBe(2);
+    expect(nextSquareInWord(greenAt(20, 16, 8, 4), 4, 5)).toBe(10);
+  });
+
+  it("gives null when all squares are green", () => {
+    const all = [0, 2, 4, 6, 7, 8, 10, 11, 13, 14, 16, 17, 18, 20, 22, 24];
+    expect(nextSquareInWord(greenAt(...all), 24, 5)).toBeNull();
   });
 });

@@ -1,25 +1,118 @@
 // The text of the home page. Each section of "src/app/pages/home/" has one part.
+import { symbols } from "../symbols";
+
+// A long date in British English, for example "Saturday 24 October". "timeZone" is set for a day key,
+// because a day key is a date without a time. See "src/shared/progress.ts".
+const longDate = (date: Date, timeZone?: string) =>
+  new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone,
+  }).format(date);
+
+// "1 puzzle", "2 puzzles".
+const puzzleCount = (count: number) => `${count} ${count === 1 ? "puzzle" : "puzzles"}`;
+
+// The text of the home page. Each section of "src/app/pages/home/" has one part.
 export const home = {
+  // The date above the headline. The CSS shows it in capitals.
+  date: (now: Date) => longDate(now),
   hero: {
-    eyebrow: "Free daily puzzles",
+    // A new player sees what Skardela is, and two links.
     title: "A new set of puzzles every day",
     intro:
-      "Skardela has three new puzzle types: one for logic, one for words and one for light. Each type has an easy, a medium and a hard puzzle each day. Play in your browser. You do not need an account or a download.",
+      "Skardela has new kinds of logic and word puzzles. Each puzzle type has an easy, a medium and a hard puzzle each day. Play in your browser. You do not need an account or a download.",
     play: "Play today's puzzles",
     howItWorks: "How it works",
-    // The counts come from the puzzle data, so the facts stay correct when a puzzle type is added.
-    factsLabel: "About Skardela",
-    facts: {
-      types: (count: number) => `${count} puzzle types`,
-      daily: (count: number) => `${count} new puzzles each day`,
-      free: "Free, with no account",
-    },
+    // A returning player sees the progress of today.
+    solvedSome: (solved: number, total: number) =>
+      `${solved} down. ${puzzleCount(total - solved)} left today.`,
+    solvedAll: "All of today's puzzles are solved. See you tomorrow.",
+    pickUp: "Pick up where you left off.",
+    // The link to the last puzzle that the player opened and did not solve.
+    continueLabel: "Continue",
+    puzzleName: (typeName: string, level: string) => `${typeName} · ${level}`,
+    progressLabel: "Today's puzzles",
+    segment: (typeName: string, level: string, isSolved: boolean) =>
+      `${typeName} ${level}: ${isSolved ? "solved" : "not solved"}`,
+    progress: (solved: number, total: number) => `${solved} of ${total} solved`,
+    // The time to the next midnight. The screen shows units in short form, for example "3 h 57 min".
+    // A screen reader reads the full words, for example "3 hours 57 minutes".
+    newPuzzlesIn: "new puzzles in",
+    timeShort: ({ hours, minutes }: { hours: number; minutes: number }) =>
+      [hours > 0 ? `${hours} h` : "", minutes > 0 || hours === 0 ? `${minutes} min` : ""]
+        .filter((part) => part !== "")
+        .join(" "),
+    timeLong: ({ hours, minutes }: { hours: number; minutes: number }) =>
+      [
+        hours > 0 ? `${hours} ${hours === 1 ? "hour" : "hours"}` : "",
+        minutes > 0 || hours === 0 ? `${minutes} ${minutes === 1 ? "minute" : "minutes"}` : "",
+      ]
+        .filter((part) => part !== "")
+        .join(" "),
   },
   today: {
     heading: "Today's puzzles",
     intro:
       "The puzzles change at midnight, your local time. All players get the same puzzles on the same date.",
     levelsLabel: (puzzleTypeName: string) => `Today's ${puzzleTypeName}`,
+    // The status under the name of each level. A solved level shows the best time of that puzzle.
+    notSolved: "not solved",
+    solvedIn: (time: string) => `${symbols.progress.solved} ${time}`,
+    solvedNoTime: `${symbols.progress.solved} solved`,
+    // The name of a level link for a screen reader. It starts with the visible level name.
+    levelLink: (level: string, time: string | undefined, isSolved: boolean) =>
+      `${level}, ${isSolved ? (time === undefined ? "solved" : `solved in ${time}`) : "not solved"}`,
+    play: (level: string) => `Play ${level}`,
+    allSolved: "All solved today",
+  },
+  stats: {
+    heading: "Your stats",
+    note: "Saved in this browser only · no account",
+    kpis: {
+      streak: "day streak",
+      longest: "longest streak",
+      solved: "puzzles solved",
+      days: "days played",
+    },
+    calendar: {
+      heading: "Last five weeks",
+      weekdays: ["M", "T", "W", "T", "F", "S", "S"],
+      day: (day: string, solves: number) =>
+        `${longDate(new Date(`${day}T00:00:00Z`), "UTC")}: ${puzzleCount(solves)} solved`,
+      legendLabel: "Solved puzzles in a day",
+      legend: { none: "none", low: "1–3", mid: "4–6", high: "7+" },
+    },
+    bests: {
+      heading: "Personal bests",
+      puzzle: "Puzzle",
+      average: "Average",
+      best: "Best",
+      noTime: "No solves",
+      row: (typeName: string, level: string) => `${typeName} · ${level}`,
+    },
+    // Export, import and clear. The message line tells the result of each action.
+    data: {
+      export: "Export my data",
+      import: "Import",
+      fileName: (day: string) => `skardela-data-${day}.json`,
+      exported: (fileName: string) => `Your data is in the file "${fileName}".`,
+      imported: (count: number) =>
+        count === 0
+          ? "The file has no new solves."
+          : `${count} new ${count === 1 ? "solve" : "solves"} added.`,
+      notData: 'This file is not a Skardela data file. Select a file from "Export my data".',
+      tooLarge: "This file is too large for a Skardela data file.",
+      note: "Export makes a backup file. Import adds the solves of a backup file to your data.",
+    },
+    clear: {
+      button: "Clear my data",
+      question: "Delete all your Skardela data?",
+      yes: { text: "Yes", label: "Yes, delete all my data" },
+      no: { text: "No", label: "No, keep my data" },
+      note: '"Clear my data" deletes your stats, your solved puzzles, your theme and your OK for the analytics notice from this browser.',
+    },
   },
   steps: {
     heading: "How it works",
@@ -49,7 +142,17 @@ export const home = {
       {
         question: "Does Skardela keep my progress?",
         answer:
-          'Partly. Skardela saves the puzzles that you solve, so "Random puzzle" gives you puzzles that you did not solve. A puzzle that you did not finish starts again when you reload the page. Skardela also saves your theme and your OK for the analytics notice. All of this stays in your browser.',
+          'Partly. Skardela saves the puzzles that you solve, your times and your streak. "Random puzzle" gives you puzzles that you did not solve. A puzzle that you did not finish starts again when you reload the page. Skardela also saves your theme and your OK for the analytics notice. All of this stays in your browser.',
+      },
+      {
+        question: "Can I move my progress to a different browser?",
+        answer:
+          'Yes. Select "Export my data" under "Your stats" to save a backup file. In the other browser, select "Import" and select the file. The solves of the file are added to the solves of that browser.',
+      },
+      {
+        question: "Something does not work. What can I do?",
+        answer:
+          'Reload the page first. If the problem stays, select "Clear my data" under "Your stats" on the home page. This deletes all your Skardela data from this browser: your stats, your solved puzzles, your theme and your OK for the analytics notice. Then the page loads again, as for a new player.',
       },
       {
         question: "What data does Skardela collect?",

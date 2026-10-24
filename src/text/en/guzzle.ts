@@ -8,13 +8,14 @@ const mistakeCount = (count: number) => `${count} ${count === 1 ? "mistake" : "m
 export const guzzle = {
   name: "Guzzle",
   summary: "Find four words that cross at the center letter. Make the fewest mistakes.",
-  // A short label for the kind of puzzle. The home page shows it above the name.
-  tagline: "Words",
   rules: [
     "Four words cross at the center letter: across, down and two diagonals.",
     `All words have the same length. An arrow (${Object.values(symbols.guzzle.arrows).join(" ")}) shows where each word starts and the direction to read it.`,
     "Each word has a clue. Select a square to see the clue for its word.",
-    "Put a letter in a square.",
+    "Before you start, select a mode. The timer starts when you select it.",
+    "With bank: the letter keys show only the letters that the words still need. A number on a key shows how many squares need that letter, when more than one square needs it.",
+    "Without bank: the letter keys show all letters from A to Z. Use the clues to find the words.",
+    "Put a letter in a square. After a green letter, the cursor goes to the next square of the same word.",
     {
       text: "Green: the letter is correct.",
       sample: { fill: "green", symbol: symbols.guzzle.correct },

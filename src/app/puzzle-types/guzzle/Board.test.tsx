@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { readSettings } from "../../../shared/settings";
+import { useAppStore } from "../../../shared/store";
 import { text } from "../../../text/en";
 import { Board } from "./Board";
 import example from "./examples/guzzle-0000.json";
@@ -83,7 +83,7 @@ describe("guzzle board result", () => {
     expect(screen.getByText("You solved the puzzle. With bank, 2 mistakes.")).toBeInTheDocument();
     expect(screen.getByTestId("confetti")).toBeInTheDocument();
     // "Random puzzle" skips a solved puzzle.
-    expect(readSettings().solved).toEqual([puzzle.id]);
+    expect(useAppStore.getState().solved).toEqual([puzzle.id]);
   });
 
   it("does not add a mistake for the same wrong letter two times", async () => {
@@ -170,8 +170,9 @@ describe("guzzle board keyboard", () => {
     await user.click(screen.getByRole("button", { name: words.modes.noBank }));
     await user.click(square(1, 1));
     await user.keyboard("r");
-    // R is correct in row 1, column 1. The next open square is row 1, column 2.
-    expect(square(1, 2)).toHaveFocus();
-    expect(square(1, 2)).toHaveAttribute("aria-pressed", "true");
+    // R is correct in row 1, column 1, on the diagonal from the top left. The cursor follows the diagonal:
+    // the center square is fixed, thus the next open square is row 3, column 3.
+    expect(square(3, 3)).toHaveFocus();
+    expect(square(3, 3)).toHaveAttribute("aria-pressed", "true");
   });
 });

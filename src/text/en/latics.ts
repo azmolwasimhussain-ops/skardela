@@ -12,8 +12,6 @@ const listOf = (items: readonly string[]) =>
 export const latics = {
   name: "Latics",
   summary: "Turn the mirrors and send the laser beam to the monster.",
-  // A short label for the kind of puzzle. The home page shows it above the name.
-  tagline: "Light",
   rules: [
     `Hit the monster ${symbols.latics.monster} with the laser beam.`,
     "The beam goes in a straight line: across, up and down, or diagonally.",

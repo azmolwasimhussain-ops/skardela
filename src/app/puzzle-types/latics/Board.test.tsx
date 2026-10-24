@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { readSettings } from "../../../shared/settings";
+import { useAppStore } from "../../../shared/store";
 import { text } from "../../../text/en";
 import { Board } from "./Board";
 import example from "./examples/latics-0000.json";
@@ -152,12 +152,12 @@ describe("latics board and the list of solved puzzles", () => {
   it("adds the puzzle to the list when the beam hits the monster", async () => {
     const user = userEvent.setup();
     render(<Board puzzle={easy} />);
-    expect(readSettings().solved).toEqual([]);
+    expect(useAppStore.getState().solved).toEqual([]);
     await user.click(square(1, 4));
     await user.click(square(5, 4));
     await user.click(square(5, 4));
     await user.click(square(5, 4));
     expect(screen.getByRole("status")).toHaveTextContent(words.status.solved);
-    expect(readSettings().solved).toEqual([easy.id]);
+    expect(useAppStore.getState().solved).toEqual([easy.id]);
   });
 });

@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { applyTheme, isTheme, themes } from "../shared/theme";
 import { getLogger } from "../shared/logger";
-import { useSetting } from "../shared/useSetting";
+import { useAppStore } from "../shared/store";
 import { text } from "../text/en";
 import styles from "./ThemeSwitcher.module.css";
 
 // This list lets the player select the system theme, the light theme or the dark theme.
 // A native <select> works with a keyboard and a screen reader without more code.
 export function ThemeSwitcher() {
-  const [theme, setTheme] = useSetting("theme");
+  const theme = useAppStore((state) => state.theme);
+  const setTheme = useAppStore((state) => state.setTheme);
   const log = getLogger("ui.theme-switcher");
 
   // The effect sets the theme on the page after each change, also after a change in a different tab.

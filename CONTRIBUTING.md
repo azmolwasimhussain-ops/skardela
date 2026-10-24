@@ -35,14 +35,18 @@ src/
     daily.ts                 Selects the puzzles of the day.
     AnalyticsNotice.tsx      The notice for new players. Analytics loads only after the OK.
     pages/                   One file or one folder for each page.
-      home/                  The home page. One file for each section.
-      puzzle/                The puzzle page, with the Restart and Random puzzle buttons.
+      home/                  The home page: today's progress, today's puzzles, the stats and the questions.
+      puzzle/                The puzzle page ("Now playing"), with the timer, Restart and Random puzzle.
     puzzle-types/
       registry.ts            The list of puzzle types and their puzzle files.
       boards.ts              The board component of each puzzle type.
       <type>/                One folder for each puzzle type. See below.
   shared/                    Code that more than one puzzle type uses.
-    settings.ts              The saved settings, in one localStorage item. Use "useSetting.ts" in a component.
+    store.ts                 The Zustand store: the saved data and its actions. It saves to one localStorage item.
+    saved-data.ts            The shape of the saved data and its checks.
+    storage-format.ts        The stored text and the export file. The lists of solves are compressed.
+    playSession.ts           The game that the player plays now: the timer and the saving of a solve.
+    progress.ts              Pure functions for the stats: streaks, the calendar and personal bests.
   text/
     en/                      All UI text. "index.ts" puts the parts together. One file for each page and puzzle type.
     es/                      Spanish text, with the same structure. The app does not use it yet.
@@ -78,11 +82,12 @@ parts into their own files. See `guzzle/` for an example: `useGame.ts`, `Grid.ts
 5. Run `npm run typecheck`. TypeScript then shows each place that needs your type:
    - `src/app/puzzle-types/boards.ts`: your board component.
    - `src/text/en/index.ts`: your UI text. Put it in a new file `src/text/en/<type>.ts`, with `name`,
-     `summary`, `tagline` and `rules`. Then add it to `index.ts` with the name of your type.
+     `summary` and `rules`. Then add it to `index.ts` with the name of your type.
+   - `src/app/pages/home/PuzzleIcon.tsx`: the small icon of your type on the home page.
    - `tools/puzzles.test.ts`: your example and your data check.
 6. Put emoji symbols in `src/text/symbols.ts`, not in other files.
-7. When the board is solved, call `useLifecycleLog` and `useRecordSolved` from `src/shared/`.
-   `useRecordSolved` puts the puzzle in the list of solved puzzles, so "Random puzzle" skips it.
+7. In the lifecycle hook of your board, call `useLifecycleLog` and `usePlayTracking` from `src/shared/`.
+   `usePlayTracking` starts the timer and saves each solve, for the stats and for "Random puzzle".
    See the lifecycle hook in `log.ts` of an existing type, for example `latics/log.ts`.
 8. Add tests for your rule logic and your board.
 9. Run `npm run fix && npm run check`.

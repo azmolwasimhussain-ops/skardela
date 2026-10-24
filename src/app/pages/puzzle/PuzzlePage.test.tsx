@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, it } from "vitest";
-import { writeSetting } from "../../../shared/settings";
+import { useAppStore } from "../../../shared/store";
 import { text } from "../../../text/en";
 import { puzzleTypes } from "../../puzzle-types/registry";
 import { routes } from "../../routes";
@@ -13,7 +13,7 @@ const page = text.puzzlePage;
 
 // The tests play as a returning player, so the analytics notice does not show.
 function renderAt(path: string) {
-  writeSetting("cookieBanner", true);
+  useAppStore.getState().acknowledgeNotice();
   const router = createMemoryRouter(routes, { initialEntries: [path] });
   render(<RouterProvider router={router} />);
   return router;
@@ -128,7 +128,7 @@ describe("puzzle page random puzzle", () => {
 
   it("skips the puzzles that the player solved", async () => {
     const { solved, unsolved } = await allSolvedButOne();
-    writeSetting("solved", solved);
+    useAppStore.setState({ solved });
     const user = userEvent.setup();
     const router = renderAt("/puzzles/guzzle-0001");
     await user.click(await screen.findByRole("button", { name: page.random }));

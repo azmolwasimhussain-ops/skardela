@@ -1,22 +1,26 @@
 import { useLoaderData } from "react-router";
 import { text } from "../../../text/en";
 import type { homeLoader } from "../../puzzles";
+import { useScrollToHash } from "../../useScrollToHash";
+import { DailyHero } from "./DailyHero";
 import { Faq } from "./Faq";
-import { Hero } from "./Hero";
 import { HowItWorks } from "./HowItWorks";
+import { Stats } from "./Stats";
 import { TodayPuzzles } from "./TodayPuzzles";
 
-// The home page tells a new player what Skardela is, and takes each player to the puzzles of today.
+// The home page: the progress of today, today's puzzles, the stats of the player, how it works and the questions.
 // Each section is in its own file in this folder. All sections use "HomePage.module.css".
-// The order: what Skardela is, today's puzzles, how it works and the questions.
+// The progress and the stats come from the saved data in the store. See "src/shared/store.ts".
 export function HomePage() {
   const cards = useLoaderData<typeof homeLoader>();
-  const dailyCount = cards.reduce((count, card) => count + card.levels.length, 0);
+  // A link such as "/#stats" from a different page goes to its section after the sections render.
+  useScrollToHash();
   return (
     <>
       <title>{text.siteName}</title>
-      <Hero typeCount={cards.length} dailyCount={dailyCount} />
+      <DailyHero cards={cards} />
       <TodayPuzzles cards={cards} />
+      <Stats types={cards.map((card) => card.type)} />
       <HowItWorks />
       <Faq />
     </>

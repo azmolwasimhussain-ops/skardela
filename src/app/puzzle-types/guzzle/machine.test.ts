@@ -63,9 +63,11 @@ describe("guzzle machine phases", () => {
 
   it("solves the puzzle and then ignores each event", () => {
     const playing = transition(start, { type: "chooseMode", mode: "bank" });
+    // The cursor follows each word: the diagonal from the top left (R, N), the diagonal from the bottom left
+    // (M, P), the across word (C, T), then the down word (B, G).
     const solved = play(
       playing,
-      [..."RBPCTMGN"].map((letter) => ({ type: "putLetter", letter }) as const),
+      [..."RNMPCTBG"].map((letter) => ({ type: "putLetter", letter }) as const),
     );
     expect(phaseOf(solved)).toBe("solved");
     expect(solved).toMatchObject({ selected: null, mistakes: 0 });

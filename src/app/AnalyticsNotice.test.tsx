@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
 import { umami } from "../shared/analytics";
-import { readSettings, writeSetting } from "../shared/settings";
+import { useAppStore } from "../shared/store";
 import { text } from "../text/en";
 import { AnalyticsNotice } from "./AnalyticsNotice";
 
@@ -33,12 +33,12 @@ describe("analytics notice", () => {
     render(<AnalyticsNotice />);
     await user.click(screen.getByRole("button", { name: words.ok }));
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(readSettings().cookieBanner).toBe(true);
+    expect(useAppStore.getState().cookieBanner).toBe(true);
     expect(analyticsScript()).not.toBeNull();
   });
 
   it("does not show to a returning player, and loads analytics at once", () => {
-    writeSetting("cookieBanner", true);
+    useAppStore.getState().acknowledgeNotice();
     render(<AnalyticsNotice />);
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(analyticsScript()).not.toBeNull();

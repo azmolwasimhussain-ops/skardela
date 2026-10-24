@@ -16,16 +16,17 @@ describe("guzzle game hook with many events in one React batch", () => {
     act(() => {
       result.current.chooseMode("noBank");
     });
-    // R is correct in row 1, column 1. Then the selection moves to row 1, column 2, where B is correct.
+    // R is correct in row 1, column 1. The selection follows the diagonal over the fixed center
+    // to row 3, column 3, where N is correct. Then it goes to the next word: row 3, column 1.
     act(() => {
       result.current.putLetter("R");
-      result.current.putLetter("B");
+      result.current.putLetter("N");
     });
-    expect(result.current.guesses.slice(0, 2)).toEqual([
+    expect([result.current.guesses[0], result.current.guesses[8]]).toEqual([
       { letter: "R", mark: "correct" },
-      { letter: "B", mark: "correct" },
+      { letter: "N", mark: "correct" },
     ]);
-    expect(result.current).toMatchObject({ selected: 2, mistakes: 0 });
+    expect(result.current).toMatchObject({ selected: 6, mistakes: 0 });
   });
 
   it("logs each move once and in order", () => {

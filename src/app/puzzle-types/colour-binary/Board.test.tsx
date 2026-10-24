@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { readSettings } from "../../../shared/settings";
+import { useAppStore } from "../../../shared/store";
 import { text } from "../../../text/en";
 import { Board } from "./Board";
 import example from "./examples/colour-binary-0000.json";
@@ -66,6 +66,6 @@ describe("colour-binary board", () => {
     expect(screen.getByRole("button", { name: words.hintButton })).toBeDisabled();
     expect(screen.getByTestId("confetti")).toBeInTheDocument();
     // "Random puzzle" skips a solved puzzle.
-    expect(readSettings().solved).toEqual([puzzle.id]);
+    expect(useAppStore.getState().solved).toEqual([puzzle.id]);
   });
 });

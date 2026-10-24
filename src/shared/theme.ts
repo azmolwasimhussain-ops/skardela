@@ -1,6 +1,6 @@
 // The player can select the system theme, the light theme or the dark theme.
 // "system" follows the setting of the device.
-// The browser keeps the selected theme in the settings. See "settings.ts".
+// The browser keeps the selected theme in the saved data. See "store.ts".
 export const themes = ["system", "light", "dark"] as const;
 
 export type Theme = (typeof themes)[number];

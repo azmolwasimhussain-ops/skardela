@@ -5,6 +5,7 @@ import {
   isSolved,
   keyHints,
   nextOpenSquare,
+  nextSquareInWord,
   type Guess,
   type Guesses,
   type KeyHint,
@@ -159,7 +160,8 @@ function chooseMode(state: GameState, mode: Mode): GameState {
   };
 }
 
-// This puts a letter in a square and checks it. After a green letter, the next open square is selected.
+// This puts a letter in a square and checks it. After a green letter, the next open square of the same word
+// is selected, in the reading direction of the word. See "nextSquareInWord".
 // After a letter that is not green, the square stays selected, so the player can try again.
 function putAt(state: GameState, index: number, letter: string): GameState {
   const { answer, size } = state.config;
@@ -171,7 +173,7 @@ function putAt(state: GameState, index: number, letter: string): GameState {
     ...state,
     guesses,
     mistakes,
-    selected: guess.mark === "correct" ? nextOpenSquare(guesses, index, size) : index,
+    selected: guess.mark === "correct" ? nextSquareInWord(guesses, index, size) : index,
     moves: [...state.moves, { type: "letter", index, guess, mistakes }],
   };
 }

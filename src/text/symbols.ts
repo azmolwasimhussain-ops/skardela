@@ -20,6 +20,14 @@ export const symbols = {
     // The monster shows this symbol too when the beam hits it.
     hit: "💥",
   },
+  // A solved level on the home page.
+  progress: {
+    solved: "✓",
+  },
+  // The link that closes a puzzle and goes back to the home page.
+  puzzlePage: {
+    close: "✕",
+  },
   theme: {
     system: "💻",
     light: "☀️",

@@ -1,7 +1,7 @@
 import { useEffect, type SyntheticEvent } from "react";
 import { loadAnalytics } from "../shared/analytics";
 import { getLogger } from "../shared/logger";
-import { useSetting } from "../shared/useSetting";
+import { useAppStore } from "../shared/store";
 import { text } from "../text/en";
 import styles from "./AnalyticsNotice.module.css";
 
@@ -9,7 +9,8 @@ import styles from "./AnalyticsNotice.module.css";
 // The analytics script loads only after the OK. The browser keeps the OK in the setting "cookieBanner",
 // thus a returning player does not see the notice again. The footer tells returning players about the analytics.
 export function AnalyticsNotice() {
-  const [isAcknowledged, setIsAcknowledged] = useSetting("cookieBanner");
+  const isAcknowledged = useAppStore((state) => state.cookieBanner);
+  const acknowledgeNotice = useAppStore((state) => state.acknowledgeNotice);
 
   useEffect(() => {
     if (isAcknowledged) loadAnalytics();
@@ -20,7 +21,7 @@ export function AnalyticsNotice() {
     <NoticeDialog
       onAcknowledge={() => {
         getLogger("ui.analytics-notice").info("Analytics notice acknowledged");
-        setIsAcknowledged(true);
+        acknowledgeNotice();
       }}
     />
   );

@@ -23,7 +23,11 @@ export function Board({ puzzle }: { puzzle: GuzzlePuzzle }) {
     difficulty: puzzle.difficulty,
   };
   const game = useGame(answer, size, createMoveLog(log, meta));
-  useGuzzleLifecycle(log, meta, size, game.isSolved, game.mistakes);
+  useGuzzleLifecycle(log, meta, size, {
+    isSolved: game.isSolved,
+    isStarted: game.mode !== null,
+    mistakes: game.mistakes,
+  });
 
   return (
     <div className={shared.game}>

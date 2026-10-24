@@ -31,6 +31,9 @@ export function puzzleLoader({ params }: LoaderFunctionArgs): Promise<LoadedPuzz
   return loadPuzzle(params.puzzleId ?? "");
 }
 
+// One card of the home page: a puzzle type and the IDs of its puzzles of today, one for each level.
+export type TodayCard = Awaited<ReturnType<typeof homeLoader>>[number];
+
 // The home page shows one recommended puzzle for each type and difficulty for the current day.
 export function homeLoader() {
   const day = dayNumber(localDate(new Date()));

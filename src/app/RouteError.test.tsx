@@ -2,7 +2,7 @@ import { createMemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import { RouteError } from "./RouteError";
 import type { ReactNode } from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { RouterProvider } from "react-router/dom";
 
 function BrokenPage(): ReactNode {
@@ -18,8 +18,10 @@ describe("RouteError", () => {
     render(<RouterProvider router={router} />);
 
     expect(await screen.findByTestId("route-error-title")).toBeInTheDocument();
-    const loggedValues = consoleErrorSpy.mock.calls.flat();
-    expect(loggedValues).toContainEqual(new Error("Test route error"));
+    // The error page logs in an effect. The effect can run after the page shows, thus the test waits for the log.
+    await waitFor(() => {
+      expect(consoleErrorSpy.mock.calls.flat()).toContainEqual(new Error("Test route error"));
+    });
   });
 
   it("logs the status of an error response", async () => {
@@ -40,8 +42,12 @@ describe("RouteError", () => {
     render(<RouterProvider router={router} />);
 
     expect(await screen.findByTestId("route-error-title")).toBeInTheDocument();
-    const loggedValues = consoleErrorSpy.mock.calls.flat();
-    expect(loggedValues).toContain("Route error response");
-    expect(loggedValues).toContainEqual({ status: 404, statusText: "Not Found" });
+    // React Router renders the error page after the loader, outside "act". Then React runs the effect
+    // that logs a little later, also after the page shows. Thus the test waits for the log.
+    await waitFor(() => {
+      const loggedValues = consoleErrorSpy.mock.calls.flat();
+      expect(loggedValues).toContain("Route error response");
+      expect(loggedValues).toContainEqual({ status: 404, statusText: "Not Found" });
+    });
   });
 });

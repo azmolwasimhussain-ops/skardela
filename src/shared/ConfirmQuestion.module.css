@@ -1,0 +1,21 @@
+/* The question and its two answers, in one line. In a row of buttons, the question fills the row. */
+.question {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.question > button {
+  padding-inline: 1rem;
+}
+
+/* A fast double click on the button lands on this text. The text must not be selected then.
+   The text takes only its own width, so "Yes" and "No" are directly after the question. */
+.text {
+  flex: 0 1 auto;
+  color: var(--text-h);
+  font-weight: 600;
+  user-select: none;
+}

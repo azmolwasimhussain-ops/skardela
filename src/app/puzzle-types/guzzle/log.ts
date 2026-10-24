@@ -1,6 +1,6 @@
 import { getLogger } from "../../../shared/logger";
 import { useLifecycleLog } from "../../../shared/useLifecycleLog";
-import { useRecordSolved } from "../../../shared/useRecordSolved";
+import { usePlayTracking } from "../../../shared/playSession";
 import type { Move } from "./machine";
 import type { GuzzlePuzzle } from "./puzzle";
 
@@ -37,19 +37,20 @@ export function createMoveLog(log: Log, meta: Meta): (move: Move) => void {
 }
 
 // The start and the solve of a puzzle, with the details for Guzzle. See "src/shared/useLifecycleLog.ts".
-// A solved puzzle also goes in the list of solved puzzles. See "src/shared/useRecordSolved.ts".
+// The play session gives the timer and saves the solve. See "src/shared/playSession.ts".
+// The game starts when the player selects a mode, thus the timer starts then too.
 export function useGuzzleLifecycle(
   log: Log,
   meta: Meta,
   size: number,
-  isSolved: boolean,
-  mistakes: number,
+  game: { isSolved: boolean; isStarted: boolean; mistakes: number },
 ) {
+  const { isSolved, isStarted, mistakes } = game;
   useLifecycleLog(log, {
     puzzleId: meta.puzzleId,
     isSolved,
     started: { ...meta, size },
     solved: { ...meta, mistakes },
   });
-  useRecordSolved(meta.puzzleId, isSolved);
+  usePlayTracking(meta, isSolved, isStarted);
 }

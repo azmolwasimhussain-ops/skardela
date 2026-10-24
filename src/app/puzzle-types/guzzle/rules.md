@@ -4,7 +4,9 @@
 
 Four words cross at the center letter: across, down and two diagonals. All words have the same length. An arrow on the first square of each word shows the direction to read the word: → across, ↓ down, ↘ diagonal from the top left, ↗ diagonal from the bottom left. Each word has a clue. Select a square to see the clue for its word.
 
-Put a letter in a square. Green: the letter is correct. Yellow: this word has the letter in a different square. Red: this word does not have the letter. Make all squares green with the fewest mistakes.
+Before you start, select a mode. The timer starts when you select it. With bank: the letter keys show only the letters that the words still need, and a number on a key shows how many squares need that letter, when more than one square needs it. Without bank: the letter keys show all letters from A to Z, and you use the clues to find the words.
+
+Put a letter in a square. After a green letter, the cursor goes to the next square of the same word, in the direction of the word. Green: the letter is correct. Yellow: this word has the letter in a different square. Red: this word does not have the letter. Make all squares green with the fewest mistakes.
 
 The letter keys show what you know about the selected square. ✗: the letter is not in this square. ↔: the word has the letter. A letter that you already know is wrong does not add a mistake.
 

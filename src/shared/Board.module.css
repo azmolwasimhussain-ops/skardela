@@ -73,7 +73,7 @@
   min-height: 2.75rem;
   padding: 0.5rem 1rem;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   background-color: var(--surface);
   text-align: center;
 }
@@ -89,10 +89,10 @@
 /* A secondary button has a soft fill and no border. */
 .button {
   justify-self: center;
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding: 0.5rem 1.25rem;
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   background-color: var(--surface-muted);
   color: var(--text-h);
   font-weight: 600;
@@ -110,13 +110,38 @@
   opacity: 0.6;
 }
 
-/* A secondary button with a box, for example the Hint button. The board uses both "button" and "boxed". */
+/* A secondary button with a box, for example the Hint button. The board uses both "button" and "boxed".
+   The light border is as in the redesign. The text of the button shows that it is a button. */
 .boxed {
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   background-color: var(--surface);
 }
 
 .boxed:hover:enabled {
-  border-color: var(--accent);
-  background-color: var(--surface);
+  border-color: var(--line);
+  background-color: var(--surface-muted);
+}
+
+/* A button for an action that deletes something, for example "Clear my data". Use it with "button" and "boxed".
+   The red outline shows the danger before the first click. */
+.danger {
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+
+.danger:hover:enabled {
+  border-color: var(--danger);
+  background-color: var(--danger-bg);
+}
+
+/* The button that does the delete, for example "Yes" in "Restart the puzzle?". It is filled with red. */
+.dangerSolid {
+  border-color: var(--danger);
+  background-color: var(--danger);
+  color: var(--on-danger);
+}
+
+.dangerSolid:hover:enabled {
+  border-color: var(--danger-hover);
+  background-color: var(--danger-hover);
 }

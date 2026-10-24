@@ -1,6 +1,6 @@
 import { getLogger } from "../../../shared/logger";
 import { useLifecycleLog } from "../../../shared/useLifecycleLog";
-import { useRecordSolved } from "../../../shared/useRecordSolved";
+import { usePlayTracking } from "../../../shared/playSession";
 import type { Move } from "./machine";
 import type { ColourBinaryPuzzle } from "./puzzle";
 
@@ -35,7 +35,7 @@ export function createMoveLog(log: Log, meta: Meta): (move: Move) => void {
 }
 
 // The start and the solve of a puzzle, with the details for Colour Binary. See "src/shared/useLifecycleLog.ts".
-// A solved puzzle also goes in the list of solved puzzles. See "src/shared/useRecordSolved.ts".
+// The play session gives the timer and saves the solve. See "src/shared/playSession.ts".
 export function useColourBinaryLifecycle(log: Log, meta: Meta, size: number, isSolved: boolean) {
   useLifecycleLog(log, {
     puzzleId: meta.puzzleId,
@@ -43,5 +43,5 @@ export function useColourBinaryLifecycle(log: Log, meta: Meta, size: number, isS
     started: { ...meta, size },
     solved: { ...meta, size },
   });
-  useRecordSolved(meta.puzzleId, isSolved);
+  usePlayTracking(meta, isSolved);
 }
