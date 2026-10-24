@@ -59,8 +59,10 @@ describe("colour-binary board", () => {
   it("shows that the puzzle is solved", async () => {
     const user = userEvent.setup();
     render(<Board puzzle={puzzle} />);
+    expect(screen.queryByTestId("confetti")).not.toBeInTheDocument();
     await fillAnswer(user);
     expect(screen.getByRole("status")).toHaveTextContent(words.status.solved);
     expect(screen.getByRole("button", { name: words.hintButton })).toBeDisabled();
+    expect(screen.getByTestId("confetti")).toBeInTheDocument();
   });
 });

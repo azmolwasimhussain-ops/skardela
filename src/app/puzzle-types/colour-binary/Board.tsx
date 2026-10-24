@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Confetti } from "../../../shared/Confetti";
 import { gridStyle } from "../../../shared/grid";
 import { getLogger } from "../../../shared/logger";
 import styles from "./Board.module.css";
@@ -110,6 +111,9 @@ function BoardView({
       <output className={shared.status} data-solved={isSolved}>
         {statusText(isSolved, hint, size)}
       </output>
+
+      {/* The confetti shows when the puzzle is solved. */}
+      {isSolved && <Confetti />}
 
       <button
         type="button"

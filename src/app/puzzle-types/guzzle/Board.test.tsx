@@ -63,6 +63,7 @@ describe("guzzle board result", () => {
     const user = userEvent.setup();
     render(<Board puzzle={puzzle} />);
     await user.click(screen.getByRole("button", { name: words.modes.bank }));
+    expect(screen.queryByTestId("confetti")).not.toBeInTheDocument();
 
     // Steps 2 to 5: two mistakes in the top-left square, then all correct letters.
     await typeLetters(user, [
@@ -79,6 +80,7 @@ describe("guzzle board result", () => {
     ]);
 
     expect(screen.getByText("You solved the puzzle. With bank, 2 mistakes.")).toBeInTheDocument();
+    expect(screen.getByTestId("confetti")).toBeInTheDocument();
   });
 
   it("does not add a mistake for the same wrong letter two times", async () => {

@@ -1,4 +1,5 @@
 import { useEffect, useRef, type KeyboardEvent } from "react";
+import { Confetti } from "../../../shared/Confetti";
 import { gridStyle } from "../../../shared/grid";
 import shared from "../../../shared/Board.module.css";
 import { text } from "../../../text/en";
@@ -137,13 +138,18 @@ function GridSquare({ answer, size, game, index }: GameProps & { index: number }
 }
 
 // The grid shows all squares in rows and columns.
+// When the puzzle is solved, the confetti shows. It is next to the grid and not in it,
+// because the grid has "container-type" and then the confetti cannot cover the full window.
 export function Grid({ answer, size, game }: GameProps) {
   return (
-    <div className={shared.grid} style={gridStyle(size)}>
-      {answer.map((_, index) => (
-        // oxlint-disable-next-line react/no-array-index-key -- the index is the identity of a square. The squares never move.
-        <GridSquare key={index} answer={answer} size={size} game={game} index={index} />
-      ))}
-    </div>
+    <>
+      <div className={shared.grid} style={gridStyle(size)}>
+        {answer.map((_, index) => (
+          // oxlint-disable-next-line react/no-array-index-key -- the index is the identity of a square. The squares never move.
+          <GridSquare key={index} answer={answer} size={size} game={game} index={index} />
+        ))}
+      </div>
+      {game.isSolved && <Confetti />}
+    </>
   );
 }
