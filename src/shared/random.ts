@@ -10,3 +10,12 @@ export function makeRandom(seed: number): () => number {
     return ((value ^ (value >>> 14)) >>> 0) / 4_294_967_296;
   };
 }
+
+// This helper selects one item of a list. It gives undefined for an empty list.
+// The default random source is "Math.random". A test can give a source from "makeRandom".
+export function pickOne<Item>(
+  items: readonly Item[],
+  random: () => number = Math.random,
+): Item | undefined {
+  return items[Math.floor(random() * items.length)];
+}

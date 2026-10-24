@@ -1,0 +1,33 @@
+/* The bar above the rules. The buttons fill one row and have almost the same width.
+   The text of a button stays on one line, so a button is never narrower than its text. */
+.bar {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* A shared button has a wide padding. In the narrow column, the bar uses a smaller one. */
+.bar > button {
+  flex: 1 1 0;
+  padding-inline: 0.75rem;
+  white-space: nowrap;
+}
+
+/* The question and its two answers fill the row in place of the two buttons. */
+.question {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.question > button {
+  padding-inline: 1rem;
+}
+
+/* A fast double click on "Restart" lands on this text. The text must not be selected then. */
+.questionText {
+  flex: 1;
+  color: var(--text-h);
+  font-weight: 600;
+  user-select: none;
+}

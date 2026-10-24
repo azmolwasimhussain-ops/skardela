@@ -1,5 +1,5 @@
-// Spanish translations for the application
-export const text = {
+// The text of the app frame in Spanish. See "src/text/en/app.ts" for the English text.
+export const app = {
   siteName: "Skardela",
   skipLink: "Saltar al contenido principal",
   nav: {

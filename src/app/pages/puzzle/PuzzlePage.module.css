@@ -10,7 +10,7 @@
 @media (min-width: 60rem) {
   .layout {
     grid-template-columns: minmax(16rem, 21rem) 1fr;
-    grid-template-areas: "rules play";
+    grid-template-areas: "side play";
     align-items: start;
     gap: 2.5rem;
   }
@@ -19,8 +19,9 @@
     grid-area: play;
   }
 
-  .rules {
-    grid-area: rules;
+  /* The actions and the rules stay on the screen when the page scrolls. */
+  .side {
+    grid-area: side;
     position: sticky;
     top: 1rem;
   }
@@ -28,6 +29,12 @@
 
 .play {
   min-width: 0;
+}
+
+/* The puzzle actions are on top of the rules. */
+.side {
+  display: grid;
+  gap: 1rem;
 }
 
 /* The title and its details are one group, so they are close together. */

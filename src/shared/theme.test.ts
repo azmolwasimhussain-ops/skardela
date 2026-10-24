@@ -1,31 +1,14 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import indexHtml from "../../index.html?raw";
-import { applyTheme, readTheme, saveTheme, themeStorageKey } from "./theme";
+import { afterEach, describe, expect, it } from "vitest";
+import { applyTheme, isTheme } from "./theme";
 
 afterEach(() => {
-  localStorage.clear();
   delete document.documentElement.dataset.theme;
 });
 
 describe("theme", () => {
-  it("gives the system theme when no theme is saved or the saved value is not known", () => {
-    expect(readTheme()).toBe("system");
-    localStorage.setItem(themeStorageKey, "purple");
-    expect(readTheme()).toBe("system");
-  });
-
-  it("saves and reads a theme", () => {
-    saveTheme("dark");
-    expect(readTheme()).toBe("dark");
-    saveTheme("system");
-    expect(localStorage.getItem(themeStorageKey)).toBeNull();
-  });
-
-  it("gives the system theme when the browser blocks storage", () => {
-    vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
-      throw new Error("Storage is blocked");
-    });
-    expect(readTheme()).toBe("system");
+  it("knows the three themes", () => {
+    expect(["system", "light", "dark"].every((value) => isTheme(value))).toBe(true);
+    expect([undefined, null, "purple", 1].some((value) => isTheme(value))).toBe(false);
   });
 
   it("sets data-theme on the page, and removes it for the system theme", () => {
@@ -33,9 +16,5 @@ describe("theme", () => {
     expect(document.documentElement.dataset.theme).toBe("light");
     applyTheme("system");
     expect(Object.hasOwn(document.documentElement.dataset, "theme")).toBe(false);
-  });
-
-  it("uses the same storage key as the script in index.html", () => {
-    expect(indexHtml).toContain(`localStorage.getItem("${themeStorageKey}")`);
   });
 });

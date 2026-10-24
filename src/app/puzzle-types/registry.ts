@@ -6,7 +6,7 @@ import { decipherPuzzles } from "../../shared/cipher";
 // This file is the list of all puzzle types and their puzzle files.
 // To add a puzzle type, add its puzzle type to "PuzzleMap" and add one entry to "puzzleTypes".
 // TypeScript then shows an error in each place that needs more work:
-// the board in "boards.ts", the text in "src/text/en.ts" and the data check in "tools/puzzles.test.ts".
+// the board in "boards.ts", the text in "src/text/en/index.ts" and the data check in "tools/puzzles.test.ts".
 // This file has no React code, so the data checks in "tools/" can use it too.
 
 // Each puzzle type name, with the type of one puzzle of that type.

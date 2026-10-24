@@ -17,7 +17,7 @@ Rules for AI agents working in the Skardela project.
 - Follow the current project structure in `src/`.
 - Keep the puzzle logic browser-safe and pure.
 - Keep UI text simple and accessible.
-- Put all UI text in `src/text/en.ts` and all emoji symbols in `src/text/symbols.ts`.
+- Put all UI text in the `src/text/en/` folder and all emoji symbols in `src/text/symbols.ts`.
 - Use the shared code in `src/shared/` before you write new code.
 - Prefer the existing stack and patterns over new abstractions.
 

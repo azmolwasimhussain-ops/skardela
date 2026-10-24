@@ -33,14 +33,19 @@ src/
     routes.tsx               All pages and their URLs.
     puzzles.ts               Loads puzzles for the home page and the puzzle page.
     daily.ts                 Selects the puzzles of the day.
-    pages/                   One file for each page.
+    AnalyticsNotice.tsx      The notice for new players. Analytics loads only after the OK.
+    pages/                   One file or one folder for each page.
+      home/                  The home page. One file for each section.
+      puzzle/                The puzzle page, with the Restart and Random puzzle buttons.
     puzzle-types/
       registry.ts            The list of puzzle types and their puzzle files.
       boards.ts              The board component of each puzzle type.
       <type>/                One folder for each puzzle type. See below.
   shared/                    Code that more than one puzzle type uses.
+    settings.ts              The saved settings, in one localStorage item. Use "useSetting.ts" in a component.
   text/
-    en.ts                    All UI text.
+    en/                      All UI text. "index.ts" puts the parts together. One file for each page and puzzle type.
+    es/                      Spanish text, with the same structure. The app does not use it yet.
     symbols.ts               All emoji symbols.
 ```
 
@@ -72,7 +77,8 @@ parts into their own files. See `guzzle/` for an example: `useGame.ts`, `Grid.ts
 4. In `src/app/puzzle-types/registry.ts`, add your type to `PuzzleMap` and to `puzzleTypes`.
 5. Run `npm run typecheck`. TypeScript then shows each place that needs your type:
    - `src/app/puzzle-types/boards.ts`: your board component.
-   - `src/text/en.ts`: your UI text, with `name`, `summary` and `rules`.
+   - `src/text/en/index.ts`: your UI text. Put it in a new file `src/text/en/<type>.ts`, with `name`,
+     `summary`, `tagline` and `rules`. Then add it to `index.ts` with the name of your type.
    - `tools/puzzles.test.ts`: your example and your data check.
 6. Put emoji symbols in `src/text/symbols.ts`, not in other files.
 7. Add tests for your rule logic and your board.
@@ -81,7 +87,7 @@ parts into their own files. See `guzzle/` for an example: `useGame.ts`, `Grid.ts
 ## Rules for code
 
 - Use strict TypeScript. Do not use `any` or `@ts-ignore`.
-- Put all UI text in `src/text/en.ts`. Put all emoji symbols in `src/text/symbols.ts`.
+- Put all UI text in the `src/text/en/` folder. Put all emoji symbols in `src/text/symbols.ts`.
 - Use the shared code in `src/shared/` before you write new code. For example `RuleList`,
   `Board.module.css`, `gridStyle` and `PuzzleBase`.
 - Make each control work with a keyboard and a screen reader. Do not use colour as the only signal.

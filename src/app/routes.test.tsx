@@ -18,7 +18,7 @@ describe("routes", () => {
   it("shows the home page at /", async () => {
     renderAt("/");
     expect(
-      await screen.findByRole("heading", { level: 1, name: text.home.title }),
+      await screen.findByRole("heading", { level: 1, name: text.home.hero.title }),
     ).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: text.nav.label })).toBeInTheDocument();
   });

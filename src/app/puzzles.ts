@@ -8,9 +8,10 @@ import {
 } from "./puzzle-types/registry";
 
 // One puzzle with the name of its type. The type tells the page which board to show.
+// "others" has the IDs of the other puzzles of the same type and level. The "Random puzzle" button uses them.
 export type LoadedPuzzle = {
   [Type in PuzzleType]: { type: Type; puzzle: PuzzleMap[Type] };
-}[PuzzleType];
+}[PuzzleType] & { readonly others: readonly string[] };
 
 // A puzzle ID has the form: type-number, with a number of 4 digits, such as colour-binary-0001.
 // The loader checks the format, loads the correct puzzle file, and returns one item if it exists.
@@ -19,7 +20,11 @@ export async function loadPuzzle(id: string): Promise<LoadedPuzzle | null> {
   if (type === undefined || !isPuzzleType(type)) return null;
   const puzzles: readonly PuzzleMap[PuzzleType][] = await puzzleTypes[type].loadPuzzles();
   const puzzle = puzzles.find((item) => item.id === id);
-  return puzzle ? ({ type, puzzle } as LoadedPuzzle) : null;
+  if (!puzzle) return null;
+  const others = puzzles
+    .filter((item) => item.difficulty === puzzle.difficulty && item.id !== puzzle.id)
+    .map((item) => item.id);
+  return { type, puzzle, others } as LoadedPuzzle;
 }
 
 export function puzzleLoader({ params }: LoaderFunctionArgs): Promise<LoadedPuzzle | null> {

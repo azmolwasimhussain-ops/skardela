@@ -11,7 +11,9 @@ export function RouteError() {
   useEffect(() => {
     const log = getLogger("app.route-error");
     if (isRouteErrorResponse(error)) {
-      log.error("Route error response", {
+      // The second argument of "error" is the error. A response is not an error, thus it is undefined,
+      // and the status goes in the details.
+      log.error("Route error response", undefined, {
         status: error.status,
         statusText: error.statusText,
       });

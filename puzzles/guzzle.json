@@ -208,5 +208,215 @@
       "diagonalDown": "Numbers such as 1, 2 and 3",
       "diagonalUp": "Books in a series, or levels of sound"
     }
+  },
+  {
+    "id": "guzzle-0016",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["FCM", "HAT", "JRN"],
+    "clues": {
+      "across": "You wear it on your head",
+      "down": "It has four wheels and an engine",
+      "diagonalDown": "It moves air to keep you cool",
+      "diagonalUp": "Sweet fruit that you put on bread"
+    }
+  },
+  {
+    "id": "guzzle-0017",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["NWN", "HEN", "TBT"],
+    "clues": {
+      "across": "A female chicken",
+      "down": "A spider makes it to catch insects",
+      "diagonalDown": "You catch fish with it",
+      "diagonalUp": "The number after nine"
+    }
+  },
+  {
+    "id": "guzzle-0018",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["PFP", "COW", "MXT"],
+    "clues": {
+      "across": "A farm animal that gives milk",
+      "down": "A wild animal with red fur and a long tail",
+      "diagonalDown": "You cook soup in it",
+      "diagonalUp": "You clean the floor with it"
+    }
+  },
+  {
+    "id": "guzzle-0019",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["WKP", "SIX", "ZDN"],
+    "clues": {
+      "across": "The number after five",
+      "down": "A young child",
+      "diagonalDown": "To be first in a game",
+      "diagonalUp": "It closes a coat or a bag"
+    }
+  },
+  {
+    "id": "guzzle-0020",
+    "type": "guzzle",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["JMM", "HUT", "GDG"],
+    "clues": {
+      "across": "A small, simple house",
+      "down": "Wet, soft earth",
+      "diagonalDown": "You pour water or milk from it",
+      "diagonalUp": "You chew it, but you do not swallow it"
+    }
+  },
+  {
+    "id": "guzzle-0021",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["S.C.E", ".HHT.", "TRAIN", ".LIR.", "P.R.K"],
+    "clues": {
+      "across": "It runs on rails and carries people",
+      "down": "A seat with a back, for one person",
+      "diagonalDown": "A big fish with sharp teeth",
+      "diagonalUp": "You put your food on it"
+    }
+  },
+  {
+    "id": "guzzle-0022",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["G.P.E", ".LHK.", "CLOCK", ".MNV.", "S.E.E"],
+    "clues": {
+      "across": "It shows the time on a wall",
+      "down": "You use it to call people",
+      "diagonalDown": "You wear it on your hand",
+      "diagonalUp": "Grey air that comes from a fire"
+    }
+  },
+  {
+    "id": "guzzle-0023",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["O.S.M", ".CLA.", "QUEEN", ".REA.", "D.P.N"],
+    "clues": {
+      "across": "A woman who rules a country",
+      "down": "What you do in bed at night",
+      "diagonalDown": "A very large area of salt water",
+      "diagonalUp": "Pictures in your mind while you sleep"
+    }
+  },
+  {
+    "id": "guzzle-0024",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["S.J.T", ".MUE.", "KNIFE", ".UCL.", "Q.E.E"],
+    "clues": {
+      "across": "You cut food with it",
+      "down": "A drink made from fruit",
+      "diagonalDown": "Your face does this when you are happy",
+      "diagonalUp": "Not loud"
+    }
+  },
+  {
+    "id": "guzzle-0025",
+    "type": "guzzle",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["T.M.B", ".ROM.", "MOUSE", ".RTN.", "C.H.K"],
+    "clues": {
+      "across": "A small animal with a long tail",
+      "down": "You eat and speak with it",
+      "diagonalDown": "The thick wood part of a tree",
+      "diagonalUp": "A very small piece of bread"
+    }
+  },
+  {
+    "id": "guzzle-0026",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["H..S..E", ".A.P.G.", "..IAA..", "LIBRARY", "..ORC..", ".T.O.U.", "S..W..T"],
+    "clues": {
+      "across": "A building where you can borrow books",
+      "down": "A small brown bird",
+      "diagonalDown": "A barber gives you this",
+      "diagonalUp": "Space where you keep things"
+    }
+  },
+  {
+    "id": "guzzle-0027",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["K..D..N", ".I.E.I.", "..TNA..", "PICTURE", "..PIE..", ".A.S.N.", "C..T..S"],
+    "clues": {
+      "across": "A painting or a photo",
+      "down": "A doctor for your teeth",
+      "diagonalDown": "Young cats",
+      "diagonalUp": "The person in charge of a ship"
+    }
+  },
+  {
+    "id": "guzzle-0028",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["C..B..S", ".O.L.T.", "..UAU..", "PLANETS", "..AKT..", ".E.E.R.", "P..T..Y"],
+    "clues": {
+      "across": "Earth and Mars, for example",
+      "down": "A warm cover for a bed",
+      "diagonalDown": "France or Japan, for example",
+      "diagonalUp": "Small nuts that grow under the ground"
+    }
+  },
+  {
+    "id": "guzzle-0029",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["M..G..R", ".O.L.E.", "..NAT..", "MESSAGE", "..MST..", ".A.E.E.", "H..S..R"],
+    "clues": {
+      "across": "Words that you send to a person",
+      "down": "You wear them to see better",
+      "diagonalDown": "A scary creature in a story",
+      "diagonalUp": "A small pet that runs in a wheel"
+    }
+  },
+  {
+    "id": "guzzle-0030",
+    "type": "guzzle",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "answer": ["V..T..N", ".O.E.E.", "..LAK..", "KITCHEN", "..IHA..", ".H.E.N.", "C..R..O"],
+    "clues": {
+      "across": "The room where you cook",
+      "down": "A person who helps you learn at school",
+      "diagonalDown": "A mountain that can throw out hot rock",
+      "diagonalUp": "A farm bird that lays eggs"
+    }
   }
 ]

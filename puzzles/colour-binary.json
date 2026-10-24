@@ -448,5 +448,455 @@
       "BRRBRRBB",
       "BBRBRRBR"
     ]
+  },
+  {
+    "id": "colour-binary-0031",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [".R..", "...R", "RB.R", "RB.B"],
+    "answer": ["BRRB", "BRBR", "RBBR", "RBRB"]
+  },
+  {
+    "id": "colour-binary-0032",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["..BB", "..R.", ".BRR", "RB.."],
+    "answer": ["RRBB", "BRRB", "BBRR", "RBBR"]
+  },
+  {
+    "id": "colour-binary-0033",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["BBR.", "..BB", "BB..", "...B"],
+    "answer": ["BBRR", "RRBB", "BBRR", "RRBB"]
+  },
+  {
+    "id": "colour-binary-0034",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["BB..", ".BB.", "..RB", "R.B."],
+    "answer": ["BBRR", "RBBR", "BRRB", "RRBB"]
+  },
+  {
+    "id": "colour-binary-0035",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [".BRR", "...R", ".RB.", ".RB."],
+    "answer": ["BBRR", "BBRR", "RRBB", "RRBB"]
+  },
+  {
+    "id": "colour-binary-0036",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [".BRR", "B.RB", "...B", ".B.."],
+    "answer": ["BBRR", "BRRB", "RRBB", "RBBR"]
+  },
+  {
+    "id": "colour-binary-0037",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["..RR", "R..B", "..B.", "BRB."],
+    "answer": ["BBRR", "RBRB", "RRBB", "BRBR"]
+  },
+  {
+    "id": "colour-binary-0038",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["...B", "B..R", "RB..", "RR.B"],
+    "answer": ["BRRB", "BBRR", "RBBR", "RRBB"]
+  },
+  {
+    "id": "colour-binary-0039",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["....", "B.RB", ".BB.", "R.BB"],
+    "answer": ["BBRR", "BRRB", "RBBR", "RRBB"]
+  },
+  {
+    "id": "colour-binary-0040",
+    "type": "colour-binary",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["....", "BBRR", "RBR.", "...B"],
+    "answer": ["BRBR", "BBRR", "RBRB", "RRBB"]
+  },
+  {
+    "id": "colour-binary-0041",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["...BB.", "BRB..R", "...BR.", "B....R", "RR.B.B", "RBB..."],
+    "answer": ["BRRBBR", "BRBRBR", "RBRBRB", "BBRRBR", "RRBBRB", "RBBRRB"]
+  },
+  {
+    "id": "colour-binary-0042",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [".RB.RB", "R.B..R", "BBR.RR", "....RB", "..B...", "BB...."],
+    "answer": ["RRBBRB", "RBBRBR", "BBRBRR", "BRRBRB", "RRBRBB", "BBRRBR"]
+  },
+  {
+    "id": "colour-binary-0043",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [".BRRBR", ".....B", "BB.R..", "..B...", ".B.BRB", "R.BB.."],
+    "answer": ["BBRRBR", "RRBBRB", "BBRRBR", "BRBRBR", "RBRBRB", "RRBBRB"]
+  },
+  {
+    "id": "colour-binary-0044",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["B.....", ".R..RR", "..RBRB", ".RBRB.", "BR....", "RB..B."],
+    "answer": ["BBRRBR", "BRBBRR", "RBRBRB", "RRBRBB", "BRBBRR", "RBRRBB"]
+  },
+  {
+    "id": "colour-binary-0045",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["BB.R.R", "BB.B..", "..BR..", ".B.R.R", "R...RB", "R.B..."],
+    "answer": ["BBRRBR", "BBRBRR", "RRBRBB", "BBRRBR", "RRBBRB", "RRBBRB"]
+  },
+  {
+    "id": "colour-binary-0046",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [".B.R.R", "RB..B.", "B..B.B", "R.RRB.", ".R....", ".RBB.."],
+    "answer": ["BBRRBR", "RBBRBR", "BRRBRB", "RBRRBB", "BRBBRR", "RRBBRB"]
+  },
+  {
+    "id": "colour-binary-0047",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["B.R...", "R..B..", "B.BRRB", "B.R..B", ".B..B.", ".RBR.."],
+    "answer": ["BBRBRR", "RBRBBR", "BRBRRB", "BRRBRB", "RBBRBR", "RRBRBB"]
+  },
+  {
+    "id": "colour-binary-0048",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["..RB.R", "...BRB", ".BB...", ".BRRBR", "B..BR.", ".....R"],
+    "answer": ["BRRBBR", "RRBBRB", "RBBRRB", "BBRRBR", "BRRBRB", "RBBRBR"]
+  },
+  {
+    "id": "colour-binary-0049",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["BB..B.", "R.....", "RRB...", "B.R.B.", "..BR.B", ".RRB.B"],
+    "answer": ["BBRRBR", "RBBRBR", "RRBBRB", "BRRBBR", "RBBRRB", "BRRBRB"]
+  },
+  {
+    "id": "colour-binary-0050",
+    "type": "colour-binary",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": ["B...BR", "..BBR.", "BBR.B.", "R..B..", "..R..R", ".BRB.."],
+    "answer": ["BRBRBR", "RRBBRB", "BBRRBR", "RRBBRB", "BBRRBR", "RBRBRB"]
+  },
+  {
+    "id": "colour-binary-0051",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      "..RBBRB.",
+      "B.BB.R..",
+      "..BR....",
+      "BB.R.R..",
+      ".RB..B.R",
+      "..B.BB..",
+      ".R...R..",
+      "...R..R."
+    ],
+    "answer": [
+      "BRRBBRBR",
+      "BRBBRRBR",
+      "RBBRRBRB",
+      "BBRRBRRB",
+      "RRBBRBBR",
+      "RBBRBBRR",
+      "BRRBRRBB",
+      "RBRRBBRB"
+    ]
+  },
+  {
+    "id": "colour-binary-0052",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      ".......B",
+      ".....B..",
+      "BB.RBBR.",
+      ".B.BBR.R",
+      "....R.RB",
+      "BBR.....",
+      "B....RB.",
+      "R....RBR"
+    ],
+    "answer": [
+      "RRBBRRBB",
+      "BRBRRBRB",
+      "BBRRBBRR",
+      "RBRBBRBR",
+      "RRBBRBRB",
+      "BBRRBBRR",
+      "BRRBRRBB",
+      "RBBRBRBR"
+    ]
+  },
+  {
+    "id": "colour-binary-0053",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      "...R..R.",
+      "...R..R.",
+      "..B...BB",
+      "BBR.B.RB",
+      "..B.R.B.",
+      ".BBR.B.B",
+      "..R....R",
+      "..B..B.R"
+    ],
+    "answer": [
+      "BBRRBRRB",
+      "BBRRBBRR",
+      "RRBBRRBB",
+      "BBRRBRRB",
+      "RRBBRBBR",
+      "RBBRRBRB",
+      "BRRBBRBR",
+      "RRBBRBBR"
+    ]
+  },
+  {
+    "id": "colour-binary-0054",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      "...RB..R",
+      ".B..R...",
+      "R....R.B",
+      "....B..R",
+      "RR...B..",
+      "..R.BR.B",
+      "RRB...BR",
+      "RR..R.B."
+    ],
+    "answer": [
+      "BBRRBBRR",
+      "BBRBRBRR",
+      "RRBRBRBB",
+      "BBRRBRBR",
+      "RRBBRBRB",
+      "BBRRBRRB",
+      "RRBBRBBR",
+      "RRBBRRBB"
+    ]
+  },
+  {
+    "id": "colour-binary-0055",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      "BBR.B..R",
+      ".BB.B.R.",
+      "......BB",
+      ".R.B...R",
+      "R...B..R",
+      "R.R.....",
+      ".R..R.B.",
+      "B.RB.B.."
+    ],
+    "answer": [
+      "BBRRBBRR",
+      "RBBRBRRB",
+      "RRBBRRBB",
+      "BRRBRBBR",
+      "RBBRBBRR",
+      "RBRRBRBB",
+      "BRBBRRBR",
+      "BRRBRBRB"
+    ]
+  },
+  {
+    "id": "colour-binary-0056",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      "B.RR.R..",
+      ".R.R.RB.",
+      "R..BR.R.",
+      "R.B.....",
+      "....R.RR",
+      "....RR.B",
+      "B.B....R",
+      "RR.....R"
+    ],
+    "answer": [
+      "BBRRBRRB",
+      "BRBRBRBR",
+      "RBRBRBRB",
+      "RRBRBRBB",
+      "BBRBRBRR",
+      "RBRBRRBB",
+      "BRBRBBRR",
+      "RRBBRBBR"
+    ]
+  },
+  {
+    "id": "colour-binary-0057",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      "BB.BR..R",
+      "....BB.R",
+      "...RB...",
+      ".......R",
+      "..R..R.B",
+      "RR..B.B.",
+      "R.BR.BR.",
+      "BR...R.."
+    ],
+    "answer": [
+      "BBRBRBRR",
+      "RBBRBBRR",
+      "RRBRBRBB",
+      "BBRBRBRR",
+      "BRRBRRBB",
+      "RRBRBRBB",
+      "RBBRBBRR",
+      "BRRBRRBB"
+    ]
+  },
+  {
+    "id": "colour-binary-0058",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      "......R.",
+      "..R.R.RR",
+      ".R...R.B",
+      "...R..R.",
+      "..BB.B..",
+      "R.B..BR.",
+      "...BR..R",
+      "RBBR.B.R"
+    ],
+    "answer": [
+      "BRRBBRRB",
+      "BBRBRBRR",
+      "RRBRBRBB",
+      "BBRRBRRB",
+      "RRBBRBBR",
+      "RRBRBBRB",
+      "BBRBRRBR",
+      "RBBRRBBR"
+    ]
+  },
+  {
+    "id": "colour-binary-0059",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      "BB.R.RR.",
+      ".B..R.B.",
+      "R.B.....",
+      "...RB...",
+      "B...RB.B",
+      ".RBBRR.R",
+      "R.RR....",
+      "....R..."
+    ],
+    "answer": [
+      "BBRRBRRB",
+      "BBRBRRBR",
+      "RRBRBBRB",
+      "RBBRBRBR",
+      "BRRBRBRB",
+      "BRBBRRBR",
+      "RBRRBBRB",
+      "RRBBRBBR"
+    ]
+  },
+  {
+    "id": "colour-binary-0060",
+    "type": "colour-binary",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "start": [
+      "...RB...",
+      "R.R.B.RB",
+      "..R....R",
+      "BR...B.B",
+      "R..R..BB",
+      "....B..R",
+      "..BR....",
+      "B.R.RRB."
+    ],
+    "answer": [
+      "BRBRBBRR",
+      "RBRBBRRB",
+      "RBRBRBBR",
+      "BRBRRBRB",
+      "RRBRBRBB",
+      "RBRBBRBR",
+      "BRBRRBRB",
+      "BBRBRRBR"
+    ]
   }
 ]

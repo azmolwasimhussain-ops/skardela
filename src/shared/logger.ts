@@ -15,4 +15,8 @@ configure({
   minLevel: level,
   // Use the object form so level and styles can change independently in later configure calls.
   console: { level },
+  // The library sends nothing ("endpoint: null"), thus a captured uncaught error goes only to the console.
+  // The browser already prints each uncaught error, so the capture prints it a second time.
+  // With the capture off, the library also does not load its error capture code.
+  capture: { errors: false, rejections: false },
 });

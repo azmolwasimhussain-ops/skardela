@@ -79,6 +79,12 @@ describe.each(Object.keys(puzzleTypes) as PuzzleType[])("%s puzzle file", (type)
     expect(ids.filter((id, index) => ids.indexOf(id) !== index)).toEqual([]);
   });
 
+  // A copy of a puzzle with a different ID gives the player the same puzzle two times.
+  it("has different content for each puzzle", async () => {
+    const contents = (await load()).map((puzzle) => JSON.stringify({ ...puzzle, id: undefined }));
+    expect(contents.filter((content, index) => contents.indexOf(content) !== index)).toEqual([]);
+  });
+
   it("has at least one puzzle for each level", async () => {
     const puzzles = await load();
     const missing = levels.filter(

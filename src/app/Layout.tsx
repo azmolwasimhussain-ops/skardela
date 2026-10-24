@@ -1,5 +1,6 @@
 import { Link, Outlet } from "react-router";
 import { text } from "../text/en";
+import { AnalyticsNotice } from "./AnalyticsNotice";
 import styles from "./Layout.module.css";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 
@@ -28,6 +29,8 @@ export function Layout() {
       <footer className={styles.footer}>
         <p>{text.footer.content(currentYear)}</p>
       </footer>
+      {/* The notice shows on each page, because a new player can open a puzzle link first. */}
+      <AnalyticsNotice />
     </>
   );
 }
