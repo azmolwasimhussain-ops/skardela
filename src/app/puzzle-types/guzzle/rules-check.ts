@@ -62,3 +62,47 @@ export function nextOpenSquare(guesses: Guesses, from: number, size: number): nu
   }
   return null;
 }
+
+// One move of the player: a letter in a square and its colour.
+export type Move = { readonly index: number; readonly guess: Guess };
+
+// What the player knows about a letter for the selected square. The letter keys show it.
+// "wrong": the letter is not in this square. The word does not have the letter (red),
+// or the player already put the letter in this square and it was not green.
+// "inWord": the letter is yellow in a different square of the word. Thus the word has the letter,
+// and it can be in this square.
+export type KeyHint = "wrong" | "inWord";
+
+// This function finds the key hints for a square from the earlier moves.
+// It uses only the center letter of the answer. The player can see the center letter.
+export function keyHints(
+  answer: readonly string[],
+  moves: readonly Move[],
+  index: number,
+): Map<string, KeyHint> {
+  const size = Math.sqrt(answer.length);
+  const line = lineOf(index, size);
+  const hints = new Map<string, KeyHint>();
+  if (line === undefined) return hints;
+  const word = lineIndexes(line, size);
+  const wordMoves = moves.filter((move) => word.includes(move.index));
+
+  for (const { index: square, guess } of wordMoves) {
+    if (guess.mark === "absent" || (square === index && guess.mark !== "correct")) {
+      hints.set(guess.letter, "wrong");
+    }
+  }
+
+  // A green letter or the center letter can be the cause of a yellow letter.
+  // Then the word maybe has no more of that letter, thus the key gets no "inWord" hint.
+  const found = new Set([
+    answer[(answer.length - 1) / 2],
+    ...wordMoves.filter((move) => move.guess.mark === "correct").map((move) => move.guess.letter),
+  ]);
+  for (const { index: square, guess } of wordMoves) {
+    const isNew = !hints.has(guess.letter) && !found.has(guess.letter);
+    if (guess.mark === "present" && square !== index && isNew) hints.set(guess.letter, "inWord");
+  }
+
+  return hints;
+}

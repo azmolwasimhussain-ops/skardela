@@ -50,8 +50,9 @@ describe("guzzle board feedback", () => {
     expect(screen.getByText(words.mistakes(2))).toBeInTheDocument();
 
     // Step 4: N in the bottom-right square is green. The bank does not show N now.
+    // Before the move, the N key has the "inWord" hint, because N was yellow in the same word.
     await user.click(square(3, 3));
-    await user.click(screen.getByRole("button", { name: words.key("N", 1) }));
+    await user.click(screen.getByRole("button", { name: words.key("N", 1, "inWord") }));
     expect(square(3, 3)).toHaveAttribute("data-mark", "correct");
     expect(bank).toHaveTextContent("BCGMPRT");
   });
@@ -91,6 +92,55 @@ describe("guzzle board result", () => {
     expect(
       screen.getByText(words.status.absent("T", words.lines.diagonalDown)),
     ).toBeInTheDocument();
+  });
+});
+
+describe("guzzle board direction and clues", () => {
+  it("shows an arrow on the first square of each word", () => {
+    render(<Board puzzle={puzzle} />);
+    expect(square(1, 1)).toHaveAccessibleName(
+      `Row 1, column 1, empty, ${words.start(words.lines.diagonalDown)}`,
+    );
+    expect(square(3, 1)).toHaveTextContent(words.symbols.arrows.diagonalUp);
+    expect(square(3, 3)).toHaveAccessibleName("Row 3, column 3, empty");
+  });
+
+  it("marks the clue and the squares of the selected word", async () => {
+    const user = userEvent.setup();
+    render(<Board puzzle={puzzle} />);
+    await user.click(screen.getByRole("button", { name: words.modes.noBank }));
+    await user.click(square(1, 3));
+
+    // The top-right square is the last letter of MAP, the diagonal from the bottom left.
+    const clues = screen.getByRole("list", { name: words.cluesLabel });
+    const current = clues.querySelector('[aria-current="true"]');
+    expect(current).toHaveTextContent(words.clueLines.diagonalUp);
+    expect(current).toHaveTextContent(words.position(3, 3));
+    expect(current).toHaveTextContent(puzzle.clues.diagonalUp);
+    expect(square(3, 1)).toHaveAttribute("data-in-word", "true");
+    expect(square(1, 1)).toHaveAttribute("data-in-word", "false");
+  });
+});
+
+describe("guzzle board key hints", () => {
+  it("marks the keys and adds no mistake for a letter that is known to be wrong", async () => {
+    const user = userEvent.setup();
+    render(<Board puzzle={puzzle} />);
+    await user.click(screen.getByRole("button", { name: words.modes.noBank }));
+
+    // T is red and N is yellow in the top-left square. Then the bottom-right square is selected.
+    await typeLetters(user, [
+      [1, 1, "T"],
+      [1, 1, "N"],
+    ]);
+    await user.click(square(3, 3));
+    expect(screen.getByRole("button", { name: words.key("T", undefined, "wrong") })).toBeVisible();
+    expect(screen.getByRole("button", { name: words.key("N", undefined, "inWord") })).toBeVisible();
+
+    // T in the bottom-right square is red, but the player already knew that. The mistakes stay at 2.
+    await user.keyboard("t");
+    expect(square(3, 3)).toHaveAttribute("data-mark", "absent");
+    expect(screen.getByText(words.mistakes(2))).toBeInTheDocument();
   });
 });
 

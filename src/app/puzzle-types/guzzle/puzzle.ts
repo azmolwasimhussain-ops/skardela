@@ -1,15 +1,17 @@
 import type { Difficulty } from "../../../shared/difficulty";
 import type { PuzzleBase } from "../../../shared/puzzle";
 
+// The four words cross at the center square.
+// "diagonalDown" starts at the top left. "diagonalUp" starts at the bottom left.
+export type Line = "across" | "down" | "diagonalDown" | "diagonalUp";
+
 export type GuzzlePuzzle = PuzzleBase & {
   readonly type: "guzzle";
   // Each row has one letter for each square. A "." is a square that is not on a word.
   readonly answer: readonly string[];
+  // One short clue for each word. With the clues, a player can find the words without the bank.
+  readonly clues: Readonly<Record<Line, string>>;
 };
-
-// The four words cross at the center square.
-// "diagonalDown" starts at the top left. "diagonalUp" starts at the bottom left.
-export type Line = "across" | "down" | "diagonalDown" | "diagonalUp";
 
 export const lineNames: readonly Line[] = ["across", "down", "diagonalDown", "diagonalUp"];
 
@@ -54,6 +56,11 @@ export function lineIndexes(line: Line, size: number): number[] {
   }
 }
 
+// This helper finds the word that starts at a square. The board shows an arrow on that square.
+export function lineStartingAt(index: number, size: number): Line | undefined {
+  return lineNames.find((line) => lineIndexes(line, size)[0] === index);
+}
+
 // This helper reads the four words from the answer rows.
 export function wordsOf(answer: readonly string[]): Record<Line, string> {
   const squares = toSquares(answer);
@@ -93,6 +100,19 @@ export function findPuzzleProblems(puzzle: GuzzlePuzzle): string[] {
     }
     if (!isOnWord && square !== ".") {
       problems.push(`Row ${row + 1}, column ${column + 1} is not on a word. It must be ".".`);
+    }
+  }
+
+  // Each word needs a clue. A clue must not show its own word.
+  // The data comes from a JSON file, thus a clue can be missing.
+  const clues = puzzle.clues as Partial<Record<Line, unknown>> | undefined;
+  const words = wordsOf(rows);
+  for (const line of lineNames) {
+    const value = clues?.[line];
+    const clue = typeof value === "string" ? value.trim() : "";
+    if (clue === "") problems.push(`"clues.${line}" must not be empty.`);
+    if (clue.toUpperCase().includes(words[line])) {
+      problems.push(`"clues.${line}" must not have the word "${words[line]}".`);
     }
   }
 
