@@ -3,6 +3,7 @@ import { gridStyle } from "../../../shared/grid";
 import shared from "../../../shared/Board.module.css";
 import { text } from "../../../text/en";
 import styles from "./Board.module.css";
+import { lineOf, lineStartingAt, type Line } from "./puzzle";
 import { isPlayable, type Guess } from "./rules-check";
 import type { Game } from "./useGame";
 
@@ -34,6 +35,8 @@ type SquareProps = {
   guess: Guess | undefined;
   isFixed?: boolean;
   isSelected?: boolean;
+  isInWord?: boolean;
+  start?: Line;
   isLocked: boolean;
   onSelect?: () => void;
   onLetter?: (letter: string) => void;
@@ -41,12 +44,16 @@ type SquareProps = {
 
 // Each square on a word is a button. The player selects a square and then types a letter.
 // The symbol shows the colour as a shape too, so the colour is not the only signal.
+// The first square of a word shows an arrow. The arrow shows the direction to read the word.
+// "isInWord" marks the other squares of the selected word, so the player can see the full word.
 function SquareButton({
   label,
   letter,
   guess,
   isFixed = false,
   isSelected = false,
+  isInWord = false,
+  start,
   isLocked,
   onSelect,
   onLetter,
@@ -61,6 +68,7 @@ function SquareButton({
       data-mark={guess?.mark ?? "none"}
       data-fixed={isFixed}
       data-selected={isSelected}
+      data-in-word={isInWord}
       aria-label={label}
       aria-pressed={isFixed ? undefined : isSelected}
       aria-disabled={isLocked}
@@ -74,6 +82,11 @@ function SquareButton({
         onLetter?.(typed);
       }}
     >
+      {start !== undefined && (
+        <span aria-hidden="true" className={styles.arrow}>
+          {words.symbols.arrows[start]}
+        </span>
+      )}
       <span aria-hidden="true">{letter}</span>
       {guess !== undefined && (
         <span aria-hidden="true" className={styles.symbol}>
@@ -95,12 +108,15 @@ function GridSquare({ answer, size, game, index }: GameProps & { index: number }
   }
   const guess = isCenter ? undefined : game.guesses[index];
   const letter = isCenter ? (answer[index] ?? "") : (guess?.letter ?? "");
+  const start = lineStartingAt(index, size);
+  const selectedLine = game.selected === null ? undefined : lineOf(game.selected, size);
   const label = words.square({
     row: Math.floor(index / size) + 1,
     column: (index % size) + 1,
     letter,
     mark: guess === undefined ? "" : words.marks[guess.mark],
     isFixed: isCenter,
+    start: start === undefined ? "" : words.start(words.lines[start]),
   });
   return (
     <SquareButton
@@ -109,6 +125,8 @@ function GridSquare({ answer, size, game, index }: GameProps & { index: number }
       guess={guess}
       isFixed={isCenter}
       isSelected={game.selected === index}
+      isInWord={selectedLine !== undefined && lineOf(index, size) === selectedLine}
+      start={start}
       isLocked={isCenter || game.mode === null || game.isSolved || guess?.mark === "correct"}
       onSelect={() => {
         game.setSelected(index);

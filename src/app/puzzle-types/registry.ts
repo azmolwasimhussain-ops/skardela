@@ -1,5 +1,6 @@
 import type { ColourBinaryPuzzle } from "./colour-binary/puzzle";
 import type { GuzzlePuzzle } from "./guzzle/puzzle";
+import { decipherPuzzles } from "../../shared/cipher";
 
 // This file is the list of all puzzle types and their puzzle files.
 // To add a puzzle type, add its puzzle type to "PuzzleMap" and add one entry to "puzzleTypes".
@@ -16,16 +17,19 @@ export type PuzzleMap = {
 export type PuzzleType = keyof PuzzleMap;
 
 // This loads all puzzles of the type. The file loads only when the app needs it.
+// The answers in the file are ciphered by the Vite plugin in "vite.config.ts". "decipherPuzzles" decodes them.
 type PuzzleTypeEntry<Puzzle> = { loadPuzzles: () => Promise<readonly Puzzle[]> };
 
 export const puzzleTypes: { [Type in PuzzleType]: PuzzleTypeEntry<PuzzleMap[Type]> } = {
   "colour-binary": {
     loadPuzzles: async () =>
-      (await import("../../../puzzles/colour-binary.json")).default as ColourBinaryPuzzle[],
+      decipherPuzzles<ColourBinaryPuzzle>(
+        (await import("../../../puzzles/colour-binary.json")).default,
+      ),
   },
   guzzle: {
     loadPuzzles: async () =>
-      (await import("../../../puzzles/guzzle.json")).default as GuzzlePuzzle[],
+      decipherPuzzles<GuzzlePuzzle>((await import("../../../puzzles/guzzle.json")).default),
   },
 };
 

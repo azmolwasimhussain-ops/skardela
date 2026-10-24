@@ -4,5 +4,11 @@
   "difficulty": "easy",
   "author": "skardela",
   "license": "CC-BY-4.0",
-  "answer": ["RBP", "CAT", "MGN"]
+  "answer": ["RBP", "CAT", "MGN"],
+  "clues": {
+    "across": "A small pet that says meow",
+    "down": "You carry things in it",
+    "diagonalDown": "Moved fast on foot, in the past",
+    "diagonalUp": "A drawing that shows roads and places"
+  }
 }

@@ -12,6 +12,8 @@ export const symbols = {
     correct: "✓",
     present: "↔",
     absent: "✗",
+    // An arrow on the first square of a word shows the direction to read the word.
+    arrows: { across: "→", down: "↓", diagonalDown: "↘", diagonalUp: "↗" },
   },
   theme: {
     system: "💻",

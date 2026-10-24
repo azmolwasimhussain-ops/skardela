@@ -80,3 +80,80 @@
   font-size: 0.625rem;
   font-variant-numeric: tabular-nums;
 }
+
+/* The squares of the selected word have a soft accent fill, so the player can see the full word.
+   A square with a colour keeps its colour. */
+.square[data-in-word="true"][data-mark="none"] {
+  --fill: var(--accent-bg);
+  --fill-edge: var(--accent-border);
+}
+
+/* The arrow on the first square of a word. It is at the top left, and the symbol is at the top right. */
+.arrow {
+  position: absolute;
+  top: 0.1em;
+  left: 0.2em;
+  font-size: 0.5em;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+/* The list of clues. The clue of the selected word has an accent line and fill. */
+.clues {
+  display: grid;
+  gap: 0.25rem;
+  width: min(100%, 32rem);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.clue {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-inline-start: 3px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+.clue[aria-current="true"] {
+  border-inline-start-color: var(--accent);
+  background-color: var(--accent-bg);
+  color: var(--text-h);
+}
+
+.clue strong {
+  color: var(--text-h);
+}
+
+/* The arrow has a fixed width, so all clue texts start at the same place. */
+.clueArrow {
+  flex: none;
+  width: 1.25em;
+  text-align: center;
+}
+
+/* A key with a "wrong" hint has muted text. A key with an "inWord" hint is yellow.
+   The muted text colour keeps enough contrast, thus the key does not use opacity.
+   The key does not use a line through the letter, because then some letters look like other letters. */
+.key[data-hint="wrong"] {
+  color: var(--text-muted);
+}
+
+.key[data-hint="inWord"] {
+  background-color: var(--yellow);
+  color: var(--on-yellow);
+}
+
+.key[data-hint="inWord"]:hover:enabled {
+  background-color: color-mix(in srgb, var(--yellow) 85%, #000000);
+}
+
+/* The hint symbol is at the top right of a key. The count is at the bottom right. */
+.keySymbol {
+  position: absolute;
+  top: 0.125rem;
+  right: 0.25rem;
+  font-size: 0.625rem;
+  line-height: 1;
+}

@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest";
 import example from "./examples/guzzle-0000.json";
-import { findPuzzleProblems, lineOf, toSquares, wordsOf, type GuzzlePuzzle } from "./puzzle";
-import { bankLetters, checkLetter, isSolved, type Guess } from "./rules-check";
+import {
+  findPuzzleProblems,
+  lineOf,
+  lineStartingAt,
+  toSquares,
+  wordsOf,
+  type GuzzlePuzzle,
+} from "./puzzle";
+import { bankLetters, checkLetter, isSolved, keyHints, type Guess, type Move } from "./rules-check";
 
 // The example board from rules.md: CAT across, BAG down, RAN and MAP on the diagonals.
 const answer = toSquares(example.answer);
@@ -25,6 +32,14 @@ describe("guzzle puzzle", () => {
     expect(lineOf(1, 5)).toBeUndefined();
   });
 
+  it("finds the word that starts at a square", () => {
+    expect(lineStartingAt(0, 3)).toBe("diagonalDown");
+    expect(lineStartingAt(1, 3)).toBe("down");
+    expect(lineStartingAt(3, 3)).toBe("across");
+    expect(lineStartingAt(6, 3)).toBe("diagonalUp");
+    expect(lineStartingAt(8, 3)).toBeUndefined();
+  });
+
   it("finds broken puzzle data", () => {
     // A 3 by 3 board is too small for the medium level.
     expect(findPuzzleProblems({ ...(example as GuzzlePuzzle), difficulty: "medium" })).toEqual([
@@ -39,6 +54,18 @@ describe("guzzle puzzle", () => {
     ]);
     expect(findPuzzleProblems({ ...medium, answer: rows.with(0, "..B.E") })).toEqual([
       "Row 1, column 1 must have a letter from A to Z.",
+    ]);
+  });
+});
+
+describe("guzzle clue check", () => {
+  it("finds a missing clue and a clue that shows its word", () => {
+    const easy = example as GuzzlePuzzle;
+    expect(findPuzzleProblems({ ...easy, clues: { ...easy.clues, down: " " } })).toEqual([
+      '"clues.down" must not be empty.',
+    ]);
+    expect(findPuzzleProblems({ ...easy, clues: { ...easy.clues, across: "A cat" } })).toEqual([
+      '"clues.across" must not have the word "CAT".',
     ]);
   });
 });
@@ -78,5 +105,35 @@ describe("guzzle rules check", () => {
     const guesses = answer.map((letter): Guess => ({ letter, mark: "correct" }));
     expect(isSolved(answer, guesses)).toBe(true);
     expect(isSolved(answer, guesses.with(0, { letter: "N", mark: "present" }))).toBe(false);
+  });
+});
+
+// This helper makes one move: a letter in a square, with the colour that the rules give.
+function move(index: number, letter: string): Move {
+  return { index, guess: { letter, mark: checkLetter(answer, index, letter) } };
+}
+
+describe("guzzle key hints", () => {
+  it("marks a red letter as wrong for each square of the word", () => {
+    // T is red in the top-left square. The diagonal RAN does not have T.
+    const hints = keyHints(answer, [move(0, "T")], 8);
+    expect(hints.get("T")).toBe("wrong");
+  });
+
+  it("marks a yellow letter as wrong here and in the word for the other squares", () => {
+    // N is yellow in the top-left square, because RAN has N in the bottom-right square.
+    const moves = [move(0, "N")];
+    expect(keyHints(answer, moves, 0).get("N")).toBe("wrong");
+    expect(keyHints(answer, moves, 8).get("N")).toBe("inWord");
+  });
+
+  it("gives no hint for a letter of a different word", () => {
+    // The top-middle square is on the word BAG. A red T on the diagonal RAN tells nothing about BAG.
+    expect(keyHints(answer, [move(0, "T")], 1).size).toBe(0);
+  });
+
+  it("gives no inWord hint when the center letter can be the cause of the yellow", () => {
+    // A is yellow in the top-left square, but the A in RAN is the center letter.
+    expect(keyHints(answer, [move(0, "A")], 8).has("A")).toBe(false);
   });
 });

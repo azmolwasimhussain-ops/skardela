@@ -5,7 +5,13 @@
     "difficulty": "easy",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["RBP", "CAT", "MGN"]
+    "answer": ["RBP", "CAT", "MGN"],
+    "clues": {
+      "across": "A small pet that says meow",
+      "down": "You carry things in it",
+      "diagonalDown": "Moved fast on foot, in the past",
+      "diagonalUp": "A drawing that shows roads and places"
+    }
   },
   {
     "id": "guzzle-0002",
@@ -13,7 +19,13 @@
     "difficulty": "easy",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["BHP", "DOG", "TTX"]
+    "answer": ["BHP", "DOG", "TTX"],
+    "clues": {
+      "across": "A pet that barks",
+      "down": "Not cold",
+      "diagonalDown": "A container with six flat sides",
+      "diagonalUp": "The highest part"
+    }
   },
   {
     "id": "guzzle-0003",
@@ -21,7 +33,13 @@
     "difficulty": "easy",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["LBT", "PEN", "JDG"]
+    "answer": ["LBT", "PEN", "JDG"],
+    "clues": {
+      "across": "You write with it",
+      "down": "You sleep in it at night",
+      "diagonalDown": "You stand and walk on it",
+      "diagonalUp": "A fast aircraft"
+    }
   },
   {
     "id": "guzzle-0004",
@@ -29,7 +47,13 @@
     "difficulty": "easy",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["CBG", "SUN", "RSP"]
+    "answer": ["CBG", "SUN", "RSP"],
+    "clues": {
+      "across": "It gives light in the day",
+      "down": "A big vehicle for many passengers",
+      "diagonalDown": "You drink tea from it",
+      "diagonalUp": "A small carpet"
+    }
   },
   {
     "id": "guzzle-0005",
@@ -37,7 +61,13 @@
     "difficulty": "easy",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["FSD", "PIG", "LTN"]
+    "answer": ["FSD", "PIG", "LTN"],
+    "clues": {
+      "across": "A farm animal that says oink",
+      "down": "To rest on a chair",
+      "diagonalDown": "A fish swims with it",
+      "diagonalUp": "The cover of a pot or a box"
+    }
   },
   {
     "id": "guzzle-0006",
@@ -45,7 +75,13 @@
     "difficulty": "medium",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["G.B.E", ".REK.", "PLANT", ".NCP.", "S.H.E"]
+    "answer": ["G.B.E", ".REK.", "PLANT", ".NCP.", "S.H.E"],
+    "clues": {
+      "across": "It grows in soil and has leaves",
+      "down": "Sand next to the sea",
+      "diagonalDown": "A small fruit that grows in bunches",
+      "diagonalUp": "A long animal with no legs"
+    }
   },
   {
     "id": "guzzle-0007",
@@ -53,7 +89,13 @@
     "difficulty": "medium",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["F.C.T", ".LLS.", "STONE", ".HUO.", "G.D.R"]
+    "answer": ["F.C.T", ".LLS.", "STONE", ".HUO.", "G.D.R"],
+    "clues": {
+      "across": "A small piece of rock",
+      "down": "A white or grey shape in the sky",
+      "diagonalDown": "You walk on it in a room",
+      "diagonalUp": "A spirit in a scary story"
+    }
   },
   {
     "id": "guzzle-0008",
@@ -61,7 +103,13 @@
     "difficulty": "medium",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["B.S.T", ".RHS.", "GREEN", ".HEA.", "C.P.D"]
+    "answer": ["B.S.T", ".RHS.", "GREEN", ".HEA.", "C.P.D"],
+    "clues": {
+      "across": "The colour of grass",
+      "down": "A farm animal that gives wool",
+      "diagonalDown": "You make toast from it",
+      "diagonalUp": "A large box for treasure"
+    }
   },
   {
     "id": "guzzle-0009",
@@ -69,7 +117,13 @@
     "difficulty": "medium",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["W.S.D", ".HHL.", "BRICK", ".HRT.", "C.T.E"]
+    "answer": ["W.S.D", ".HHL.", "BRICK", ".HRT.", "C.T.E"],
+    "clues": {
+      "across": "A block for building walls",
+      "down": "Clothing with buttons and sleeves",
+      "diagonalDown": "The colour of snow",
+      "diagonalUp": "A young person"
+    }
   },
   {
     "id": "guzzle-0010",
@@ -77,7 +131,13 @@
     "difficulty": "medium",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["F.B.D", ".RRN.", "TRUCK", ".OSI.", "R.H.T"]
+    "answer": ["F.B.D", ".RRN.", "TRUCK", ".OSI.", "R.H.T"],
+    "clues": {
+      "across": "A large vehicle that carries goods",
+      "down": "You use it on your teeth or hair",
+      "diagonalDown": "Apples and bananas, for example",
+      "diagonalUp": "Shaped like a circle or a ball"
+    }
   },
   {
     "id": "guzzle-0011",
@@ -85,7 +145,13 @@
     "difficulty": "hard",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["S..T..D", ".P.H.E.", "..EES..", "BALANCE", "..ETK..", ".L.R.E.", "P..E..R"]
+    "answer": ["S..T..D", ".P.H.E.", "..EES..", "BALANCE", "..ETK..", ".L.R.E.", "P..E..R"],
+    "clues": {
+      "across": "To stay steady and not fall",
+      "down": "A building where people watch plays",
+      "diagonalDown": "A device that plays sound",
+      "diagonalUp": "Happy and satisfied"
+    }
   },
   {
     "id": "guzzle-0012",
@@ -93,7 +159,13 @@
     "difficulty": "hard",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["F..C..D", ".O.A.E.", "..RRR..", "FREEDOM", "..VFV..", ".O.U.E.", "C..L..R"]
+    "answer": ["F..C..D", ".O.A.E.", "..RRR..", "FREEDOM", "..VFV..", ".O.U.E.", "C..L..R"],
+    "clues": {
+      "across": "The right to do what you want",
+      "down": "Paying attention to prevent a mistake",
+      "diagonalDown": "For all time",
+      "diagonalUp": "With something on top of it"
+    }
   },
   {
     "id": "guzzle-0013",
@@ -101,7 +173,13 @@
     "difficulty": "hard",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["M..C..Y", ".A.A.A.", "..GPD..", "CABINET", "..LTC..", ".O.A.A.", "H..L..L"]
+    "answer": ["M..C..Y", ".A.A.A.", "..GPD..", "CABINET", "..LTC..", ".O.A.A.", "H..L..L"],
+    "clues": {
+      "across": "A cupboard with shelves and doors",
+      "down": "The main city of a country",
+      "diagonalDown": "Like a spell or a wizard",
+      "diagonalUp": "Days off from work or school"
+    }
   },
   {
     "id": "guzzle-0014",
@@ -109,7 +187,13 @@
     "difficulty": "hard",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["D..R..S", ".E.E.R.", "..VMU..", "COLOURS", "..VVT..", ".A.E.E.", "F..D..D"]
+    "answer": ["D..R..S", ".E.E.R.", "..VMU..", "COLOURS", "..VVT..", ".A.E.E.", "F..D..D"],
+    "clues": {
+      "across": "Red, blue and green, for example",
+      "down": "Taken away",
+      "diagonalDown": "Very loyal and loving",
+      "diagonalUp": "Kind acts that you do for other people"
+    }
   },
   {
     "id": "guzzle-0015",
@@ -117,6 +201,12 @@
     "difficulty": "hard",
     "author": "skardela",
     "license": "CC-BY-4.0",
-    "answer": ["F..N..S", ".I.A.E.", "..GTM..", "MINUTES", "..LRR..", ".O.A.E.", "V..L..S"]
+    "answer": ["F..N..S", ".I.A.E.", "..GTM..", "MINUTES", "..LRR..", ".O.A.E.", "V..L..S"],
+    "clues": {
+      "across": "There are sixty of these in one hour",
+      "down": "Not made by people",
+      "diagonalDown": "Numbers such as 1, 2 and 3",
+      "diagonalUp": "Books in a series, or levels of sound"
+    }
   }
 ]
