@@ -81,8 +81,11 @@ parts into their own files. See `guzzle/` for an example: `useGame.ts`, `Grid.ts
      `summary`, `tagline` and `rules`. Then add it to `index.ts` with the name of your type.
    - `tools/puzzles.test.ts`: your example and your data check.
 6. Put emoji symbols in `src/text/symbols.ts`, not in other files.
-7. Add tests for your rule logic and your board.
-8. Run `npm run fix && npm run check`.
+7. When the board is solved, call `useLifecycleLog` and `useRecordSolved` from `src/shared/`.
+   `useRecordSolved` puts the puzzle in the list of solved puzzles, so "Random puzzle" skips it.
+   See the lifecycle hook in `log.ts` of an existing type, for example `latics/log.ts`.
+8. Add tests for your rule logic and your board.
+9. Run `npm run fix && npm run check`.
 
 ## Rules for code
 

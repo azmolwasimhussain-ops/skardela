@@ -30,6 +30,9 @@ describe("RouteError", () => {
         loader: () => {
           throw new Response(null, { status: 404, statusText: "Not Found" });
         },
+        // A route with a loader needs a fallback for the first render, as the routes of the app have.
+        // Without it, React Router warns when the first render comes before the loader ends.
+        hydrateFallbackElement: <p>Loading</p>,
         element: <p>Never shown</p>,
         errorElement: <RouteError />,
       },

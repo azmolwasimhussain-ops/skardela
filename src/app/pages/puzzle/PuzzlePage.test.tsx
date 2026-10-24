@@ -32,6 +32,12 @@ async function easyGuzzleIds() {
     .map((puzzle) => puzzle.id);
 }
 
+// The easy Guzzle puzzles other than guzzle-0001: all of them are solved, except the last one.
+async function allSolvedButOne() {
+  const others = (await easyGuzzleIds()).filter((id) => id !== "guzzle-0001");
+  return { solved: others.slice(0, -1), unsolved: others.at(-1) };
+}
+
 // The page data of the first Latics puzzle, as if its level had no other puzzle.
 async function aloneInItsLevel() {
   const [puzzle] = await puzzleTypes.latics.loadPuzzles();
@@ -120,10 +126,28 @@ describe("puzzle page random puzzle", () => {
     expect(screen.getByRole("button", { name: page.random })).toHaveFocus();
   });
 
+  it("skips the puzzles that the player solved", async () => {
+    const { solved, unsolved } = await allSolvedButOne();
+    writeSetting("solved", solved);
+    const user = userEvent.setup();
+    const router = renderAt("/puzzles/guzzle-0001");
+    await user.click(await screen.findByRole("button", { name: page.random }));
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe(`/puzzles/${unsolved}`);
+    });
+  });
+
   it("has no Random button when the level has no other puzzle", async () => {
     const loaded = await aloneInItsLevel();
     const router = createMemoryRouter([
-      { path: "/", loader: () => loaded, element: <PuzzlePage /> },
+      // A route with a loader needs a fallback for the first render, as the routes of the app have.
+      // Without it, React Router warns when the first render comes before the loader ends.
+      {
+        path: "/",
+        loader: () => loaded,
+        hydrateFallbackElement: <p>{page.loading}</p>,
+        element: <PuzzlePage />,
+      },
     ]);
     render(<RouterProvider router={router} />);
     expect(await screen.findByRole("button", { name: page.restart })).toBeInTheDocument();

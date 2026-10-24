@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
+import { readSettings } from "../../../shared/settings";
 import { text } from "../../../text/en";
 import { Board } from "./Board";
 import example from "./examples/latics-0000.json";
@@ -143,5 +144,20 @@ describe("latics board on hard", () => {
     expect(square(1, 1)).toHaveAccessibleName("Row 1, column 1, laser, points down and right");
     await user.click(screen.getByRole("button", { name: words.fire }));
     expect(screen.getByText(words.status.solvedWithMisses(0))).toBeInTheDocument();
+  });
+});
+
+// "Random puzzle" skips a solved puzzle. The clicks are the steps of the rules.md example.
+describe("latics board and the list of solved puzzles", () => {
+  it("adds the puzzle to the list when the beam hits the monster", async () => {
+    const user = userEvent.setup();
+    render(<Board puzzle={easy} />);
+    expect(readSettings().solved).toEqual([]);
+    await user.click(square(1, 4));
+    await user.click(square(5, 4));
+    await user.click(square(5, 4));
+    await user.click(square(5, 4));
+    expect(screen.getByRole("status")).toHaveTextContent(words.status.solved);
+    expect(readSettings().solved).toEqual([easy.id]);
   });
 });

@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
+import { readSettings } from "../../../shared/settings";
 import { text } from "../../../text/en";
 import { Board } from "./Board";
 import example from "./examples/guzzle-0000.json";
@@ -81,6 +82,8 @@ describe("guzzle board result", () => {
 
     expect(screen.getByText("You solved the puzzle. With bank, 2 mistakes.")).toBeInTheDocument();
     expect(screen.getByTestId("confetti")).toBeInTheDocument();
+    // "Random puzzle" skips a solved puzzle.
+    expect(readSettings().solved).toEqual([puzzle.id]);
   });
 
   it("does not add a mistake for the same wrong letter two times", async () => {

@@ -1,5 +1,6 @@
 import { getLogger } from "../../../shared/logger";
 import { useLifecycleLog } from "../../../shared/useLifecycleLog";
+import { useRecordSolved } from "../../../shared/useRecordSolved";
 import type { Move } from "./machine";
 import type { LaticsPuzzle } from "./puzzle";
 
@@ -29,6 +30,7 @@ export function createMoveLog(log: Log, meta: Meta): (move: Move) => void {
 }
 
 // The start and the solve of a puzzle, with the details for Latics. See "src/shared/useLifecycleLog.ts".
+// A solved puzzle also goes in the list of solved puzzles. See "src/shared/useRecordSolved.ts".
 export function useLaticsLifecycle(log: Log, meta: Meta, isSolved: boolean, misses: number) {
   useLifecycleLog(log, {
     puzzleId: meta.puzzleId,
@@ -36,4 +38,5 @@ export function useLaticsLifecycle(log: Log, meta: Meta, isSolved: boolean, miss
     started: meta,
     solved: { ...meta, misses },
   });
+  useRecordSolved(meta.puzzleId, isSolved);
 }

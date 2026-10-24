@@ -7,6 +7,7 @@ afterEach(() => {
   vi.restoreAllMocks();
   // A failed write keeps the settings in memory. A good write removes them, so the next test starts clean.
   writeSetting("cookieBanner", defaultSettings.cookieBanner);
+  writeSetting("solved", defaultSettings.solved);
   localStorage.clear();
 });
 
@@ -25,6 +26,18 @@ describe("useSetting", () => {
     expect(first.result.current[0]).toBe(true);
     expect(second.result.current[0]).toBe(true);
     expect(readSettings().cookieBanner).toBe(true);
+  });
+
+  // React warns, and can render again and again, when a store gives a new array for the same state.
+  it("gives a stable list for a list setting", () => {
+    const printed = vi.spyOn(console, "error").mockImplementation(() => {});
+    writeSetting("solved", ["guzzle-0001"]);
+    const { result, rerender } = renderHook(() => useSetting("solved"));
+    const first = result.current[0];
+    rerender();
+    expect(result.current[0]).toBe(first);
+    expect(first).toEqual(["guzzle-0001"]);
+    expect(printed).not.toHaveBeenCalled();
   });
 
   it("changes the value also when the browser blocks storage", () => {

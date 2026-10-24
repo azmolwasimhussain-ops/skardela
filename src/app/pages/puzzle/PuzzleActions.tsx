@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router";
 import shared from "../../../shared/Board.module.css";
 import { getLogger } from "../../../shared/logger";
-import { pickOne } from "../../../shared/random";
+import { readSettings } from "../../../shared/settings";
 import { text } from "../../../text/en";
 import type { LoadedPuzzle } from "../../puzzles";
 import styles from "./PuzzleActions.module.css";
+import { randomPuzzleId } from "./randomPuzzle";
 import { RestartQuestion } from "./RestartQuestion";
 import { useRestartQuestion } from "./useRestartQuestion";
 
@@ -12,7 +13,8 @@ const page = text.puzzlePage;
 const buttonClass = `${shared.button} ${shared.boxed}`;
 
 // The bar above the rules. "Restart" starts the same puzzle again, after one question.
-// "Random puzzle" opens a different puzzle of the same type and level. While the question is open, it fills the bar.
+// "Random puzzle" opens a different puzzle of the same type and level, if possible one that the player did not solve.
+// While the question is open, it fills the bar.
 // The bar is outside the board, thus each puzzle type gets it. The page keeps the bar when it opens a new puzzle,
 // thus "Random puzzle" keeps the focus.
 export function PuzzleActions({
@@ -37,7 +39,7 @@ export function PuzzleActions({
     close();
   };
   const openRandom = () => {
-    const id = pickOne(others);
+    const id = randomPuzzleId(others, readSettings().solved);
     if (id === undefined) return;
     log.info("Random puzzle opened", { from: puzzle.id, to: id });
     void navigate(`/puzzles/${id}`);

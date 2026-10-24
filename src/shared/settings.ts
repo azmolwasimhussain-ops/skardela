@@ -11,11 +11,13 @@ export type Settings = {
   readonly theme: Theme;
   // True after the player selected OK on the analytics notice. Then the notice does not show again.
   readonly cookieBanner: boolean;
+  // The IDs of the puzzles that the player solved. "Random puzzle" skips them. See "useRecordSolved.ts".
+  readonly solved: readonly string[];
 };
 
 export type SettingName = keyof Settings;
 
-export const defaultSettings: Settings = { theme: "system", cookieBanner: false };
+export const defaultSettings: Settings = { theme: "system", cookieBanner: false, solved: [] };
 
 // Each field has a check. A field with a value that is not correct gets its default value,
 // thus a broken or an old value in the storage does not break the app.
@@ -23,6 +25,8 @@ export const defaultSettings: Settings = { theme: "system", cookieBanner: false 
 const checks: { [Name in SettingName]: (value: unknown) => value is Settings[Name] } = {
   theme: isTheme,
   cookieBanner: (value): value is boolean => typeof value === "boolean",
+  solved: (value): value is readonly string[] =>
+    Array.isArray(value) && value.every((id) => typeof id === "string"),
 };
 
 // This makes correct settings from a JSON text. Text that is not JSON, or JSON that is not an object,
@@ -40,18 +44,28 @@ export function parseSettings(json: string | null): Settings {
     const value = fields[name];
     return checks[name](value) ? value : defaultSettings[name];
   };
-  return { theme: fieldOr("theme"), cookieBanner: fieldOr("cookieBanner") };
+  return {
+    theme: fieldOr("theme"),
+    cookieBanner: fieldOr("cookieBanner"),
+    solved: fieldOr("solved"),
+  };
 }
 
 // When the browser blocks storage, or the storage is full, the settings stay here until the page closes.
 // Thus the theme and the OK on the analytics notice still work on this page.
 let memory: Settings | null = null;
 
+// The last stored text and its settings. While the text is the same, "readSettings" gives the same object.
+// Thus a list setting, such as "solved", is the same array, and React does not render again for it.
+let cache: { json: string | null; settings: Settings } | null = null;
+
 // This reads all settings. It never throws.
 export function readSettings(): Settings {
   if (memory !== null) return memory;
   try {
-    return parseSettings(localStorage.getItem(settingsStorageKey));
+    const json = localStorage.getItem(settingsStorageKey);
+    if (cache?.json !== json) cache = { json, settings: parseSettings(json) };
+    return cache.settings;
   } catch {
     return defaultSettings;
   }

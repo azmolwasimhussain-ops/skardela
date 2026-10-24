@@ -49,7 +49,7 @@ export const home = {
       {
         question: "Does Skardela keep my progress?",
         answer:
-          "No. A puzzle starts again when you reload the page. Skardela saves only your theme and your OK for the analytics notice.",
+          'Partly. Skardela saves the puzzles that you solve, so "Random puzzle" gives you puzzles that you did not solve. A puzzle that you did not finish starts again when you reload the page. Skardela also saves your theme and your OK for the analytics notice. All of this stays in your browser.',
       },
       {
         question: "What data does Skardela collect?",

@@ -35,11 +35,11 @@ describe("theme switcher", () => {
 
     await user.selectOptions(select, text.theme.options.light);
     expect(document.documentElement.dataset.theme).toBe("light");
-    expect(readSettings()).toEqual({ theme: "light", cookieBanner: true });
+    expect(readSettings()).toEqual({ theme: "light", cookieBanner: true, solved: [] });
 
     await user.selectOptions(select, text.theme.options.system);
     expect(Object.hasOwn(document.documentElement.dataset, "theme")).toBe(false);
-    expect(readSettings()).toEqual({ theme: "system", cookieBanner: true });
+    expect(readSettings()).toEqual({ theme: "system", cookieBanner: true, solved: [] });
   });
 
   it("follows a theme change in a different tab", () => {

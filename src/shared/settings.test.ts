@@ -34,19 +34,29 @@ describe("parseSettings", () => {
   });
 
   it("keeps each correct field, and gives the default value for each field that is not correct", () => {
-    expect(parseSettings('{"theme":"dark","cookieBanner":true}')).toEqual({
+    expect(parseSettings('{"theme":"dark","cookieBanner":true,"solved":["guzzle-0001"]}')).toEqual({
       theme: "dark",
       cookieBanner: true,
+      solved: ["guzzle-0001"],
     });
     expect(parseSettings('{"theme":"purple","cookieBanner":true}')).toEqual({
       theme: "system",
       cookieBanner: true,
+      solved: [],
     });
     expect(parseSettings('{"theme":"light","cookieBanner":"yes","other":1}')).toEqual({
       theme: "light",
       cookieBanner: false,
+      solved: [],
     });
   });
+
+  it.each(['"guzzle-0001"', "{}", '["guzzle-0001", 2]', "[null]"])(
+    "gives an empty list of solved puzzles for the value %s",
+    (value) => {
+      expect(parseSettings(`{"solved":${value}}`).solved).toEqual([]);
+    },
+  );
 });
 
 describe("settings in the storage", () => {
@@ -56,8 +66,9 @@ describe("settings in the storage", () => {
     expect(JSON.parse(String(localStorage.getItem(settingsStorageKey)))).toEqual({
       theme: "dark",
       cookieBanner: true,
+      solved: [],
     });
-    expect(readSettings()).toEqual({ theme: "dark", cookieBanner: true });
+    expect(readSettings()).toEqual({ theme: "dark", cookieBanner: true, solved: [] });
   });
 
   it("keeps the settings in memory when the browser blocks storage", () => {
@@ -66,7 +77,7 @@ describe("settings in the storage", () => {
     expect(() => {
       writeSetting("cookieBanner", true);
     }).not.toThrow();
-    expect(readSettings()).toEqual({ theme: "system", cookieBanner: true });
+    expect(readSettings()).toEqual({ theme: "system", cookieBanner: true, solved: [] });
   });
 
   it("keeps the settings in memory when the storage is full", () => {
@@ -90,6 +101,19 @@ describe("settings in the storage", () => {
     writeSetting("theme", "light");
     window.dispatchEvent(new StorageEvent("storage", { key: settingsStorageKey }));
     expect(listener).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe("readSettings", () => {
+  // React reads a setting at each render. A new array each time would render the component again and again.
+  it("gives the same object while the stored text is the same, and a new object after a change", () => {
+    writeSetting("solved", ["latics-0001"]);
+    const first = readSettings();
+    expect(readSettings()).toBe(first);
+    expect(readSettings().solved).toBe(first.solved);
+    writeSetting("solved", ["latics-0001", "latics-0002"]);
+    expect(readSettings()).not.toBe(first);
+    expect(readSettings().solved).toEqual(["latics-0001", "latics-0002"]);
   });
 });
 

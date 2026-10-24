@@ -1,5 +1,6 @@
 import { getLogger } from "../../../shared/logger";
 import { useLifecycleLog } from "../../../shared/useLifecycleLog";
+import { useRecordSolved } from "../../../shared/useRecordSolved";
 import type { Move } from "./machine";
 import type { GuzzlePuzzle } from "./puzzle";
 
@@ -36,6 +37,7 @@ export function createMoveLog(log: Log, meta: Meta): (move: Move) => void {
 }
 
 // The start and the solve of a puzzle, with the details for Guzzle. See "src/shared/useLifecycleLog.ts".
+// A solved puzzle also goes in the list of solved puzzles. See "src/shared/useRecordSolved.ts".
 export function useGuzzleLifecycle(
   log: Log,
   meta: Meta,
@@ -49,4 +51,5 @@ export function useGuzzleLifecycle(
     started: { ...meta, size },
     solved: { ...meta, mistakes },
   });
+  useRecordSolved(meta.puzzleId, isSolved);
 }
