@@ -24,7 +24,7 @@ export function createMoveLog(log: Log, meta: Meta): (move: Move) => void {
     if (move.type === "change") {
       log.debug("Piece changed", { ...meta, index: move.index, from: move.from, to: move.to });
     } else {
-      log.info("Laser fired", { ...meta, end: move.end, misses: move.misses });
+      log.info("Laser fired", { ...meta, hits: move.hits, misses: move.misses });
     }
   };
 }

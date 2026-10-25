@@ -36,7 +36,7 @@ export function Board({ puzzle }: { puzzle: LaticsPuzzle }) {
         {statusText(game)}
       </output>
 
-      <BeamPath beam={game.beam} size={game.size} />
+      <BeamPath beam={game.beam} layout={{ squares: game.squares, water: game.config.water }} />
 
       {/* The confetti is not in the grid, because the grid has "container-type". */}
       {game.isSolved && <Confetti />}

@@ -1,16 +1,15 @@
 import { describe, expect, it } from "vitest";
 import example from "./examples/latics-0000.json";
 import { findPuzzleProblems, toSquares, type LaticsPuzzle, type Square } from "./puzzle";
-import {
-  beamLines,
-  canChange,
-  nextSquare,
-  pathParts,
-  reflect,
-  traceBeam,
-  turnLaser,
-  turnMirror,
-} from "./rules-check";
+import { beamLines, pathParts, traceBeam, type Beam, type BeamPart } from "./beam";
+import { canChange, nextSquare, reflect, turnLaser, turnMirror } from "./rules-check";
+
+// The first part of a beam. A beam from one laser always has a first part.
+function firstPart(beam: Beam): BeamPart {
+  const [part] = beam.parts;
+  if (part === undefined) throw new Error("The beam has no part.");
+  return part;
+}
 
 // The example from rules.md. The laser is at row 1, column 1 and points right.
 // The monster is at row 5, column 5. Two mirrors are at row 1, column 4 and at row 5, column 4.
@@ -21,6 +20,18 @@ const start = toSquares(puzzle.board);
 function withSquares(changes: Record<number, Square>): Square[] {
   return start.map((square, index) => changes[index] ?? square);
 }
+
+// The beam of one white laser on a board without water.
+function beamOf(squares: readonly Square[], direction: "E" | "SE" | "N" = "E"): Beam {
+  return traceBeam({
+    squares,
+    water: squares.map(() => false),
+    lasers: [{ direction, colour: "white" }],
+  });
+}
+
+// The end of each part of a beam.
+const ends = (beam: Beam) => beam.parts.map((part) => part.end);
 
 describe("latics optics", () => {
   it("reflects the beam with the angle in the same as the angle out", () => {
@@ -48,54 +59,67 @@ describe("latics optics", () => {
 describe("latics beam", () => {
   it("follows the steps of the rules.md example", () => {
     // Step 1: the beam goes along the horizontal mirror and off the board.
-    expect(traceBeam(start, "E").end).toBe("edge");
+    expect(ends(beamOf(start))).toEqual(["edge"]);
     // Step 2: the first mirror turns the beam down. It goes along the vertical mirror and off the board.
-    expect(traceBeam(withSquares({ 3: "\\" }), "E").end).toBe("edge");
+    expect(ends(beamOf(withSquares({ 3: "\\" })))).toEqual(["edge"]);
     // Step 3: the second mirror turns the beam left, and it goes off the board.
-    expect(traceBeam(withSquares({ 3: "\\", 23: "/" }), "E").end).toBe("edge");
+    expect(ends(beamOf(withSquares({ 3: "\\", 23: "/" })))).toEqual(["edge"]);
     // Step 4: the second mirror sends the beam up, and the first mirror sends it back to the laser.
-    expect(traceBeam(withSquares({ 3: "\\", 23: "-" }), "E").end).toBe("laser");
+    expect(ends(beamOf(withSquares({ 3: "\\", 23: "-" })))).toEqual(["laser"]);
     // Step 5: the beam hits the monster.
-    expect(traceBeam(withSquares({ 3: "\\", 23: "\\" }), "E").end).toBe("monster");
+    const hit = beamOf(withSquares({ 3: "\\", 23: "\\" }));
+    expect(ends(hit)).toEqual(["monster"]);
+    expect(hit.hits).toEqual([24]);
   });
 
   it("stops at a wall", () => {
-    const beam = traceBeam(withSquares({ 3: "\\", 23: "/", 21: "#" }), "E");
-    expect(beam.end).toBe("wall");
-    expect(beam.steps.at(-1)).toEqual({ index: 21, enter: "W", exit: null });
+    const beam = beamOf(withSquares({ 3: "\\", 23: "/", 21: "#" }));
+    expect(ends(beam)).toEqual(["wall"]);
+    expect(beam.parts[0]?.steps.at(-1)).toEqual({ index: 21, enter: "W", exit: null });
   });
 
   it("goes diagonally from square to square", () => {
     // The beam goes down and right from row 1, column 1 through the middle of each square, to the monster.
     // This is why the example does not let the player turn the laser.
-    const beam = traceBeam(start, "SE");
-    expect(beam.steps.map((step) => step.index)).toEqual([6, 12, 18, 24]);
-    expect(beam.end).toBe("monster");
+    const beam = beamOf(start, "SE");
+    expect(beam.parts[0]?.steps.map((step) => step.index)).toEqual([6, 12, 18, 24]);
+    expect(ends(beam)).toEqual(["monster"]);
   });
 
   it("goes off the board at once when the laser points out", () => {
-    const beam = traceBeam(start, "N");
-    expect(beam).toEqual({ from: 0, direction: "N", steps: [], end: "edge" });
+    expect(beamOf(start, "N")).toEqual({
+      parts: [{ colour: "white", from: 0, direction: "N", steps: [], end: "edge" }],
+      hits: [],
+    });
   });
 });
 
 describe("latics beam lines and words", () => {
   it("draws one line for a beam that a mirror sends back", () => {
     // The vertical mirror at row 1, column 4 sends the beam back to the laser on the same side.
-    const beam = traceBeam(withSquares({ 3: "|" }), "E");
-    expect(beam.end).toBe("laser");
-    expect(beamLines(beam).get(3)).toEqual(["W"]);
+    const beam = beamOf(withSquares({ 3: "|" }));
+    expect(ends(beam)).toEqual(["laser"]);
+    expect(beamLines(beam).get(3)).toEqual([{ direction: "W", colour: "white" }]);
   });
 
   it("gives the lines to draw and the path in words", () => {
-    const beam = traceBeam(withSquares({ 3: "\\", 23: "\\" }), "E");
-    expect(beamLines(beam).get(3)).toEqual(["W", "S"]);
-    expect(beamLines(beam).get(0)).toEqual(["E"]);
-    expect(pathParts(beam)).toEqual([
+    const squares = withSquares({ 3: "\\", 23: "\\" });
+    const beam = beamOf(squares);
+    expect(
+      beamLines(beam)
+        .get(3)
+        ?.map((line) => line.direction),
+    ).toEqual(["W", "S"]);
+    expect(
+      beamLines(beam)
+        .get(0)
+        ?.map((line) => line.direction),
+    ).toEqual(["E"]);
+    expect(pathParts(firstPart(beam), { squares, water: squares.map(() => false) })).toEqual([
       { kind: "move", direction: "E", squares: 3 },
-      { kind: "turn", index: 3, direction: "S" },
+      { kind: "turn", index: 3, direction: "S", cause: "mirror" },
       { kind: "move", direction: "S", squares: 4 },
-      { kind: "turn", index: 23, direction: "E" },
+      { kind: "turn", index: 23, direction: "E", cause: "mirror" },
       { kind: "move", direction: "E", squares: 1 },
     ]);
   });
@@ -110,13 +134,16 @@ describe("latics changes", () => {
     expect(nextSquare("|", false, 0)).toBe("/");
   });
 
-  it("lets the player change only mirrors, the tray squares and the laser on hard", () => {
+  it("lets the player change only mirrors, the tray squares out of water and the laser on hard", () => {
     expect(canChange("/", 0, false)).toBe(true);
     expect(canChange(".", 0, false)).toBe(false);
     expect(canChange(".", 1, false)).toBe(true);
+    expect(canChange(".", 1, false, true)).toBe(false);
     expect(canChange("L", 0, false)).toBe(false);
     expect(canChange("L", 0, true)).toBe(true);
     expect(canChange("#", 2, true)).toBe(false);
+    expect(canChange("^", 2, true)).toBe(false);
+    expect(canChange("r", 2, true)).toBe(false);
   });
 });
 
@@ -130,14 +157,25 @@ describe("latics puzzle data", () => {
       '"board" has characters that are not pieces: ?.',
     ]);
     expect(findPuzzleProblems({ ...puzzle, board: puzzle.board.with(4, "...|.") })).toEqual([
-      '"board" must have exactly one "M".',
+      '"board" must have at least one monster: "M", "R" or "B".',
     ]);
     expect(findPuzzleProblems({ ...puzzle, difficulty: "medium" })).toEqual([
       '"board" must have 7 rows of 7 squares for the level "medium".',
       '"tray" must be a whole number from 1 to 2 for the level "medium".',
     ]);
-    expect(findPuzzleProblems({ ...puzzle, laser: "UP" as LaticsPuzzle["laser"] })).toEqual([
-      '"laser" must be one of: E, NE, N, NW, W, SW, S, SE.',
+    const upward = [{ direction: "UP", colour: "white" }] as unknown as LaticsPuzzle["lasers"];
+    expect(findPuzzleProblems({ ...puzzle, lasers: upward })).toEqual([
+      "The direction of each laser must be one of: E, NE, N, NW, W, SW, S, SE.",
+    ]);
+  });
+
+  it("needs one laser in the list for each laser on the board", () => {
+    expect(findPuzzleProblems({ ...puzzle, lasers: [] })).toEqual([
+      '"lasers" must have one item for each "L" on "board": 1.',
+    ]);
+    const green = [{ direction: "E", colour: "green" }] as unknown as LaticsPuzzle["lasers"];
+    expect(findPuzzleProblems({ ...puzzle, lasers: green })).toEqual([
+      "The colour of each laser must be one of: white, red, blue.",
     ]);
   });
 });

@@ -6,7 +6,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": [".....", "M....", ".-./.", "-...L", ".-..."],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 0
   },
   {
@@ -16,7 +16,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": [".....", "-M...", "/.|..", "..-.L", "....."],
-    "laser": "W",
+    "lasers": [{ "direction": "W", "colour": "white" }],
     "tray": 0
   },
   {
@@ -26,7 +26,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": [".....", "..\\#M", "...\\.", "|#|..", "#L..."],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 0
   },
   {
@@ -36,7 +36,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["...#..-", "..|.#..", "M......", "#|\\...L", "..#....", "......\\", "......."],
-    "laser": "S",
+    "lasers": [{ "direction": "S", "colour": "white" }],
     "tray": 2
   },
   {
@@ -46,7 +46,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["....#\\.", "..|#M.\\", "#-...#.", "...#...", "|.#....", "...-...", ".L....."],
-    "laser": "NE",
+    "lasers": [{ "direction": "NE", "colour": "white" }],
     "tray": 2
   },
   {
@@ -56,7 +56,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": [".......", "L.\\..#.", "....../", "...\\..\\", "..#....", ".....#.", "...-M.."],
-    "laser": "N",
+    "lasers": [{ "direction": "N", "colour": "white" }],
     "tray": 2
   },
   {
@@ -76,7 +76,7 @@
       "..#.#....",
       "-/.#L...."
     ],
-    "laser": "NE",
+    "lasers": [{ "direction": "NE", "colour": "white" }],
     "tray": 2
   },
   {
@@ -96,7 +96,7 @@
       "#.......-",
       ".....-..."
     ],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 1
   },
   {
@@ -116,7 +116,7 @@
       "........\\",
       ".//#\\.L.."
     ],
-    "laser": "E",
+    "lasers": [{ "direction": "E", "colour": "white" }],
     "tray": 2
   },
   {
@@ -126,7 +126,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["...#L", "./...", "\\.\\..", "#-...", "M...."],
-    "laser": "SW",
+    "lasers": [{ "direction": "SW", "colour": "white" }],
     "tray": 0
   },
   {
@@ -136,7 +136,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["..\\/#", "...-.", "M.\\..", ".....", "....L"],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 0
   },
   {
@@ -146,7 +146,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["../..", "..\\..", "M...|", "#..-.", "#..#L"],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 0
   },
   {
@@ -156,7 +156,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["..#L.", ".....", "..-\\.", ".....", "M\\|#."],
-    "laser": "S",
+    "lasers": [{ "direction": "S", "colour": "white" }],
     "tray": 0
   },
   {
@@ -166,7 +166,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": [".....", "...M.", "#\\...", "L|...", ".|.|."],
-    "laser": "E",
+    "lasers": [{ "direction": "E", "colour": "white" }],
     "tray": 0
   },
   {
@@ -176,7 +176,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": [".M-#.", "#...#", "#....", "/.|-.", "..#L."],
-    "laser": "N",
+    "lasers": [{ "direction": "N", "colour": "white" }],
     "tray": 0
   },
   {
@@ -186,7 +186,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": [".....", "L..|.", "..#--", ".|.#.", ".#..M"],
-    "laser": "E",
+    "lasers": [{ "direction": "E", "colour": "white" }],
     "tray": 0
   },
   {
@@ -196,7 +196,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": [".|.../.", "....M..", "....|..", ".#.....", "/...-..", ".......", ".|..#.L"],
-    "laser": "W",
+    "lasers": [{ "direction": "W", "colour": "white" }],
     "tray": 2
   },
   {
@@ -206,7 +206,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["#..#...", "...M.#.", "|...#..", "....|..", "#......", "././.#.", "L../#\\."],
-    "laser": "NE",
+    "lasers": [{ "direction": "NE", "colour": "white" }],
     "tray": 2
   },
   {
@@ -216,7 +216,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["L./..#.", "./.....", "......|", ".#.....", ".\\.#...", ".|...##", "#..#M.\\"],
-    "laser": "SE",
+    "lasers": [{ "direction": "SE", "colour": "white" }],
     "tray": 2
   },
   {
@@ -226,7 +226,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["..#.\\-.", "-M#.|..", "....|..", ".......", "...#...", ".#....L", "..|...#"],
-    "laser": "N",
+    "lasers": [{ "direction": "N", "colour": "white" }],
     "tray": 2
   },
   {
@@ -236,7 +236,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": [".\\/-...", "M...\\..", "#-..#..", "......#", "...#../", "......#", "...L..."],
-    "laser": "W",
+    "lasers": [{ "direction": "W", "colour": "white" }],
     "tray": 2
   },
   {
@@ -246,7 +246,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["...#./.", ".-..|.L", ".......", "....../", ".#..#..", "M.|.#..", "......."],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 2
   },
   {
@@ -256,7 +256,7 @@
     "author": "skardela",
     "license": "CC-BY-4.0",
     "board": ["....M#.", "..-..#.", "...\\|..", "L.#....", "./|..\\.", "##..#.#", ".#..#.."],
-    "laser": "S",
+    "lasers": [{ "direction": "S", "colour": "white" }],
     "tray": 2
   },
   {
@@ -276,7 +276,7 @@
       "......#.#",
       "......M.\\"
     ],
-    "laser": "NE",
+    "lasers": [{ "direction": "NE", "colour": "white" }],
     "tray": 2
   },
   {
@@ -296,7 +296,7 @@
       "...\\.....",
       "|...#...#"
     ],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 2
   },
   {
@@ -316,7 +316,7 @@
       ".......#|",
       "...|.L..-"
     ],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 1
   },
   {
@@ -336,7 +336,7 @@
       "..#......",
       "...##...L"
     ],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 2
   },
   {
@@ -356,7 +356,7 @@
       "..#-.....",
       "........."
     ],
-    "laser": "SW",
+    "lasers": [{ "direction": "SW", "colour": "white" }],
     "tray": 1
   },
   {
@@ -376,7 +376,7 @@
       "../##....",
       "..|#....\\"
     ],
-    "laser": "NE",
+    "lasers": [{ "direction": "NE", "colour": "white" }],
     "tray": 2
   },
   {
@@ -396,7 +396,526 @@
       ".#.\\#./..",
       ".L..#...#"
     ],
-    "laser": "NW",
+    "lasers": [{ "direction": "NW", "colour": "white" }],
     "tray": 1
+  },
+  {
+    "id": "latics-0031",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".M...", "../..", "|...L", "....#", "-#.|."],
+    "lasers": [{ "direction": "SW", "colour": "white" }],
+    "tray": 0,
+    "water": [".....", ".....", ".~~~.", ".~~~.", "....."]
+  },
+  {
+    "id": "latics-0032",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["L#...", ".-...", "|..M|", "....#", "..\\.."],
+    "lasers": [{ "direction": "SE", "colour": "white" }],
+    "tray": 0,
+    "water": [".....", "..~~.", "..~~.", "..~~.", "....."]
+  },
+  {
+    "id": "latics-0033",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["\\#.M.", ".....", "|L...", "\\....", "#\\#.."],
+    "lasers": [{ "direction": "SW", "colour": "white" }],
+    "tray": 0,
+    "water": [".....", "..~~~", "..~~~", "..~~~", "....."]
+  },
+  {
+    "id": "latics-0034",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".....", ".\\//.", ".L..#", ".|^..", ".R.B."],
+    "lasers": [{ "direction": "N", "colour": "white" }],
+    "tray": 0
+  },
+  {
+    "id": "latics-0035",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["..B.R", "./...", "./^..", ".#...", ".L|.."],
+    "lasers": [{ "direction": "E", "colour": "white" }],
+    "tray": 0
+  },
+  {
+    "id": "latics-0036",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["..-L.", "..^#.", ".-#B.", "R.-..", "..../"],
+    "lasers": [{ "direction": "W", "colour": "white" }],
+    "tray": 0
+  },
+  {
+    "id": "latics-0037",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["#..L/", "R..r\\", ".....", "..|..", "....."],
+    "lasers": [{ "direction": "E", "colour": "white" }],
+    "tray": 0
+  },
+  {
+    "id": "latics-0038",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["-..#L", "....b", ".-..|", "..#..", ".B..."],
+    "lasers": [{ "direction": "S", "colour": "white" }],
+    "tray": 0
+  },
+  {
+    "id": "latics-0039",
+    "type": "latics",
+    "difficulty": "easy",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".B.-.", ".....", "..|#.", "....L", "./.b-"],
+    "lasers": [{ "direction": "S", "colour": "white" }],
+    "tray": 0
+  },
+  {
+    "id": "latics-0040",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".....#.", "../##.#", ".......", ".....#.", "....\\L.", "..#..M.", "....../"],
+    "lasers": [{ "direction": "NW", "colour": "white" }],
+    "tray": 2,
+    "water": [".......", ".......", ".......", ".~~~...", ".~~~...", ".......", "......."]
+  },
+  {
+    "id": "latics-0041",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".#-..|.", ".....\\.", ".#....-", "..#....", ".......", ".......", "#...LM."],
+    "lasers": [{ "direction": "NE", "colour": "white" }],
+    "tray": 2,
+    "water": [".......", ".......", ".......", "....~~.", "....~~.", "....~~.", "......."]
+  },
+  {
+    "id": "latics-0042",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["......|", ".....\\#", "......#", "......#", "..M.../", "......L", ".#..|.."],
+    "lasers": [{ "direction": "SW", "colour": "white" }],
+    "tray": 2,
+    "water": [".......", ".......", ".~~~~~.", ".~~~~~.", ".~~~~~.", ".~~~~~.", "......."]
+  },
+  {
+    "id": "latics-0043",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["..#.R..", "......-", "....\\..", ".....B.", "....^..", "L#.../.", "-#..|.."],
+    "lasers": [{ "direction": "N", "colour": "white" }],
+    "tray": 1
+  },
+  {
+    "id": "latics-0044",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["..|#..B", "..#....", ".#...-.", "|.#....", ".......", ".|^...\\", ".R.L#.."],
+    "lasers": [{ "direction": "NW", "colour": "white" }],
+    "tray": 2
+  },
+  {
+    "id": "latics-0045",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["....L..", "#-#./B.", ".R^..#.", "...|.#.", ".\\.#...", "....#.|", "....|.."],
+    "lasers": [{ "direction": "SW", "colour": "white" }],
+    "tray": 2
+  },
+  {
+    "id": "latics-0046",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".......", ".../#.#", ".r#....", ".-../..", "...R..R", "...L...", "Lr/...|"],
+    "lasers": [
+      { "direction": "W", "colour": "white" },
+      { "direction": "E", "colour": "red" }
+    ],
+    "tray": 2
+  },
+  {
+    "id": "latics-0047",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [".....RL", "##..#..", "...#\\..", ".-.r..|", "\\.R.L..", "...\\b..", "./..#.."],
+    "lasers": [
+      { "direction": "S", "colour": "white" },
+      { "direction": "N", "colour": "red" }
+    ],
+    "tray": 2
+  },
+  {
+    "id": "latics-0048",
+    "type": "latics",
+    "difficulty": "medium",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": ["..#....", "...L.L.", "#-|.b\\.", "..b....", "/......", ".#...B.", "...|\\.R"],
+    "lasers": [
+      { "direction": "W", "colour": "white" },
+      { "direction": "E", "colour": "red" }
+    ],
+    "tray": 2
+  },
+  {
+    "id": "latics-0049",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      ".........",
+      ".#..-..#.",
+      "|M.......",
+      ".......-|",
+      ".\\.......",
+      "#........",
+      ".......##",
+      ".#...../.",
+      "........L"
+    ],
+    "lasers": [{ "direction": "SE", "colour": "white" }],
+    "tray": 1,
+    "water": [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".~~~~~...",
+      ".~~~~~...",
+      ".........",
+      "........."
+    ]
+  },
+  {
+    "id": "latics-0050",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "...\\#.#M.",
+      ".......#.",
+      "....#|..-",
+      "......../",
+      ".........",
+      "......\\..",
+      "......L..",
+      ".........",
+      "..\\....##"
+    ],
+    "lasers": [{ "direction": "NW", "colour": "white" }],
+    "tray": 1,
+    "water": [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "..~~~~...",
+      "..~~~~...",
+      "..~~~~...",
+      "..~~~~...",
+      "........."
+    ]
+  },
+  {
+    "id": "latics-0051",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "....|#.#\\",
+      "..#-.....",
+      "....\\#...",
+      "....#....",
+      "L#-..M...",
+      ".........",
+      ".........",
+      "..#......",
+      ".|......\\"
+    ],
+    "lasers": [{ "direction": "E", "colour": "white" }],
+    "tray": 1,
+    "water": [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "...~~~~~.",
+      "...~~~~~.",
+      "...~~~~~.",
+      "...~~~~~.",
+      "........."
+    ]
+  },
+  {
+    "id": "latics-0052",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "...#.....",
+      "./L#.....",
+      "#........",
+      ".......\\.",
+      ".....\\...",
+      "M...L#.#.",
+      "...#.#M..",
+      "......#\\.",
+      "/.....-.."
+    ],
+    "lasers": [
+      { "direction": "E", "colour": "white" },
+      { "direction": "E", "colour": "white" }
+    ],
+    "tray": 1,
+    "water": [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "~~~~~....",
+      "~~~~~....",
+      ".........",
+      ".........",
+      "........."
+    ]
+  },
+  {
+    "id": "latics-0053",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      ".L......#",
+      "....##...",
+      "...\\.....",
+      "./..#...#",
+      "....L....",
+      ".#...#.-.",
+      "-..M.....",
+      ".#.......",
+      "..M..#..."
+    ],
+    "lasers": [
+      { "direction": "NW", "colour": "white" },
+      { "direction": "SE", "colour": "white" }
+    ],
+    "tray": 1,
+    "water": [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "..~~~....",
+      "..~~~....",
+      "..~~~....",
+      "..~~~....",
+      "........."
+    ]
+  },
+  {
+    "id": "latics-0054",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "L.......|",
+      "#......\\/",
+      "......\\..",
+      ".....#.\\.",
+      "..#......",
+      "#........",
+      ".....M...",
+      "...L.....",
+      ".M......#"
+    ],
+    "lasers": [
+      { "direction": "W", "colour": "white" },
+      { "direction": "E", "colour": "white" }
+    ],
+    "tray": 1,
+    "water": [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".~~~~~...",
+      ".~~~~~..."
+    ]
+  },
+  {
+    "id": "latics-0055",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "..|...B..",
+      ".R..|^.#.",
+      "..L./#...",
+      "...\\.#...",
+      ".-.....\\.",
+      ".##....#.",
+      "..-.-....",
+      ".........",
+      "#....#..."
+    ],
+    "lasers": [{ "direction": "W", "colour": "white" }],
+    "tray": 2
+  },
+  {
+    "id": "latics-0056",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      ".......\\.",
+      "..|.#..L.",
+      "...#.....",
+      "...#..#R.",
+      "-......B.",
+      "..../^.\\.",
+      "........\\",
+      "...|.....",
+      "..#.....#"
+    ],
+    "lasers": [{ "direction": "E", "colour": "white" }],
+    "tray": 2
+  },
+  {
+    "id": "latics-0057",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "......../",
+      "#../.L.|/",
+      "..#...R..",
+      ".........",
+      "\\...^B#.#",
+      ".#.......",
+      ".......\\#",
+      ".#.......",
+      "//......."
+    ],
+    "lasers": [{ "direction": "NE", "colour": "white" }],
+    "tray": 2
+  },
+  {
+    "id": "latics-0058",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "...#.....",
+      "....#.b..",
+      "r#.......",
+      "\\..-...R-",
+      ".....#...",
+      "|........",
+      "|....##..",
+      "..|L.....",
+      ".LB..|..\\"
+    ],
+    "lasers": [
+      { "direction": "NE", "colour": "white" },
+      { "direction": "SW", "colour": "blue" }
+    ],
+    "tray": 2
+  },
+  {
+    "id": "latics-0059",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "..#......",
+      "L.-..#...",
+      "r.\\.....#",
+      ".#.#....#",
+      ".#.....L.",
+      "B..\\b....",
+      "........\\",
+      "......B.#",
+      "........#"
+    ],
+    "lasers": [
+      { "direction": "S", "colour": "white" },
+      { "direction": "N", "colour": "blue" }
+    ],
+    "tray": 1
+  },
+  {
+    "id": "latics-0060",
+    "type": "latics",
+    "difficulty": "hard",
+    "author": "skardela",
+    "license": "CC-BY-4.0",
+    "board": [
+      "..#\\B....",
+      ".../.#...",
+      ".........",
+      ".r.#.....",
+      "\\.\\...#..",
+      ".L......#",
+      ".#R..L.#.",
+      ".#.......",
+      "......b.#"
+    ],
+    "lasers": [
+      { "direction": "S", "colour": "white" },
+      { "direction": "N", "colour": "blue" }
+    ],
+    "tray": 2
   }
 ]

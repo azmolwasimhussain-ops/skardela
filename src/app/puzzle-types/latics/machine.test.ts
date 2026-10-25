@@ -13,9 +13,10 @@ import {
   type GameState,
   type Phase,
 } from "./machine";
-import { directions, isMirror, mirrors, toSquares, type LaticsPuzzle } from "./puzzle";
-import { traceBeam, trayMirror } from "./rules-check";
-import { solve, type Solution } from "./solver";
+import { directions, isMirror, mirrors, type LaticsPuzzle } from "./puzzle";
+import { boardOf, solve, type Solution } from "./solver";
+import { hitsAllMonsters, laserSquares, monsterSquares, traceBeam } from "./beam";
+import { trayMirror } from "./rules-check";
 
 const easy = example as LaticsPuzzle;
 
@@ -52,7 +53,7 @@ describe("latics machine with a live beam", () => {
   it("starts in the phase playing, with no moves and no misses", () => {
     const state = initialState(easy);
     expect(state).toMatchObject({ phase: "playing", misses: 0, moves: [], fromTray: [] });
-    expect(visibleBeam(state)?.end).toBe("edge");
+    expect(visibleBeam(state)?.parts[0]?.end).toBe("edge");
     expect(canFire(state)).toBe(false);
   });
 
@@ -61,7 +62,7 @@ describe("latics machine with a live beam", () => {
     const solved = play(initialState(easy), [...selects(3, 1), ...selects(23, 3)]);
     expect(solved.phase).toBe("solved");
     expect(solved.moves).toHaveLength(4);
-    expect(visibleBeam(solved)?.end).toBe("monster");
+    expect(visibleBeam(solved)?.parts[0]?.end).toBe("monster");
     expect(transition(solved, { type: "select", index: 3 })).toBe(solved);
     expect(transition(solved, { type: "fire" })).toBe(solved);
   });
@@ -84,8 +85,8 @@ describe("latics machine with a fire button", () => {
   it("goes from playing to missed with a shot that does not hit", () => {
     const missed = transition(initialState(medium), { type: "fire" });
     expect(missed).toMatchObject({ phase: "missed", misses: 1 });
-    expect(missed.moves).toEqual([{ type: "fire", end: "edge", misses: 1 }]);
-    expect(visibleBeam(missed)?.end).toBe("edge");
+    expect(missed.moves).toEqual([{ type: "fire", hits: 0, misses: 1 }]);
+    expect(visibleBeam(missed)?.parts[0]?.end).toBe("edge");
   });
 
   it("does not fire again in the phase missed", () => {
@@ -105,7 +106,7 @@ describe("latics machine with a fire button", () => {
     // One select puts the tray mirror, and two turns send the beam down.
     const solved = play(initialState(medium), [...selects(6, 3), { type: "fire" }]);
     expect(solved).toMatchObject({ phase: "solved", misses: 0 });
-    expect(solved.moves.at(-1)).toEqual({ type: "fire", end: "monster", misses: 0 });
+    expect(solved.moves.at(-1)).toEqual({ type: "fire", hits: 1, misses: 0 });
   });
 
   it("puts a tray mirror back after four turns, and keeps the tray list in order", () => {
@@ -118,6 +119,15 @@ describe("latics machine with a fire button", () => {
     const back = play(placed, selects(5, 4));
     expect(back.fromTray).toEqual([2]);
     expect(back.squares[5]).toBe(".");
+  });
+
+  it("does not put a tray mirror on water", () => {
+    // Row 1, columns 3 to 5 are water. Row 1, column 2 is not.
+    const wet = { ...medium, water: ["..~~~..", ...Array.from({ length: 6 }, () => ".......")] };
+    const state = initialState(wet);
+    expect(canSelect(state, 3)).toBe(false);
+    expect(transition(state, { type: "select", index: 3 })).toBe(state);
+    expect(canSelect(state, 1)).toBe(true);
   });
 });
 
@@ -138,13 +148,18 @@ function brokenInvariants(first: GameState, state: GameState): string[] {
       (!isTray && (isMirror(before) ? isMirror(after) : after === before));
     if (!isAllowed) problems.push(`square ${index} changed from ${before} to ${after}`);
   }
-  if (!config.canAim && state.laser !== first.laser) problems.push("the laser turned");
-  const isHit = traceBeam(state.squares, state.laser).end === "monster";
+  const isTurned = state.lasers.some(
+    (laser, number) => laser.direction !== first.lasers[number]?.direction,
+  );
+  if (!config.canAim && isTurned) problems.push("a laser turned");
+  const beam = traceBeam({ squares: state.squares, water: config.water, lasers: state.lasers });
+  const isHit = hitsAllMonsters(beam, state.squares);
   if (state.phase === "solved" && !isHit) problems.push("solved without a hit");
   if (state.phase !== "solved" && config.liveBeam && isHit)
     problems.push("a live hit is not solved");
   if (state.phase === "missed" && (config.liveBeam || isHit)) problems.push("a wrong missed phase");
-  const missedShots = state.moves.filter((move) => move.type === "fire" && move.end !== "monster");
+  const monsters = monsterSquares(state.squares).length;
+  const missedShots = state.moves.filter((move) => move.type === "fire" && move.hits < monsters);
   if (state.misses !== missedShots.length) problems.push("the misses do not match the shots");
   const isBeamHidden = !config.liveBeam && state.phase === "playing";
   if ((visibleBeam(state) === null) !== isBeamHidden)
@@ -241,7 +256,10 @@ function eventsTo(state: GameState, solution: Solution): GameEvent[] {
       square === "." ? 1 + turns(mirrors, trayMirror, target) : turns(mirrors, square, target);
     return selects(index, count);
   });
-  const aim = selects(state.squares.indexOf("L"), turns(directions, state.laser, solution.laser));
+  const aim = laserSquares(state.squares).flatMap((index, number) => {
+    const from = state.lasers[number]?.direction ?? "E";
+    return selects(index, turns(directions, from, solution.lasers[number]?.direction ?? from));
+  });
   return [...changes, ...aim, ...(state.config.liveBeam ? [] : [{ type: "fire" } as const])];
 }
 
@@ -249,7 +267,7 @@ function eventsTo(state: GameState, solution: Solution): GameEvent[] {
 function playSolution(puzzle: LaticsPuzzle) {
   const start = initialState(puzzle);
   const { canAim, tray } = start.config;
-  const solution = solve(toSquares(puzzle.board), puzzle.laser, { tray, canAim });
+  const solution = solve(boardOf(puzzle), { tray, canAim });
   const end = solution === null ? start : play(start, eventsTo(start, solution));
   return { id: puzzle.id, phase: end.phase, misses: end.misses };
 }

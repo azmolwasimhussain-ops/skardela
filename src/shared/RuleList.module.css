@@ -4,6 +4,15 @@
   padding-left: 1.25rem;
 }
 
+/* A symbol in colour, in the line of the text, for example a red "●". */
+.mark[data-colour="red"] {
+  color: var(--red);
+}
+
+.mark[data-colour="blue"] {
+  color: var(--blue);
+}
+
 /* A small sample of a game square, in the line of the text. */
 .sample {
   position: relative;
@@ -38,9 +47,16 @@
   background-color: var(--blue);
 }
 
+/* Water has a soft blue fill and a blue edge, as on the Latics board. */
+.sample[data-fill="water"] {
+  background-color: color-mix(in srgb, var(--blue) 25%, transparent);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--blue) 60%, transparent);
+}
+
 /* An empty square is an outline, as an empty square on the board. */
 .sample[data-fill="empty"] {
   box-shadow: inset 0 0 0 1.5px var(--line);
+  color: var(--text-h);
 }
 
 /* The dot of a given square, as on the Colour Binary board. */

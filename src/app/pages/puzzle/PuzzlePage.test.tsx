@@ -121,8 +121,9 @@ describe("puzzle page random puzzle", () => {
 
     const id = router.state.location.pathname.replace("/puzzles/", "");
     expect(await easyGuzzleIds()).toContain(id);
+    // The page can render the new puzzle a moment after the path changes, thus the test waits for it.
     const details = screen.getByRole("list", { name: page.detailsLabel });
-    expect(within(details).getByText(page.puzzleNumber(id.slice(-4)))).toBeInTheDocument();
+    expect(await within(details).findByText(page.puzzleNumber(id.slice(-4)))).toBeInTheDocument();
     expect(screen.getByRole("button", { name: page.random })).toHaveFocus();
   });
 
@@ -199,7 +200,8 @@ describe("puzzle page rules", () => {
     const rules = await screen.findByRole("region", { name: page.rulesHeading });
     const more = within(rules).getByText(text.latics.moreRules.label).closest("details");
     expect(more).not.toHaveAttribute("open");
-    // Latics has no key.
-    expect(within(rules).queryByRole("list", { name: page.keyLabel })).toBeNull();
+    // The key of Latics shows the materials.
+    const key = within(rules).getByRole("list", { name: page.keyLabel });
+    expect(within(key).getAllByRole("listitem")).toHaveLength(text.latics.rulesKey.length);
   });
 });

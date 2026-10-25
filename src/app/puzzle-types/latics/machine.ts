@@ -1,12 +1,14 @@
-import { levelRules, toSquares, type Direction, type LaticsPuzzle, type Square } from "./puzzle";
 import {
-  canChange,
-  nextSquare,
-  traceBeam,
-  turnLaser,
-  type Beam,
-  type BeamEnd,
-} from "./rules-check";
+  levelRules,
+  toSquares,
+  toWater,
+  type Direction,
+  type LaserData,
+  type LaticsPuzzle,
+  type Square,
+} from "./puzzle";
+import { hitsAllMonsters, laserSquares, traceBeam, type Beam } from "./beam";
+import { canChange, nextSquare, turnLaser } from "./rules-check";
 
 // The state machine of a Latics game. It is pure: no React, no logs and no other side effects.
 // "transition" is the only way to change a game. It gets a state and an event, and it gives the next state.
@@ -21,12 +23,14 @@ export type GameConfig = {
   readonly canAim: boolean;
   // The number of mirrors in the tray at the start.
   readonly tray: number;
+  // "true" for each square in water. The water does not change.
+  readonly water: readonly boolean[];
 };
 
 // "playing": the player can change the board. Without a live beam, the player can also fire.
-// "missed": only without a live beam. The last shot did not hit the monster, and its beam shows.
+// "missed": only without a live beam. The last shot did not hit all monsters, and its beam shows.
 //   The board did not change after the shot, thus the player cannot fire again. A change goes back to "playing".
-// "solved": the beam hits the monster. This phase is final: no event changes the game.
+// "solved": the beam hits all monsters. This phase is final: no event changes the game.
 export type Phase = "playing" | "missed" | "solved";
 
 // A move is an event that changed the game. The board logs each move.
@@ -37,14 +41,16 @@ export type Move =
       readonly from: Square | Direction;
       readonly to: Square | Direction;
     }
-  | { readonly type: "fire"; readonly end: BeamEnd; readonly misses: number };
+  // "hits": the number of monsters that the shot hits.
+  | { readonly type: "fire"; readonly hits: number; readonly misses: number };
 
 export type GameState = {
   readonly config: GameConfig;
   readonly squares: readonly Square[];
   // The indexes of the squares with a mirror from the tray, from small to large.
   readonly fromTray: readonly number[];
-  readonly laser: Direction;
+  // One laser for each "L" on the board, in reading order. On hard, the player can turn them.
+  readonly lasers: readonly LaserData[];
   readonly misses: number;
   readonly phase: Phase;
   // All moves, in order. A new move goes at the end, and no move changes after that.
@@ -58,20 +64,25 @@ export type GameEvent =
 
 // The state does not keep the beam. The beam comes from the board, thus it always matches the board.
 // In the phase "missed", the board did not change after the shot, thus this beam is the beam of the shot.
-function beamHitsMonster(squares: readonly Square[], laser: Direction): boolean {
-  return traceBeam(squares, laser).end === "monster";
+function beamOf(config: GameConfig, board: Pick<GameState, "squares" | "lasers">): Beam {
+  return traceBeam({ squares: board.squares, water: config.water, lasers: board.lasers });
+}
+
+function hitsAll(config: GameConfig, board: Pick<GameState, "squares" | "lasers">): boolean {
+  return hitsAllMonsters(beamOf(config, board), board.squares);
 }
 
 export function initialState(puzzle: LaticsPuzzle): GameState {
   const { liveBeam, canAim } = levelRules[puzzle.difficulty];
   const squares = toSquares(puzzle.board);
+  const config = { liveBeam, canAim, tray: puzzle.tray, water: toWater(puzzle) };
   // The data checks do not allow a puzzle that is solved at the start. The phase is correct for one too.
-  const isSolved = liveBeam && beamHitsMonster(squares, puzzle.laser);
+  const isSolved = liveBeam && hitsAll(config, { squares, lasers: puzzle.lasers });
   return {
-    config: { liveBeam, canAim, tray: puzzle.tray },
+    config,
     squares,
     fromTray: [],
-    laser: puzzle.laser,
+    lasers: puzzle.lasers,
     misses: 0,
     phase: isSolved ? "solved" : "playing",
     moves: [],
@@ -101,7 +112,7 @@ export function trayLeft(state: GameState): number {
 // The beam to show, or "null" when the player must fire to see it.
 export function visibleBeam(state: GameState): Beam | null {
   const isShown = state.config.liveBeam || state.phase !== "playing";
-  return isShown ? traceBeam(state.squares, state.laser) : null;
+  return isShown ? beamOf(state.config, state) : null;
 }
 
 // "true" when a "select" event on the square changes the game.
@@ -110,7 +121,7 @@ export function canSelect(state: GameState, index: number): boolean {
   return (
     accepts[state.phase].select &&
     square !== undefined &&
-    canChange(square, trayLeft(state), state.config.canAim)
+    canChange(square, trayLeft(state), state.config.canAim, state.config.water[index] === true)
   );
 }
 
@@ -119,14 +130,14 @@ export function canFire(state: GameState): boolean {
   return accepts[state.phase].fire && !state.config.liveBeam;
 }
 
-// After a change, the phase is "playing". With a live beam, a change that sends the beam to the monster
+// After a change, the phase is "playing". With a live beam, a change that sends the beam to all monsters
 // solves the puzzle. A change also hides the beam of the last shot, because that beam does not match the board.
 function afterChange(
   state: GameState,
-  board: Pick<GameState, "squares" | "fromTray" | "laser">,
+  board: Pick<GameState, "squares" | "fromTray" | "lasers">,
   move: Move,
 ): GameState {
-  const isSolved = state.config.liveBeam && beamHitsMonster(board.squares, board.laser);
+  const isSolved = state.config.liveBeam && hitsAll(state.config, board);
   return {
     ...state,
     ...board,
@@ -149,18 +160,21 @@ function trayAfter(
   return fromTray;
 }
 
-// A select turns a mirror or the laser, or puts a tray mirror on an empty square.
+// A select turns a mirror or a laser, or puts a tray mirror on an empty square.
 // A tray mirror goes back to the tray after four turns. See "nextSquare".
 // "transition" calls it only when "canSelect" is "true".
 function select(state: GameState, index: number): GameState {
   const square = state.squares[index] as Square;
   const { squares, fromTray } = state;
   if (square === "L") {
-    const laser = turnLaser(state.laser);
+    // The lasers are in reading order, thus the number of the laser is its place in the list of laser squares.
+    const number = laserSquares(squares).indexOf(index);
+    const laser = state.lasers[number] as LaserData;
+    const direction: Direction = turnLaser(laser.direction);
     return afterChange(
       state,
-      { squares, fromTray, laser },
-      { type: "change", index, from: state.laser, to: laser },
+      { squares, fromTray, lasers: state.lasers.with(number, { ...laser, direction }) },
+      { type: "change", index, from: laser.direction, to: direction },
     );
   }
   const next = nextSquare(square, fromTray.includes(index), trayLeft(state));
@@ -169,22 +183,23 @@ function select(state: GameState, index: number): GameState {
     {
       squares: squares.with(index, next),
       fromTray: trayAfter(fromTray, index, square, next),
-      laser: state.laser,
+      lasers: state.lasers,
     },
     { type: "change", index, from: square, to: next },
   );
 }
 
-// A shot shows the beam. A shot that does not hit the monster is a miss.
+// A shot shows the beam of all lasers. A shot that does not hit all monsters is a miss.
 // "transition" calls it only when "canFire" is "true".
 function fire(state: GameState): GameState {
-  const { end } = traceBeam(state.squares, state.laser);
-  const misses = end === "monster" ? state.misses : state.misses + 1;
+  const beam = beamOf(state.config, state);
+  const isHit = hitsAllMonsters(beam, state.squares);
+  const misses = isHit ? state.misses : state.misses + 1;
   return {
     ...state,
     misses,
-    phase: end === "monster" ? "solved" : "missed",
-    moves: [...state.moves, { type: "fire", end, misses }],
+    phase: isHit ? "solved" : "missed",
+    moves: [...state.moves, { type: "fire", hits: beam.hits.length, misses }],
   };
 }
 

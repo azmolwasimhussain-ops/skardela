@@ -52,7 +52,7 @@ describe("latics game hook with many events in one React batch", () => {
     expect(onMove.mock.calls.map(([move]) => move)).toEqual([
       { type: "change", index: 6, from: ".", to: "/" },
       { type: "change", index: 6, from: "/", to: "-" },
-      { type: "fire", end: "edge", misses: 1 },
+      { type: "fire", hits: 0, misses: 1 },
     ]);
   });
 });

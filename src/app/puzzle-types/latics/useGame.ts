@@ -25,7 +25,7 @@ export function useGame(puzzle: LaticsPuzzle, onMove?: (move: Move) => void) {
     size: puzzle.board.length,
     squares: state.squares,
     fromTray: state.fromTray,
-    laser: state.laser,
+    lasers: state.lasers,
     misses: state.misses,
     isSolved: state.phase === "solved",
     beam: visibleBeam(state),

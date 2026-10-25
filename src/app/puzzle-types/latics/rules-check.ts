@@ -1,8 +1,25 @@
-import { directions, isMirror, mirrors, type Direction, type Mirror, type Square } from "./puzzle";
+import {
+  directions,
+  isMirror,
+  mirrors,
+  type BeamColour,
+  type Direction,
+  type Filter,
+  type Mirror,
+  type Square,
+} from "./puzzle";
+
+// The optics of Latics: what each piece does to a beam, and what each select changes.
+// The water is in "water.ts", and the path of the beam is in "beam.ts".
 
 // This helper gives the item before the given item. After the first item, it goes to the last item.
 function previous<Item>(list: readonly Item[], item: Item): Item {
   return list[(list.indexOf(item) - 1 + list.length) % list.length] as Item;
+}
+
+// This helper gives the item after the given item. After the last item, it goes to the first item.
+function following<Item>(list: readonly Item[], item: Item): Item {
+  return list[(list.indexOf(item) + 1) % list.length] as Item;
 }
 
 // The change in row and in column for one step in each direction. The row number increases down the board.
@@ -17,8 +34,18 @@ export const steps: Record<Direction, { readonly row: number; readonly column: n
   SE: { row: 1, column: 1 },
 };
 
+// The direction of a step with this change in row and in column.
+export function directionOf(row: number, column: number): Direction {
+  return directions.find((item) => steps[item].row === row && steps[item].column === column) ?? "E";
+}
+
 export function opposite(direction: Direction): Direction {
   return directions[(directions.indexOf(direction) + 4) % directions.length] as Direction;
+}
+
+export function isDiagonal(direction: Direction): boolean {
+  const { row, column } = steps[direction];
+  return row !== 0 && column !== 0;
 }
 
 // The law of reflection: the angle in is the same as the angle out.
@@ -30,7 +57,7 @@ export function reflect(direction: Direction, mirror: Mirror): Direction {
   return directions[(angle + directions.length) % directions.length] as Direction;
 }
 
-// Each select turns a mirror or the laser 45° clockwise.
+// Each select turns a mirror or a laser 45° clockwise.
 // The lists go counterclockwise, thus clockwise is one step back in the list.
 export function turnMirror(mirror: Mirror): Mirror {
   return previous(mirrors, mirror);
@@ -40,24 +67,77 @@ export function turnLaser(direction: Direction): Direction {
   return previous(directions, direction);
 }
 
-// What a square does to the beam. A piece either sends the beam on in a direction, or stops it.
-export type StopReason = "wall" | "laser" | "monster";
-export type Effect = { readonly stop: StopReason } | { readonly direction: Direction };
+// A prism bends red light less than blue light. In the game, red light turns 45° to the right (clockwise)
+// and blue light turns 45° to the left (counterclockwise). White light has both, thus it splits.
+export function prismTurn(direction: Direction, colour: "red" | "blue"): Direction {
+  return colour === "red" ? previous(directions, direction) : following(directions, direction);
+}
+
+// What a square does to the beam. A piece stops the beam, or sends one or more rays on.
+// "monster": the beam hits the monster. "otherMonster": a monster of a different colour stops the beam.
+// "filter": a filter of a different colour stops the beam.
+export type StopReason = "wall" | "laser" | "monster" | "otherMonster" | "filter";
+
+// A ray is a beam of one colour that goes in one direction.
+export type Ray = { readonly direction: Direction; readonly colour: BeamColour };
+
+// "isNewPart": the beam ends in this square, and each ray is a new part of the beam.
+// A prism splits a white beam into two parts, and a filter changes the colour of a white beam.
+export type Effect =
+  | { readonly stop: StopReason }
+  | { readonly rays: readonly Ray[]; readonly isNewPart: boolean };
+
+const go = (direction: Direction, colour: BeamColour): Effect => ({
+  rays: [{ direction, colour }],
+  isNewPart: false,
+});
+
+// A filter lets its own colour through. White light goes through, but only its part of the colour of the filter.
+function filterEffect(filter: Filter, direction: Direction, colour: BeamColour): Effect {
+  const own: BeamColour = filter === "r" ? "red" : "blue";
+  if (colour === own) return go(direction, colour);
+  if (colour === "white") return { rays: [{ direction, colour: own }], isNewPart: true };
+  return { stop: "filter" };
+}
+
+// A monster of one colour is hit only by a beam of its colour. The monster "M" is hit by each beam.
+function monsterEffect(square: "R" | "B", colour: BeamColour): Effect {
+  const own: BeamColour = square === "R" ? "red" : "blue";
+  return { stop: colour === own ? "monster" : "otherMonster" };
+}
 
 // One rule for each piece. A new piece needs only one rule here, and the beam and the solver use it.
-const effects: Record<Square, (direction: Direction) => Effect> = {
-  ".": (direction) => ({ direction }),
+const effects: Record<Square, (direction: Direction, colour: BeamColour) => Effect> = {
+  ".": (direction, colour) => go(direction, colour),
   "#": () => ({ stop: "wall" }),
   L: () => ({ stop: "laser" }),
   M: () => ({ stop: "monster" }),
-  "-": (direction) => ({ direction: reflect(direction, "-") }),
-  "/": (direction) => ({ direction: reflect(direction, "/") }),
-  "|": (direction) => ({ direction: reflect(direction, "|") }),
-  "\\": (direction) => ({ direction: reflect(direction, "\\") }),
+  R: (_, colour) => monsterEffect("R", colour),
+  B: (_, colour) => monsterEffect("B", colour),
+  "^": (direction, colour) =>
+    colour === "white"
+      ? {
+          rays: [
+            { direction: prismTurn(direction, "red"), colour: "red" },
+            { direction: prismTurn(direction, "blue"), colour: "blue" },
+          ],
+          isNewPart: true,
+        }
+      : go(prismTurn(direction, colour), colour),
+  r: (direction, colour) => filterEffect("r", direction, colour),
+  b: (direction, colour) => filterEffect("b", direction, colour),
+  "-": (direction, colour) => go(reflect(direction, "-"), colour),
+  "/": (direction, colour) => go(reflect(direction, "/"), colour),
+  "|": (direction, colour) => go(reflect(direction, "|"), colour),
+  "\\": (direction, colour) => go(reflect(direction, "\\"), colour),
 };
 
-export function effectOf(square: Square, direction: Direction): Effect {
-  return effects[square](direction);
+export function effectOf(
+  square: Square,
+  direction: Direction,
+  colour: BeamColour = "white",
+): Effect {
+  return effects[square](direction, colour);
 }
 
 // The index of the next square in the direction, or "null" when the next step goes off the board.
@@ -67,101 +147,24 @@ export function neighbour(index: number, direction: Direction, size: number): nu
   return row >= 0 && row < size && column >= 0 && column < size ? row * size + column : null;
 }
 
-// One square on the path of the beam after the laser square.
-// "enter" is the direction of the beam when it comes in. "exit" is the direction when it goes out,
-// or "null" when a piece stops the beam in this square.
-export type BeamStep = {
-  readonly index: number;
-  readonly enter: Direction;
-  readonly exit: Direction | null;
-};
-
-// "edge": the beam goes off the board. "loop": the beam goes around and never ends.
-export type BeamEnd = StopReason | "edge" | "loop";
-
-export type Beam = {
-  readonly from: number;
-  readonly direction: Direction;
-  readonly steps: readonly BeamStep[];
-  readonly end: BeamEnd;
-};
-
-// This function follows the beam from the laser, one square at a time, until the beam stops.
-// A beam can be in each square in each direction only once before it repeats.
-// Thus a longer path is a loop. With only mirrors a loop cannot occur, because each step can go back.
-// The limit keeps the function safe for new pieces in the future.
-export function traceBeam(squares: readonly Square[], laser: Direction): Beam {
-  const size = Math.sqrt(squares.length);
-  const from = squares.indexOf("L");
-  const path: BeamStep[] = [];
-  let index = from;
-  let direction = laser;
-  for (let count = 0; count <= squares.length * directions.length; count += 1) {
-    const next = neighbour(index, direction, size);
-    if (next === null) return { from, direction: laser, steps: path, end: "edge" };
-    const effect = effectOf(squares[next] ?? "#", direction);
-    if ("stop" in effect) {
-      path.push({ index: next, enter: direction, exit: null });
-      return { from, direction: laser, steps: path, end: effect.stop };
-    }
-    path.push({ index: next, enter: direction, exit: effect.direction });
-    index = next;
-    direction = effect.direction;
-  }
-  return { from, direction: laser, steps: path, end: "loop" };
-}
-
-// The square where the beam ends: the last square on the path, or the laser when the path is empty.
-export function endSquare(beam: Beam): number {
-  return beam.steps.at(-1)?.index ?? beam.from;
-}
-
-// The beam lines to draw in each square. Each line goes from the middle of the square to one side.
-// A square gets a line to the side where the beam comes in, and a line to the side where it goes out.
-// Each side is in the list only once: a beam that a mirror sends back goes in and out on the same side.
-export function beamLines(beam: Beam): Map<number, Direction[]> {
-  const lines = new Map<number, Direction[]>([[beam.from, [beam.direction]]]);
-  for (const { index, enter, exit } of beam.steps) {
-    const sides = [opposite(enter), ...(exit === null ? [] : [exit])];
-    lines.set(index, [...new Set([...(lines.get(index) ?? []), ...sides])]);
-  }
-  return lines;
-}
-
-// The path of the beam in words: each straight part, and each mirror that turns the beam.
-export type PathPart =
-  | { readonly kind: "move"; readonly direction: Direction; readonly squares: number }
-  | { readonly kind: "turn"; readonly index: number; readonly direction: Direction };
-
-export function pathParts(beam: Beam): PathPart[] {
-  const parts: PathPart[] = [];
-  let run = 0;
-  for (const { index, enter, exit } of beam.steps) {
-    run += 1;
-    if (exit !== null && exit !== enter) {
-      parts.push(
-        { kind: "move", direction: enter, squares: run },
-        { kind: "turn", index, direction: exit },
-      );
-      run = 0;
-    }
-  }
-  const last = beam.steps.at(-1);
-  if (last !== undefined && run > 0)
-    parts.push({ kind: "move", direction: last.enter, squares: run });
-  return parts;
-}
-
 // A mirror from the tray starts at this angle. After four turns it is at this angle again.
 // Then it goes back to the tray.
 export const trayMirror: Mirror = "/";
 
-// The player can turn each mirror, put a mirror from the tray on an empty square, and turn the laser on "hard".
-export function canChange(square: Square, trayLeft: number, canAim: boolean): boolean {
-  return isMirror(square) || (square === "." && trayLeft > 0) || (square === "L" && canAim);
+// The player can turn each mirror, put a mirror from the tray on an empty square out of the water,
+// and turn a laser on "hard". Prisms and filters do not change.
+export function canChange(
+  square: Square,
+  trayLeft: number,
+  canAim: boolean,
+  isInWater = false,
+): boolean {
+  return (
+    isMirror(square) || (square === "." && trayLeft > 0 && !isInWater) || (square === "L" && canAim)
+  );
 }
 
-// The piece in a square after the player selects it. The laser is not a square change, see "turnLaser".
+// The piece in a square after the player selects it. A laser is not a square change, see "turnLaser".
 export function nextSquare(square: Square, isFromTray: boolean, trayLeft: number): Square {
   if (isMirror(square)) {
     const turned = turnMirror(square);

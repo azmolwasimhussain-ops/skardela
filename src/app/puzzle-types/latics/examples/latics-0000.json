@@ -5,6 +5,6 @@
   "author": "skardela",
   "license": "CC-BY-4.0",
   "board": ["L..-.", ".....", ".#...", ".....", "...|M"],
-  "laser": "E",
+  "lasers": [{ "direction": "E", "colour": "white" }],
   "tray": 0
 }

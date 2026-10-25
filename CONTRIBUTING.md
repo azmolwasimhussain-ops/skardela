@@ -13,19 +13,21 @@ Before you open a pull request, run `npm run fix && npm run check`. CI runs the 
 
 ## Scripts
 
-| Script             | What it does                                                        |
-| ------------------ | ------------------------------------------------------------------- |
-| `npm run dev`      | Starts the app on your computer.                                    |
-| `npm run fix`      | Formats the code and fixes lint problems that a tool can fix.       |
-| `npm run check`    | Runs the format, lint, type, build, unit test and data checks.      |
-| `npm run test`     | Runs the unit tests in `src/`.                                      |
-| `npm run validate` | Checks all puzzle files in `puzzles/`. See `tools/puzzles.test.ts`. |
+| Script                    | What it does                                                                                         |
+| ------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `npm run dev`             | Starts the app on your computer.                                                                     |
+| `npm run fix`             | Formats the code and fixes lint problems that a tool can fix.                                        |
+| `npm run check`           | Runs the format, lint, type, build, unit test and data checks.                                       |
+| `npm run test`            | Runs the unit tests in `src/`.                                                                       |
+| `npm run validate`        | Checks all puzzle files in `puzzles/`. See `tools/puzzles.test.ts`.                                  |
+| `npm run generate:latics` | Makes new Latics puzzles and adds them to `puzzles/latics.json`. See `tools/generate-latics.gen.ts`. |
 
 ## Project structure
 
 ```text
 puzzles/                     Puzzle data. One JSON file for each puzzle type. The build ciphers the answers.
 tools/puzzles.test.ts        Checks all puzzle data.
+tools/latics-generator.ts    Makes new Latics puzzles. "npm run generate:latics" runs it.
 src/
   main.tsx                   Starts the app.
   index.css                  Global styles and colour values.

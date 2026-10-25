@@ -19,6 +19,10 @@ export const symbols = {
     monster: "👾",
     // The monster shows this symbol too when the beam hits it.
     hit: "💥",
+    // The symbol of a prism in the rules key. The board draws the prism as a triangle.
+    prism: "▲",
+    // A red filter, a red monster and a red laser show a circle. Blue ones show a square, as in Colour Binary.
+    colours: { red: "●", blue: "■" },
   },
   // A solved level on the home page.
   progress: {

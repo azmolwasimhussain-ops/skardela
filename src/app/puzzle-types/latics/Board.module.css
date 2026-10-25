@@ -8,6 +8,17 @@
   background-image: repeating-linear-gradient(45deg, var(--line) 0 2px, transparent 2px 8px);
 }
 
+/* Water has a soft blue fill and thin lines across, like small waves, so the colour is not the only signal. */
+.square[data-water="true"] {
+  --fill: color-mix(in srgb, var(--blue) 16%, var(--surface));
+  --fill-edge: color-mix(in srgb, var(--blue) 50%, var(--line));
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0 8px,
+    color-mix(in srgb, var(--blue) 35%, transparent) 8px 9px
+  );
+}
+
 /* A mirror from the tray has a dashed edge, so the player can see which mirrors can go back to the tray. */
 .square[data-from-tray="true"] {
   border-style: dashed;
@@ -30,10 +41,49 @@
   pointer-events: none;
 }
 
+/* Each colour of the beam has its own pattern too: the white beam is solid, the red beam has dashes,
+   and the blue beam has dots. The white beam has the colour of the laser, so it shows on each theme. */
 .beam line {
-  stroke: var(--red);
   stroke-width: 7;
   stroke-linecap: round;
+}
+
+.beam[data-colour="white"] line {
+  stroke: var(--accent);
+}
+
+.beam[data-colour="red"] line {
+  stroke: var(--red);
+  stroke-dasharray: 14 10;
+}
+
+.beam[data-colour="blue"] line {
+  stroke: var(--blue);
+  stroke-dasharray: 1 12;
+  stroke-width: 9;
+}
+
+/* A prism is a triangle with a soft fill. */
+.prism {
+  fill: color-mix(in srgb, var(--text-h) 14%, transparent);
+  stroke: var(--text-h);
+  stroke-width: 5;
+  stroke-linejoin: round;
+}
+
+/* A filter is a square of coloured glass under the beam. */
+.filter {
+  stroke-width: 3;
+}
+
+.filter[data-colour="red"] {
+  fill: color-mix(in srgb, var(--red) 28%, transparent);
+  stroke: var(--red);
+}
+
+.filter[data-colour="blue"] {
+  fill: color-mix(in srgb, var(--blue) 28%, transparent);
+  stroke: var(--blue);
 }
 
 .mirror line {
@@ -50,6 +100,39 @@
 
 .laser circle {
   fill: var(--accent);
+}
+
+.laser[data-colour="red"] line {
+  stroke: var(--red);
+}
+
+.laser[data-colour="red"] circle {
+  fill: var(--red);
+}
+
+.laser[data-colour="blue"] line {
+  stroke: var(--blue);
+}
+
+.laser[data-colour="blue"] circle {
+  fill: var(--blue);
+}
+
+/* The shape of a red or a blue piece, in a corner of the square: a circle for red and a square for blue. */
+.shape {
+  position: absolute;
+  bottom: 0.15em;
+  left: 0.2em;
+  font-size: 0.55em;
+  line-height: 1;
+}
+
+.shape[data-colour="red"] {
+  color: var(--red);
+}
+
+.shape[data-colour="blue"] {
+  color: var(--blue);
 }
 
 /* The monster is above the beam, so the beam seems to hit it. */
