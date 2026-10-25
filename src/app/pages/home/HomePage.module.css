@@ -332,9 +332,22 @@
   background-color: var(--surface);
 }
 
+/* A solved level has a soft green fill and edge, and a check mark. The next level keeps its ring. */
+.level[data-solved="true"] {
+  box-shadow: inset 0 0 0 1px var(--success-border);
+  background-color: var(--success-bg);
+}
+
 .levelName {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.25rem;
   font-size: 0.8125rem;
   font-weight: 600;
+}
+
+.levelMark {
+  color: var(--success);
 }
 
 .levelStatus {
@@ -347,17 +360,44 @@
   color: var(--success);
 }
 
-/* The main link of a card. It is in the last row of the card. */
+/* The last row of a card: the main link, or the total of a solved card, and "Share" after a solve. */
+.cardActions {
+  display: flex;
+  align-self: end;
+  gap: 0.5rem;
+}
+
+/* The main link of a card. It fills the row next to "Share". */
 .cta,
 .allSolved {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
-  align-self: end;
   min-height: 3rem;
+  padding-inline: 0.75rem;
   border-radius: 14px;
   font-size: 0.9375rem;
   font-weight: 600;
+  text-align: center;
+}
+
+.share {
+  flex: 0 0 auto;
+  min-height: 3rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background-color: var(--surface);
+  color: var(--text-h);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.share:hover {
+  border-color: var(--line);
+  background-color: var(--surface-muted);
 }
 
 .cta {
@@ -516,7 +556,7 @@
   border-radius: 2px;
 }
 
-/* The personal bests: the name of the puzzle, then the average time and the best time. */
+/* The personal bests: the name of the puzzle type, then the best time of each level. */
 .bests {
   width: 100%;
   border-collapse: collapse;
@@ -553,13 +593,80 @@
 
 .bests td {
   width: 4.5rem;
-  color: var(--text-muted);
+  color: var(--text-h);
   font-family: var(--mono);
+  vertical-align: top;
 }
 
-.bests .bestTime {
+/* A level without a solve has a quiet dash. */
+.bests td[data-empty="true"] {
+  color: var(--text-muted);
+}
+
+/* The name of a puzzle type is a button. It looks like the text of the row, with a small arrow. */
+.bestsToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 1.75rem;
   color: var(--text-h);
+  text-align: left;
+}
+
+.bestsToggle::after {
+  content: "";
+  width: 0.375rem;
+  height: 0.375rem;
+  border-right: 1.5px solid var(--text-muted);
+  border-bottom: 1.5px solid var(--text-muted);
+  transform: translateY(-25%) rotate(45deg);
+  transition: transform 150ms ease;
+}
+
+.bestsToggle[aria-expanded="true"]::after {
+  transform: translateY(25%) rotate(-135deg);
+}
+
+.bestsToggle:hover {
+  color: var(--accent-text);
+}
+
+/* The average time shows under the best time when the row is open. */
+.average {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  white-space: nowrap;
+}
+
+.bestsNote {
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+}
+
+/* Before the first solve: one message and a link, in a panel with a dashed edge. */
+.noSolves {
+  align-content: start;
+  border-style: dashed;
+}
+
+.noSolvesLink {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  background-color: var(--text-h);
+  color: var(--bg);
+  font-size: 0.875rem;
   font-weight: 600;
+  text-decoration: none;
+}
+
+.noSolvesLink:hover {
+  background-color: color-mix(in srgb, var(--text-h) 85%, var(--bg));
 }
 
 /* Export, import and clear, in one row. The message and the note are under the buttons. */

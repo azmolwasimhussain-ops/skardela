@@ -31,6 +31,15 @@ afterEach(() => {
 });
 
 describe("app store", () => {
+  it("saves each puzzle type of the seen rules one time", () => {
+    useAppStore.getState().seeRules("guzzle");
+    const before = useAppStore.getState();
+    useAppStore.getState().seeRules("guzzle");
+    // A type that is already in the list does not change the state.
+    expect(useAppStore.getState()).toBe(before);
+    expect(stored()).toMatchObject({ seenRules: ["guzzle"] });
+  });
+
   it("saves the data under one key", () => {
     useAppStore.getState().setTheme("dark");
     useAppStore.getState().acknowledgeNotice();

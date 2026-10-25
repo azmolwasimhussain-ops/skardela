@@ -16,12 +16,15 @@ export type PuzzleRef = {
 };
 
 // One solve of one puzzle. "day" is the local date of the solve, for example "2026-10-24".
+// "mistakes" is the score to keep low: the mistakes in Guzzle, the misses in Latics and the hints in Colour Binary.
+// Solves from before this field do not have it.
 export type SolveResult = {
   readonly puzzleId: string;
   readonly type: string;
   readonly difficulty: Difficulty;
   readonly seconds: number;
   readonly day: string;
+  readonly mistakes?: number;
 };
 
 export type SavedData = {
@@ -35,6 +38,8 @@ export type SavedData = {
   readonly results: readonly SolveResult[];
   // The puzzle that the player opened last. The home page links to it when it is not solved.
   readonly lastOpened: PuzzleRef | null;
+  // The puzzle types that the player opened. "More rules" is open only on the first visit to a puzzle type.
+  readonly seenRules: readonly string[];
 };
 
 export const defaultSavedData: SavedData = {
@@ -43,6 +48,7 @@ export const defaultSavedData: SavedData = {
   solved: [],
   results: [],
   lastOpened: null,
+  seenRules: [],
 };
 
 // The list of results keeps at most this number of solves. Then the oldest solves go first.
@@ -67,11 +73,24 @@ function isPuzzleRef(value: unknown): value is PuzzleRef {
   );
 }
 
+const isCount = (value: unknown): value is number =>
+  typeof value === "number" && Number.isInteger(value) && value >= 0;
+
+// A solve without "mistakes" is correct too, because older solves do not have it.
 function isSolveResult(value: unknown): value is SolveResult {
   if (!isPuzzleRef(value)) return false;
-  const { seconds, day } = value as Fields;
-  return typeof seconds === "number" && Number.isFinite(seconds) && seconds >= 0 && isDayKey(day);
+  const { seconds, day, mistakes } = value as Fields;
+  return (
+    typeof seconds === "number" &&
+    Number.isFinite(seconds) &&
+    seconds >= 0 &&
+    isDayKey(day) &&
+    (mistakes === undefined || isCount(mistakes))
+  );
 }
+
+const isTextList = (value: unknown): value is string[] =>
+  Array.isArray(value) && value.every((item) => typeof item === "string");
 
 // Each field has a reader. A reader gives the value when it is correct, and undefined when it is not.
 // Then the field gets its default value, thus a broken or an old value in the storage does not break the app.
@@ -80,15 +99,13 @@ function isSolveResult(value: unknown): value is SolveResult {
 const readers: { [Name in keyof SavedData]: (value: unknown) => SavedData[Name] | undefined } = {
   theme: (value) => (isTheme(value) ? value : undefined),
   cookieBanner: (value) => (typeof value === "boolean" ? value : undefined),
-  solved: (value) =>
-    Array.isArray(value) && value.every((id) => typeof id === "string")
-      ? (value as string[])
-      : undefined,
+  solved: (value) => (isTextList(value) ? value : undefined),
   results: (value) =>
     Array.isArray(value)
       ? value.filter((item) => isSolveResult(item)).slice(-maxResults)
       : undefined,
   lastOpened: (value) => (isPuzzleRef(value) || value === null ? value : undefined),
+  seenRules: (value) => (isTextList(value) ? value : undefined),
 };
 
 // This makes correct saved data from a value, for example from parsed JSON.
@@ -103,6 +120,7 @@ export function readSavedData(value: unknown): SavedData {
     solved: read("solved"),
     results: read("results"),
     lastOpened: read("lastOpened"),
+    seenRules: read("seenRules"),
   };
 }
 
@@ -110,7 +128,8 @@ export function readSavedData(value: unknown): SavedData {
 const keyOf = ({ puzzleId, day, seconds }: SolveResult) => `${puzzleId}|${day}|${seconds}`;
 
 // This adds the solves of an imported file to the current data. A solve that is already in the data
-// is not added again. The theme, the OK on the analytics notice and the last opened puzzle stay as they are.
+// is not added again. The theme, the OK on the analytics notice, the last opened puzzle and the seen rules
+// stay as they are.
 // "added" is the number of new solves.
 export function mergeProgress(
   current: SavedData,
@@ -134,6 +153,6 @@ export function mergeProgress(
 
 // This keeps only the saved fields of an object, for example of the store state with its actions.
 export function pickSavedData(state: SavedData): SavedData {
-  const { theme, cookieBanner, solved, results, lastOpened } = state;
-  return { theme, cookieBanner, solved, results, lastOpened };
+  const { theme, cookieBanner, solved, results, lastOpened, seenRules } = state;
+  return { theme, cookieBanner, solved, results, lastOpened, seenRules };
 }

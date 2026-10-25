@@ -5,8 +5,12 @@ import example from "./examples/colour-binary-0000.json";
 import { findHint } from "./hint";
 import {
   canAskHint,
+  canSet,
   canTap,
+  canUndo,
+  hintsUsed,
   initialState,
+  lastChanged,
   phaseOf,
   transition,
   type GameEvent,
@@ -72,13 +76,53 @@ describe("colour binary machine", () => {
     expect(hinted.moves).toEqual([{ type: "hint", hint: findHint(start.squares) }]);
     expect(transition(hinted, { type: "tap", index: open }).hint).toEqual({ status: "hidden" });
   });
+});
 
+describe("colour binary machine keys, undo and hints", () => {
+  it("sets a colour with a key, and ignores a key that gives the same colour", () => {
+    const red = transition(start, { type: "set", index: open, square: "R" });
+    expect(red.squares[open]).toBe("R");
+    expect(red.moves).toEqual([{ type: "set", index: open, from: ".", to: "R" }]);
+    expect(transition(red, { type: "set", index: open, square: "R" })).toBe(red);
+    expect(transition(start, { type: "set", index: fixed, square: "R" })).toBe(start);
+  });
+
+  it("removes the last change with undo, one change at a time", () => {
+    const changed = play(start, [
+      { type: "tap", index: open },
+      { type: "set", index: open, square: "B" },
+    ]);
+    const once = transition(changed, { type: "undo" });
+    expect(once.squares[open]).toBe("R");
+    expect(once.moves.at(-1)).toEqual({ type: "undo", index: open, from: "B", to: "R" });
+    const twice = transition(once, { type: "undo" });
+    expect(twice.squares).toEqual(start.squares);
+    expect(canUndo(twice)).toBe(false);
+    expect(transition(twice, { type: "undo" })).toBe(twice);
+  });
+
+  it("counts only the hints that the player got, and gives the square of the last change", () => {
+    expect(hintsUsed(play(start, [{ type: "askHint" }, { type: "askHint" }]))).toBe(2);
+    // An empty board has no hint. A request without a hint does not count.
+    const empty = initialState(toSquares(["....", "....", "....", "...."]));
+    expect(hintsUsed(transition(empty, { type: "askHint" }))).toBe(0);
+    expect(lastChanged(start)).toBeNull();
+    expect(lastChanged(play(start, [{ type: "tap", index: open }, { type: "askHint" }]))).toBe(
+      open,
+    );
+  });
+});
+
+describe("colour binary machine solve", () => {
   it("solves the rules.md example and then ignores each event", () => {
     const solved = play(start, tapsTo(example as ColourBinaryPuzzle));
     expect(phaseOf(solved)).toBe("solved");
     expect(canAskHint(solved)).toBe(false);
+    expect(canUndo(solved)).toBe(false);
     expect(transition(solved, { type: "askHint" })).toBe(solved);
     expect(transition(solved, { type: "tap", index: open })).toBe(solved);
+    expect(transition(solved, { type: "set", index: open, square: "." })).toBe(solved);
+    expect(transition(solved, { type: "undo" })).toBe(solved);
   });
 });
 
@@ -101,7 +145,29 @@ function brokenInvariants(state: GameState): string[] {
   for (const move of state.moves) {
     if (move.type === "tap" && nextSquare[move.from] !== move.to) problems.push("a wrong tap move");
   }
+  // The changes that Undo can remove, applied to the start, give the board.
+  const replayed = state.changes.reduce(
+    (squares, { index, to }) => squares.with(index, to),
+    state.start,
+  );
+  if (JSON.stringify(replayed) !== JSON.stringify(state.squares)) {
+    problems.push("the changes do not give the board");
+  }
   return problems;
+}
+
+// True when the selectors tell that the machine accepts the event.
+function isAllowedEvent(state: GameState, event: GameEvent): boolean {
+  switch (event.type) {
+    case "tap":
+      return canTap(state, event.index);
+    case "set":
+      return canSet(state, event.index, event.square);
+    case "undo":
+      return canUndo(state);
+    case "askHint":
+      return canAskHint(state);
+  }
 }
 
 // The rules for one event: the selectors agree with the machine, an accepted event adds exactly one move
@@ -109,7 +175,7 @@ function brokenInvariants(state: GameState): string[] {
 function brokenStep(before: GameState, event: GameEvent, after: GameState): string[] {
   const problems: string[] = [];
   const isAccepted = after !== before;
-  const isAllowed = event.type === "tap" ? canTap(before, event.index) : canAskHint(before);
+  const isAllowed = isAllowedEvent(before, event);
   if (isAccepted !== isAllowed)
     problems.push(`${JSON.stringify(event)}: the selector does not agree`);
   const isHistoryKept =
@@ -121,12 +187,18 @@ function brokenStep(before: GameState, event: GameEvent, after: GameState): stri
 }
 
 // A random event. Most taps go to a square that is not the colour of the answer, so many games end.
-// Some events tap a fixed square or an index that is not a square, to test that the machine ignores them.
+// Some events tap or set a given square or an index that is not a square, or undo with no change,
+// to test that the machine ignores them.
 function randomEvent(state: GameState, answer: readonly string[], random: () => number): GameEvent {
   const pick = <Item>(list: readonly Item[]) => list[Math.floor(random() * list.length)] as Item;
   const wrong = [...state.squares.keys()].filter((index) => state.squares[index] !== answer[index]);
   const roll = random();
   if (roll < 0.1) return { type: "askHint" };
+  if (roll < 0.18) return { type: "undo" };
+  if (roll < 0.3) {
+    const index = pick([...state.squares.keys(), -1]);
+    return { type: "set", index, square: pick(["R", "B", "."] as const) };
+  }
   if (roll < 0.75 && wrong.length > 0) return { type: "tap", index: pick(wrong) };
   return { type: "tap", index: pick([...state.squares.keys(), -1, state.squares.length, 0.5]) };
 }

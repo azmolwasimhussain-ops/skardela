@@ -1,69 +1,46 @@
 import { Confetti } from "../../../shared/Confetti";
-import { gridStyle } from "../../../shared/grid";
+import { KeyList, type KeyItem } from "../../../shared/RuleList";
 import styles from "./Board.module.css";
 import shared from "../../../shared/Board.module.css";
+import { Grid } from "./Grid";
 import { createMoveLog, getColourBinaryLog, useColourBinaryLifecycle, type Meta } from "./log";
-import type { HintState } from "./machine";
 import { toSquares, type ColourBinaryPuzzle } from "./puzzle";
+import { statusText } from "./status";
 import { useGame, type Game } from "./useGame";
 import { text } from "../../../text/en";
 
 const words = text["colour-binary"];
 
-// The status text tells the user if the board is solved, ready to play, or waiting for a hint.
-function statusText(isSolved: boolean, hint: HintState, size: number): string {
-  if (isSolved) return words.status.solved;
-  switch (hint.status) {
-    case "hidden":
-      return words.status.start;
-    case "none":
-      return words.noHint;
-    case "shown": {
-      const { index, colour } = hint.hint;
-      return words.hint({
-        ...hint.hint,
-        row: Math.floor(index / size) + 1,
-        column: (index % size) + 1,
-        colour: words.colours[colour],
-        otherColour: words.colours[colour === "R" ? "B" : "R"],
-      });
-    }
-  }
-}
+// The key under the board. A given square and a square of the player have the same colour.
+// Only the given square has a dot.
+const legend: KeyItem[] = [
+  { text: words.legend.given, sample: { fill: "red", symbol: "", isGiven: true } },
+  { text: words.legend.yours, sample: { fill: "red", symbol: "" } },
+];
 
-type SquareProps = { game: Game; index: number; size: number };
-
-// Each square is a button so the user can tap a cell and cycle its colour.
-// A square that the player cannot tap has "aria-disabled", so a screen reader can still read it.
-function SquareButton({ game, index, size }: SquareProps) {
-  const square = game.squares[index] ?? ".";
-  const isFixed = game.isFixed(index);
-  const label = words.square({
-    row: Math.floor(index / size) + 1,
-    column: (index % size) + 1,
-    colour: words.colours[square],
-    isFixed,
-  });
+// Undo and Hint. Each button is disabled when the machine does not accept its event.
+function Buttons({ game }: { game: Game }) {
+  const buttonClass = `${shared.button} ${shared.boxed}`;
   return (
-    <button
-      type="button"
-      className={`${shared.square} ${styles.square}`}
-      data-colour={square}
-      data-fixed={isFixed}
-      data-hint={game.hint.status === "shown" && game.hint.hint.index === index}
-      aria-label={label}
-      aria-disabled={!game.canTap(index)}
-      onClick={() => {
-        game.tap(index);
-      }}
-    >
-      <span aria-hidden="true">{words.symbols[square]}</span>
-    </button>
+    <div className={styles.buttons}>
+      <button type="button" className={buttonClass} disabled={!game.canUndo} onClick={game.undo}>
+        {words.undoButton}
+      </button>
+      <button
+        type="button"
+        className={buttonClass}
+        disabled={!game.canAskHint}
+        onClick={game.askHint}
+      >
+        {words.hintButton}
+      </button>
+    </div>
   );
 }
 
 // The board keeps the start layout and the current player state in one state machine. See "machine.ts".
 // The puzzle is solved when the board matches the rule set.
+// The board shows the grid, the key, the status text, and the Undo and Hint buttons.
 export function Board({ puzzle }: { puzzle: ColourBinaryPuzzle }) {
   const size = puzzle.start.length;
   const log = getColourBinaryLog();
@@ -73,35 +50,24 @@ export function Board({ puzzle }: { puzzle: ColourBinaryPuzzle }) {
     difficulty: puzzle.difficulty,
   };
   const game = useGame(toSquares(puzzle.start), createMoveLog(log, meta));
-  useColourBinaryLifecycle(log, meta, size, game.isSolved);
+  useColourBinaryLifecycle(log, meta, size, { isSolved: game.isSolved, hints: game.hints });
 
   return (
     <div className={shared.game}>
-      <fieldset className={shared.board}>
-        <legend className="visually-hidden">{words.boardLabel}</legend>
-        <div className={shared.grid} style={gridStyle(size)}>
-          {game.squares.map((_, index) => (
-            // oxlint-disable-next-line react/no-array-index-key -- the index is the identity of a square. The squares never move.
-            <SquareButton key={index} game={game} index={index} size={size} />
-          ))}
-        </div>
-      </fieldset>
+      <Grid game={game} size={size} />
+
+      <div className={styles.legend}>
+        <KeyList items={legend} label={words.legend.label} />
+      </div>
 
       <output className={shared.status} data-solved={game.isSolved}>
-        {statusText(game.isSolved, game.hint, size)}
+        {statusText(game, size)}
       </output>
 
-      {/* The confetti shows when the puzzle is solved. */}
+      {/* The confetti shows when the puzzle is solved. It is not in the grid, because the grid has "container-type". */}
       {game.isSolved && <Confetti />}
 
-      <button
-        type="button"
-        className={`${shared.button} ${shared.boxed}`}
-        disabled={!game.canAskHint}
-        onClick={game.askHint}
-      >
-        {words.hintButton}
-      </button>
+      <Buttons game={game} />
     </div>
   );
 }

@@ -19,29 +19,50 @@ export type Meta = {
 };
 
 // The log for each move. "useGame" calls it once for each move, in order.
+// "by" tells if a tap or a key made the change.
 export function createMoveLog(log: Log, meta: Meta): (move: Move) => void {
   return (move) => {
-    if (move.type === "tap") {
-      log.debug("Square changed", { ...meta, index: move.index, from: move.from, to: move.to });
-    } else {
-      log.info("Hint requested", {
-        ...meta,
-        foundHint: move.hint !== null,
-        hintIndex: move.hint?.index,
-        hintColour: move.hint?.colour,
-      });
+    switch (move.type) {
+      case "tap":
+      case "set":
+        log.debug("Square changed", {
+          ...meta,
+          index: move.index,
+          from: move.from,
+          to: move.to,
+          by: move.type === "tap" ? "tap" : "key",
+        });
+        break;
+      case "undo":
+        log.debug("Change undone", { ...meta, index: move.index, from: move.from, to: move.to });
+        break;
+      case "hint":
+        log.info("Hint requested", {
+          ...meta,
+          foundHint: move.hint !== null,
+          hintIndex: move.hint?.index,
+          hintColour: move.hint?.colour,
+        });
+        break;
     }
   };
 }
 
 // The start and the solve of a puzzle, with the details for Colour Binary. See "src/shared/useLifecycleLog.ts".
 // The play session gives the timer and saves the solve. See "src/shared/playSession.ts".
-export function useColourBinaryLifecycle(log: Log, meta: Meta, size: number, isSolved: boolean) {
+// The hints are the mistakes of Colour Binary.
+export function useColourBinaryLifecycle(
+  log: Log,
+  meta: Meta,
+  size: number,
+  game: { isSolved: boolean; hints: number },
+) {
+  const { isSolved, hints } = game;
   useLifecycleLog(log, {
     puzzleId: meta.puzzleId,
     isSolved,
     started: { ...meta, size },
-    solved: { ...meta, size },
+    solved: { ...meta, size, hints },
   });
-  usePlayTracking(meta, isSolved);
+  usePlayTracking(meta, { isSolved, mistakes: hints });
 }

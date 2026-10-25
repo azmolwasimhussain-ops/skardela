@@ -22,6 +22,8 @@ export type AppState = SavedData & {
   setTheme: (theme: Theme) => void;
   acknowledgeNotice: () => void;
   openPuzzle: (puzzle: PuzzleRef) => void;
+  // This marks the rules of a puzzle type as seen. Then "More rules" is closed on the next visit.
+  seeRules: (type: string) => void;
   recordSolve: (result: SolveResult) => void;
   // This adds the solves of an imported file. It gives the number of new solves.
   importData: (imported: SavedData) => number;
@@ -90,6 +92,12 @@ export const useAppStore = create<AppState>()(
       },
       openPuzzle: (puzzle) => {
         set({ lastOpened: puzzle });
+      },
+      // A type that is already in the list does not change the state, thus nothing renders again.
+      seeRules: (type) => {
+        set((state) =>
+          state.seenRules.includes(type) ? state : { seenRules: [...state.seenRules, type] },
+        );
       },
       recordSolve: (result) => {
         set((state) => ({

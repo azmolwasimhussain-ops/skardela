@@ -1,27 +1,42 @@
-import type { Difficulty } from "../../../shared/difficulty";
 import { usePlaySession } from "../../../shared/playSession";
-import { bestOf, formatDuration } from "../../../shared/progress";
+import { dayKey } from "../../../shared/progress";
 import { useAppStore } from "../../../shared/store";
+import { useNow } from "../../../shared/useNow";
 import { text } from "../../../text/en";
+import type { LoadedPuzzle } from "../../puzzles";
 import styles from "./PuzzlePage.module.css";
+import { ResultNumbers } from "./ResultNumbers";
+import { ResultShare } from "./ResultShare";
 
-const page = text.puzzlePage;
+const words = text.puzzlePage.result;
 
-type SolvedCardProps = { puzzleId: string; type: string; difficulty: Difficulty };
-
-// After a solve, this card shows the time of the solve and the best time of the level.
-// The board shows its own status text too. This card adds the times from the play session and the saved data.
-export function SolvedCard({ puzzleId, type, difficulty }: SolvedCardProps) {
-  const { puzzleId: current, startedAt, solvedAt } = usePlaySession();
+// The result card. It shows after a solve: the time, the score and the time against the average,
+// the share text with a button to copy or share it, and a link to the next level of today.
+// The solve comes from the saved data: it is the last solve of this puzzle. The play session tells
+// that the player solved the puzzle on this visit.
+export function SolvedCard({ loaded }: { loaded: LoadedPuzzle }) {
+  const { type, puzzle } = loaded;
+  const { puzzleId: current, solvedAt } = usePlaySession();
   const results = useAppStore((state) => state.results);
-  if (current !== puzzleId || startedAt === null || solvedAt === null) return null;
-  const time = formatDuration((solvedAt - startedAt) / 1000);
-  const best = bestOf(results, type, difficulty)?.best;
+  const solved = useAppStore((state) => state.solved);
+  // The clock changes each minute, so the date in the share text is correct after midnight.
+  const day = dayKey(new Date(useNow(60_000)));
+  if (current !== puzzle.id || solvedAt === null) return null;
+  const solve = results.findLast((result) => result.puzzleId === puzzle.id);
+  if (solve === undefined) return null;
+  const level = text.levels[puzzle.difficulty];
+  const number = puzzle.id.slice(puzzle.id.lastIndexOf("-") + 1);
+
   return (
-    <div className={styles.solved}>
-      <p className={styles.solvedTitle}>{page.solvedTitle}</p>
-      <p>{page.solvedIn(time)}</p>
-      {best !== undefined && <p>{page.yourBest(text.levels[difficulty], formatDuration(best))}</p>}
-    </div>
+    <section className={styles.solved} aria-labelledby="solved-heading">
+      <div className={styles.solvedHead}>
+        <h2 id="solved-heading" className={styles.solvedTitle}>
+          {words.title}
+        </h2>
+        <p className={styles.solvedPuzzle}>{words.puzzle(text[type].name, level, number)}</p>
+      </div>
+      <ResultNumbers type={type} level={level} solve={solve} results={results} />
+      <ResultShare loaded={loaded} solve={solve} results={results} solved={solved} day={day} />
+    </section>
   );
 }

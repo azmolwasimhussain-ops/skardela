@@ -1,4 +1,6 @@
-import { levels } from "../../../shared/difficulty";
+import { useState } from "react";
+import { Link } from "react-router";
+import { levels, type Difficulty } from "../../../shared/difficulty";
 import { bestOf, formatDuration } from "../../../shared/progress";
 import type { SolveResult } from "../../../shared/saved-data";
 import { text } from "../../../text/en";
@@ -6,6 +8,9 @@ import type { PuzzleType } from "../../puzzle-types/registry";
 import styles from "./HomePage.module.css";
 
 const words = text.home.stats.bests;
+
+// The puzzle that the message before the first solve links to.
+export type FirstPuzzle = { id: string; type: PuzzleType; difficulty: Difficulty };
 
 // A time, or a dash when there is no solve. A screen reader reads "No solves" in place of the dash.
 function Time({ seconds }: { seconds: number | undefined }) {
@@ -20,15 +25,71 @@ function Time({ seconds }: { seconds: number | undefined }) {
   return <>{formatDuration(seconds)}</>;
 }
 
-// The average time and the best time of each puzzle type and level. It is a table, so a screen reader
-// can read it by rows and columns.
+// Before the first solve, the panel shows one message and a link to a puzzle, not rows of dashes.
+function NoSolvesYet({ first }: { first: FirstPuzzle | undefined }) {
+  return (
+    <div className={`${styles.panel} ${styles.noSolves}`}>
+      <h3 className={styles.panelTitle}>{words.heading}</h3>
+      <p>{words.empty}</p>
+      {first !== undefined && (
+        <Link className={styles.noSolvesLink} to={`/puzzles/${first.id}`}>
+          {words.play(text[first.type].name, text.levels[first.difficulty])}
+        </Link>
+      )}
+    </div>
+  );
+}
+
+type RowProps = {
+  results: readonly SolveResult[];
+  type: PuzzleType;
+  isOpen: boolean;
+  onToggle: () => void;
+};
+
+// One row: the name of the puzzle type, then the best time of each level.
+// When the row is open, each cell also shows the average time of its level.
+function BestsRow({ results, type, isOpen, onToggle }: RowProps) {
+  return (
+    <tr>
+      <th scope="row">
+        <button
+          type="button"
+          className={styles.bestsToggle}
+          aria-expanded={isOpen}
+          onClick={onToggle}
+        >
+          {text[type].name}
+        </button>
+      </th>
+      {levels.map((difficulty) => {
+        const best = bestOf(results, type, difficulty);
+        return (
+          <td key={difficulty} data-empty={best === undefined}>
+            <Time seconds={best?.best} />
+            {isOpen && best !== undefined && (
+              <span className={styles.average}>{words.average(formatDuration(best.average))}</span>
+            )}
+          </td>
+        );
+      })}
+    </tr>
+  );
+}
+
+// The best time of each puzzle type and level: one row for each puzzle type and one column for each level.
+// It is a table, so a screen reader can read it by rows and columns. One row at a time can be open.
 export function PersonalBests({
   results,
   types,
+  first,
 }: {
   results: readonly SolveResult[];
   types: readonly PuzzleType[];
+  first: FirstPuzzle | undefined;
 }) {
+  const [openType, setOpenType] = useState<PuzzleType | null>(null);
+  if (results.length === 0) return <NoSolvesYet first={first} />;
   return (
     <div className={styles.panel}>
       <table className={styles.bests}>
@@ -38,29 +99,28 @@ export function PersonalBests({
             <th scope="col">
               <span className="visually-hidden">{words.puzzle}</span>
             </th>
-            <th scope="col">{words.average}</th>
-            <th scope="col">{words.best}</th>
+            {levels.map((difficulty) => (
+              <th key={difficulty} scope="col">
+                {text.levels[difficulty]}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {types.flatMap((type) =>
-            levels.map((difficulty) => {
-              const best = bestOf(results, type, difficulty);
-              return (
-                <tr key={`${type}-${difficulty}`}>
-                  <th scope="row">{words.row(text[type].name, text.levels[difficulty])}</th>
-                  <td>
-                    <Time seconds={best?.average} />
-                  </td>
-                  <td className={styles.bestTime}>
-                    <Time seconds={best?.best} />
-                  </td>
-                </tr>
-              );
-            }),
-          )}
+          {types.map((type) => (
+            <BestsRow
+              key={type}
+              results={results}
+              type={type}
+              isOpen={openType === type}
+              onToggle={() => {
+                setOpenType(openType === type ? null : type);
+              }}
+            />
+          ))}
         </tbody>
       </table>
+      <p className={styles.bestsNote}>{words.note}</p>
     </div>
   );
 }

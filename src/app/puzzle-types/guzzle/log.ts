@@ -52,5 +52,5 @@ export function useGuzzleLifecycle(
     started: { ...meta, size },
     solved: { ...meta, mistakes },
   });
-  usePlayTracking(meta, isSolved, isStarted);
+  usePlayTracking(meta, { isSolved, isStarted, mistakes });
 }

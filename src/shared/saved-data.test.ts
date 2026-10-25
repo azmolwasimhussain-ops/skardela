@@ -29,6 +29,7 @@ describe("readSavedData", () => {
         solved: ["guzzle-0001", 2],
         results: [result],
         lastOpened: { puzzleId: "latics-0003", type: "latics", difficulty: "hard" },
+        seenRules: "guzzle",
         other: 1,
       }),
     ).toEqual({
@@ -37,6 +38,17 @@ describe("readSavedData", () => {
       solved: [],
       results: [result],
       lastOpened: { puzzleId: "latics-0003", type: "latics", difficulty: "hard" },
+      seenRules: [],
+    });
+  });
+});
+
+describe("readSavedData of the newer fields", () => {
+  it("keeps the seen rules, and a solve with a count of mistakes", () => {
+    const withMistakes = { ...result, mistakes: 3 };
+    expect(readSavedData({ seenRules: ["latics"], results: [withMistakes] })).toMatchObject({
+      seenRules: ["latics"],
+      results: [withMistakes],
     });
   });
 
@@ -47,6 +59,9 @@ describe("readSavedData", () => {
       { ...result, difficulty: "expert" },
       { ...result, day: "24 October" },
       { ...result, puzzleId: undefined },
+      { ...result, mistakes: -1 },
+      { ...result, mistakes: 1.5 },
+      { ...result, mistakes: "2" },
       "guzzle-0001",
     ];
     expect(readSavedData({ results: [...broken, result] }).results).toEqual([result]);

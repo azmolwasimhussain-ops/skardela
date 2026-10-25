@@ -1,5 +1,20 @@
 import { symbols } from "../symbols";
 
+// A short date in British English, for example "25 October". "timeZone" is set for a day key,
+// because a day key is a date without a time. See "src/shared/progress.ts".
+const shortDate = (date: Date, timeZone?: string) =>
+  new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", timeZone }).format(date);
+
+// The lines of a share text. An empty line is removed. Apps that show the text keep the line breaks.
+const shareLines = (lines: readonly string[]) => lines.filter((line) => line !== "").join("\n");
+
+// The first line of a share text: the site name, and the date when the puzzles are the puzzles of today.
+const shareTitle = (day: string | undefined) =>
+  day === undefined ? "Skardela" : `Skardela · ${shortDate(new Date(`${day}T00:00:00Z`), "UTC")}`;
+
+// The address of the site at the end of a share text.
+const site = "skardela.netlify.app";
+
 // The text of the app frame: the site name, the header, the footer, the analytics notice and the error pages.
 export const app = {
   siteName: "Skardela",
@@ -13,6 +28,49 @@ export const app = {
   streak: { word: "-day streak" },
   // The name of each level. The home page and the puzzle page both use it.
   levels: { easy: "Easy", medium: "Medium", hard: "Hard" },
+  // The share text and the share buttons. The home page and the puzzle page both use them.
+  // "day" is the day key of today's puzzles. It is undefined for a puzzle that is not one of today's puzzles.
+  // "marks" is one square symbol for each level. See "src/shared/share.ts".
+  share: {
+    site,
+    // The result of one puzzle, for example "Guzzle #0024, Medium" and "Solved in 2:14 with 1 mistake".
+    puzzle: (result: {
+      day: string | undefined;
+      typeName: string;
+      number: string;
+      level: string;
+      marks: string;
+      time: string;
+      score: string | undefined;
+    }) =>
+      shareLines([
+        shareTitle(result.day),
+        `${result.typeName} #${result.number}, ${result.level}`,
+        result.marks,
+        `Solved in ${result.time}${result.score === undefined ? "" : ` with ${result.score}`}`,
+        site,
+      ]),
+    // Today's results of one puzzle type, for example "Easy 1:42 · Medium 2:14". Each "time" is a solved level.
+    today: (result: {
+      day: string;
+      typeName: string;
+      marks: string;
+      times: readonly { level: string; time: string }[];
+    }) =>
+      shareLines([
+        shareTitle(result.day),
+        result.typeName,
+        result.marks,
+        result.times.map(({ level, time }) => `${level} ${time}`).join(" · "),
+        site,
+      ]),
+    // The button text after the action, for a short time. The message tells a screen reader the result.
+    copied: "Copied",
+    copiedMessage: "The result is copied. You can paste it now.",
+    sharedMessage: "The result is shared.",
+    failed: "Not copied",
+    failedMessage: "Your browser did not let Skardela copy the result.",
+  },
   theme: {
     label: "Theme",
     options: {

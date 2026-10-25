@@ -1,5 +1,20 @@
 /* The base and the states of a square are in "src/shared/Board.module.css".
-   This file sets only the colours. The board uses both "square" classes. */
+   This file sets the colours, the dot of a given square, the shake and the rows of the grid.
+   The board uses both "square" classes. */
+
+/* Each row of the grid uses the columns of the board grid (subgrid), so the squares stay in columns. */
+.row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+
+/* The grid cell holds the square button. The button fills the cell. */
+.cell {
+  display: grid;
+  min-width: 0;
+}
+
 .square {
   --on-fill: var(--on-colour);
 }
@@ -12,4 +27,69 @@
 .square[data-colour="B"] {
   --fill: var(--blue);
   --fill-edge: var(--blue-edge);
+}
+
+/* A given square has the same colour as a square of the player. Only a given square has a white dot
+   in its corner. The shape (● or ■) also shows the colour, so the colour is not the only signal. */
+.square[data-given="true"]::after {
+  content: "";
+  position: absolute;
+  top: 9%;
+  right: 9%;
+  width: max(4px, 12%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: var(--on-fill);
+}
+
+/* A short shake when the player tries to change a given square. */
+.square[data-shake="true"] {
+  animation: shake 320ms ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    translate: 0;
+  }
+  20% {
+    translate: -4px 0;
+  }
+  40% {
+    translate: 4px 0;
+  }
+  60% {
+    translate: -3px 0;
+  }
+  80% {
+    translate: 3px 0;
+  }
+}
+
+/* Without motion, the square flashes in place of the shake. */
+@media (prefers-reduced-motion: reduce) {
+  .square[data-shake="true"] {
+    animation-name: flash;
+  }
+}
+
+@keyframes flash {
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* The key under the board. The chips have a soft fill, because the board is on a light surface. */
+.legend {
+  --key-bg: var(--surface-muted);
+  display: flex;
+  justify-content: center;
+}
+
+/* Undo and Hint, in one row in the middle. */
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
 }

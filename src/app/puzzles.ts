@@ -1,4 +1,5 @@
 import type { LoaderFunctionArgs } from "react-router";
+import type { Difficulty } from "../shared/difficulty";
 import { dayNumber, localDate, puzzlesForDay } from "./daily";
 import {
   isPuzzleType,
@@ -7,11 +8,15 @@ import {
   type PuzzleType,
 } from "./puzzle-types/registry";
 
+// One puzzle of today: its ID and its level.
+export type TodayPuzzle = { readonly id: string; readonly difficulty: Difficulty };
+
 // One puzzle with the name of its type. The type tells the page which board to show.
 // "others" has the IDs of the other puzzles of the same type and level. The "Random puzzle" button uses them.
+// "today" has today's puzzles of the same type, one for each level. The result card links to the next one.
 export type LoadedPuzzle = {
   [Type in PuzzleType]: { type: Type; puzzle: PuzzleMap[Type] };
-}[PuzzleType] & { readonly others: readonly string[] };
+}[PuzzleType] & { readonly others: readonly string[]; readonly today: readonly TodayPuzzle[] };
 
 // A puzzle ID has the form: type-number, with a number of 4 digits, such as colour-binary-0001.
 // The loader checks the format, loads the correct puzzle file, and returns one item if it exists.
@@ -24,7 +29,8 @@ export async function loadPuzzle(id: string): Promise<LoadedPuzzle | null> {
   const others = puzzles
     .filter((item) => item.difficulty === puzzle.difficulty && item.id !== puzzle.id)
     .map((item) => item.id);
-  return { type, puzzle, others } as LoadedPuzzle;
+  const today = puzzlesForDay(puzzles, dayNumber(localDate(new Date())));
+  return { type, puzzle, others, today } as LoadedPuzzle;
 }
 
 export function puzzleLoader({ params }: LoaderFunctionArgs): Promise<LoadedPuzzle | null> {

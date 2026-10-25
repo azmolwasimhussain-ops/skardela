@@ -56,13 +56,15 @@ function unpackFields(value: unknown): unknown {
     : value;
 }
 
+// "seenRules" is a short list of puzzle types, thus it is plain text and not in "progress".
 export function toStoredText(data: SavedData): string {
-  const { theme, cookieBanner, lastOpened } = data;
+  const { theme, cookieBanner, lastOpened, seenRules } = data;
   return JSON.stringify({
     v: storedVersion,
     theme,
     cookieBanner,
     lastOpened,
+    seenRules,
     progress: packProgress(data),
   });
 }

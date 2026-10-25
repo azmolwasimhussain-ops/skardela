@@ -79,7 +79,7 @@ describe("home page cards", () => {
       const nav = screen.getByRole("navigation", { name: home.today.levelsLabel(text[type].name) });
       const links = within(nav).getAllByRole("link");
       expect(links.map((link) => link.getAttribute("aria-label"))).toEqual(
-        levels.map((level) => home.today.levelLink(text.levels[level], undefined, false)),
+        levels.map((level) => home.today.levelLink(text.levels[level])),
       );
       for (const link of links) {
         expect(link.getAttribute("href")).toMatch(new RegExp(`^/puzzles/${type}-\\d{4}$`, "u"));
@@ -92,8 +92,8 @@ describe("home page cards", () => {
     solveToday(cards, 42);
     await renderHome();
     expect(
-      screen.getByRole("link", { name: home.today.levelLink(text.levels.easy, "0:42", true) }),
-    ).toHaveTextContent(home.today.solvedIn("0:42"));
+      screen.getByRole("link", { name: home.today.levelLink(text.levels.easy, { time: "0:42" }) }),
+    ).toHaveTextContent("0:42");
     expect(screen.getByRole("link", { name: home.today.play(text.levels.medium) })).toHaveAttribute(
       "href",
       `/puzzles/${todayId(cards, "guzzle", "medium")}`,

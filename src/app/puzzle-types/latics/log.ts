@@ -31,6 +31,7 @@ export function createMoveLog(log: Log, meta: Meta): (move: Move) => void {
 
 // The start and the solve of a puzzle, with the details for Latics. See "src/shared/useLifecycleLog.ts".
 // The play session gives the timer and saves the solve. See "src/shared/playSession.ts".
+// The misses are the mistakes of Latics.
 export function useLaticsLifecycle(log: Log, meta: Meta, isSolved: boolean, misses: number) {
   useLifecycleLog(log, {
     puzzleId: meta.puzzleId,
@@ -38,5 +39,5 @@ export function useLaticsLifecycle(log: Log, meta: Meta, isSolved: boolean, miss
     started: meta,
     solved: { ...meta, misses },
   });
-  usePlayTracking(meta, isSolved);
+  usePlayTracking(meta, { isSolved, mistakes: misses });
 }

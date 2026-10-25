@@ -24,9 +24,16 @@ export const symbols = {
   progress: {
     solved: "✓",
   },
-  // The link that closes a puzzle and goes back to the home page.
+  // One square for each level in a share text: solved with no mistakes, solved with mistakes, and not solved.
+  share: {
+    clean: "🟩",
+    mistakes: "🟨",
+    unsolved: "⬜",
+  },
+  // The link that closes a puzzle and goes back to the home page, and the link to the next level.
   puzzlePage: {
     close: "✕",
+    next: "→",
   },
   theme: {
     system: "💻",

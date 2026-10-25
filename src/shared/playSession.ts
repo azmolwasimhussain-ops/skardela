@@ -25,6 +25,14 @@ export type PlayMeta = {
   readonly difficulty: PuzzleRef["difficulty"];
 };
 
+// The state of the game that the board gives. "mistakes" is the score to keep low, see "SolveResult".
+// "isStarted" is false until the game starts. Most boards start at once, so it is true when it is not given.
+export type PlayProgress = {
+  readonly isSolved: boolean;
+  readonly isStarted?: boolean;
+  readonly mistakes: number;
+};
+
 // The board calls this function when it starts. The timer does not run yet.
 // A restart makes a new board, thus a new session.
 export function openSession(meta: PlayMeta): void {
@@ -41,7 +49,11 @@ export function startSession(puzzleId: string, now = Date.now()): void {
 }
 
 // The board calls this function when the puzzle is solved. It saves the solve one time for each session.
-export function solveSession(meta: PlayMeta, now = Date.now()): void {
+// "mistakes" is saved with the solve when the board gives it.
+export function solveSession(
+  meta: PlayMeta & { readonly mistakes?: number },
+  now = Date.now(),
+): void {
   const { puzzleId, startedAt, solvedAt } = usePlaySession.getState();
   if (puzzleId !== meta.puzzleId || startedAt === null || solvedAt !== null) return;
   usePlaySession.setState({ solvedAt: now });
@@ -51,21 +63,23 @@ export function solveSession(meta: PlayMeta, now = Date.now()): void {
     difficulty: meta.difficulty,
     seconds: Math.round((now - startedAt) / 1000),
     day: dayKey(new Date(now)),
+    ...(meta.mistakes === undefined ? {} : { mistakes: meta.mistakes }),
   });
 }
 
 // The lifecycle hook of each puzzle type calls this hook. It opens the session when the board starts,
-// starts the timer when "isStarted" is true, and saves the solve when the board is solved.
+// starts the timer when "isStarted" is true, and saves the solve with its mistakes when the board is solved.
 // Most boards start at once. Guzzle starts when the player selects a mode.
 // In React strict mode, the effects run two times, which is safe: each step changes the session one time.
-export function usePlayTracking(meta: PlayMeta, isSolved: boolean, isStarted = true): void {
+export function usePlayTracking(meta: PlayMeta, progress: PlayProgress): void {
   const { puzzleId } = meta;
-  // The effects give the puzzle ID, and the effect events read the latest type and level.
+  const { isSolved, isStarted = true } = progress;
+  // The effects give the puzzle ID, and the effect events read the latest type, level and mistakes.
   const open = useEffectEvent((id: string) => {
     openSession({ ...meta, puzzleId: id });
   });
   const solve = useEffectEvent((id: string) => {
-    solveSession({ ...meta, puzzleId: id });
+    solveSession({ ...meta, puzzleId: id, mistakes: progress.mistakes });
   });
   useEffect(() => {
     open(puzzleId);

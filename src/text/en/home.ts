@@ -57,15 +57,28 @@ export const home = {
     intro:
       "The puzzles change at midnight, your local time. All players get the same puzzles on the same date.",
     levelsLabel: (puzzleTypeName: string) => `Today's ${puzzleTypeName}`,
-    // The status under the name of each level. A solved level shows the best time of that puzzle.
+    // The status under the name of each level. A solved level shows a check mark after its name,
+    // and the result of its best solve: the time and the score, for example "1:42" and "0 mistakes".
+    // An older solve has no score. Then the status shows only the time.
     notSolved: "not solved",
-    solvedIn: (time: string) => `${symbols.progress.solved} ${time}`,
-    solvedNoTime: `${symbols.progress.solved} solved`,
+    solvedMark: symbols.progress.solved,
+    solvedNoTime: "solved",
     // The name of a level link for a screen reader. It starts with the visible level name.
-    levelLink: (level: string, time: string | undefined, isSolved: boolean) =>
-      `${level}, ${isSolved ? (time === undefined ? "solved" : `solved in ${time}`) : "not solved"}`,
+    levelLink: (level: string, result?: { time?: string; score?: string }) =>
+      result === undefined
+        ? `${level}, not solved`
+        : [
+            `${level}, solved`,
+            result.time === undefined ? "" : ` in ${result.time}`,
+            result.score === undefined ? "" : ` with ${result.score}`,
+          ].join(""),
     play: (level: string) => `Play ${level}`,
-    allSolved: "All solved today",
+    // When all levels are solved, the card shows the total of the best times.
+    allSolved: (total: string | undefined) =>
+      total === undefined ? "All solved today" : `All solved · ${total} total`,
+    // Each card has a Share button. Its label tells a screen reader which puzzle type it shares.
+    share: "Share",
+    shareLabel: (puzzleTypeName: string) => `Share your ${puzzleTypeName} results of today`,
   },
   stats: {
     heading: "Your stats",
@@ -84,13 +97,17 @@ export const home = {
       legendLabel: "Solved puzzles in a day",
       legend: { none: "none", low: "1–3", mid: "4–6", high: "7+" },
     },
+    // One row for each puzzle type and one column for each level. A cell shows the best time.
+    // The name of a puzzle type is a button that shows the average times of its row.
     bests: {
       heading: "Personal bests",
       puzzle: "Puzzle",
-      average: "Average",
-      best: "Best",
       noTime: "No solves",
-      row: (typeName: string, level: string) => `${typeName} · ${level}`,
+      average: (time: string) => `average ${time}`,
+      note: "Best times. Select a puzzle to see your average times.",
+      // Before the first solve, the panel shows one message and a link to a puzzle.
+      empty: "Your best times show here after your first solve.",
+      play: (typeName: string, level: string) => `Play ${typeName} ${level}`,
     },
     // Export, import and clear. The message line tells the result of each action.
     data: {

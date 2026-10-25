@@ -10,8 +10,17 @@ const data: SavedData = {
   solved: ["guzzle-0001"],
   results: [
     { puzzleId: "guzzle-0001", type: "guzzle", difficulty: "easy", seconds: 42, day: "2026-10-24" },
+    {
+      puzzleId: "latics-0002",
+      type: "latics",
+      difficulty: "easy",
+      seconds: 30,
+      day: "2026-10-24",
+      mistakes: 2,
+    },
   ],
   lastOpened: { puzzleId: "latics-0003", type: "latics", difficulty: "hard" },
+  seenRules: ["guzzle"],
 };
 
 afterEach(() => {

@@ -1,51 +1,24 @@
-import { Link } from "react-router";
-import type { Difficulty } from "../../../shared/difficulty";
-import { bestTime, formatDuration } from "../../../shared/progress";
+import { bestResult, dayKey } from "../../../shared/progress";
 import { useAppStore } from "../../../shared/store";
+import { useNow } from "../../../shared/useNow";
 import { text } from "../../../text/en";
 import type { TodayCard } from "../../puzzles";
+import { CardActions } from "./CardActions";
 import styles from "./HomePage.module.css";
+import { LevelLink } from "./LevelLink";
 import { PuzzleIcon } from "./PuzzleIcon";
 
 const words = text.home.today;
 
-type LevelProps = {
-  id: string;
-  difficulty: Difficulty;
-  isSolved: boolean;
-  best: number | undefined;
-  isNext: boolean;
-};
-
-// A link to the puzzle of one level, with its status: the best time of a solved puzzle, or "not solved".
-// The next level to play has a ring.
-function LevelLink({ id, difficulty, isSolved, best, isNext }: LevelProps) {
-  const level = text.levels[difficulty];
-  const time = best === undefined ? undefined : formatDuration(best);
-  const notSolvedOr = (solvedText: string) => (isSolved ? solvedText : words.notSolved);
-  const status = notSolvedOr(time === undefined ? words.solvedNoTime : words.solvedIn(time));
-  return (
-    <Link
-      className={styles.level}
-      data-solved={isSolved}
-      data-next={isNext}
-      to={`/puzzles/${id}`}
-      aria-label={words.levelLink(level, time, isSolved)}
-    >
-      <span className={styles.levelName}>{level}</span>
-      <span className={styles.levelStatus}>{status}</span>
-    </Link>
-  );
-}
-
 // One card for each puzzle type, with a link to today's puzzle of each level.
-// The main link goes to the first level that the player did not solve.
-function Card({ card }: { card: TodayCard }) {
+// The main link goes to the first level that the player did not solve. See "CardActions" for the last row.
+function Card({ card, day }: { card: TodayCard; day: string }) {
   const solved = useAppStore((state) => state.solved);
   const results = useAppStore((state) => state.results);
   const { type, levels } = card;
   const { name, summary } = text[type];
   const next = levels.find(({ id }) => !solved.includes(id));
+  const bests = levels.map(({ id }) => (solved.includes(id) ? bestResult(results, id) : undefined));
   return (
     <li className={styles.card}>
       <div className={styles.cardHead}>
@@ -57,31 +30,28 @@ function Card({ card }: { card: TodayCard }) {
       </div>
       <nav aria-label={words.levelsLabel(name)}>
         <ul className={styles.levels}>
-          {levels.map(({ id, difficulty }) => (
+          {levels.map(({ id, difficulty }, index) => (
             <li key={id}>
               <LevelLink
                 id={id}
+                type={type}
                 difficulty={difficulty}
                 isSolved={solved.includes(id)}
-                best={bestTime(results, id)}
+                best={bests[index]}
                 isNext={next?.id === id}
               />
             </li>
           ))}
         </ul>
       </nav>
-      {next === undefined ? (
-        <p className={styles.allSolved}>{words.allSolved}</p>
-      ) : (
-        <Link className={styles.cta} to={`/puzzles/${next.id}`}>
-          {words.play(text.levels[next.difficulty])}
-        </Link>
-      )}
+      <CardActions card={card} bests={bests} next={next} day={day} />
     </li>
   );
 }
 
 export function TodayPuzzles({ cards }: { cards: readonly TodayCard[] }) {
+  // The clock changes each minute, so the date in a share text is correct after midnight.
+  const day = dayKey(new Date(useNow(60_000)));
   return (
     <section
       id="today"
@@ -95,7 +65,7 @@ export function TodayPuzzles({ cards }: { cards: readonly TodayCard[] }) {
       </div>
       <ul className={styles.cards}>
         {cards.map((card) => (
-          <Card key={card.type} card={card} />
+          <Card key={card.type} card={card} day={day} />
         ))}
       </ul>
     </section>

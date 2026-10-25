@@ -1,0 +1,94 @@
+import { Fragment } from "react";
+import { Link } from "react-router";
+import shared from "../../../shared/Board.module.css";
+import { bestResult, formatDuration } from "../../../shared/progress";
+import type { SolveResult } from "../../../shared/saved-data";
+import { marksText, prefersShareMenu } from "../../../shared/share";
+import { ShareButton } from "../../../shared/ShareButton";
+import { text } from "../../../text/en";
+import type { LoadedPuzzle } from "../../puzzles";
+import styles from "./PuzzlePage.module.css";
+
+const words = text.puzzlePage.result;
+
+type ResultShareProps = {
+  loaded: LoadedPuzzle;
+  solve: SolveResult;
+  results: readonly SolveResult[];
+  solved: readonly string[];
+  // Today, as a day key. A puzzle of today shows the date in its share text.
+  day: string;
+};
+
+// The share text of the solve, and its line of squares. A puzzle of today shows the date and the squares
+// of all levels of today. A different puzzle shows only its own square.
+function shareTextOf({ loaded, solve, results, solved, day }: ResultShareProps) {
+  const { type, puzzle, today } = loaded;
+  const isToday = today.some(({ id }) => id === puzzle.id);
+  const levelResults: (SolveResult | undefined)[] = isToday
+    ? today.map(({ id }) =>
+        id === puzzle.id ? solve : solved.includes(id) ? bestResult(results, id) : undefined,
+      )
+    : [solve];
+  const marks = marksText(levelResults);
+  const shareText = text.share.puzzle({
+    day: isToday ? day : undefined,
+    typeName: text[type].name,
+    number: puzzle.id.slice(puzzle.id.lastIndexOf("-") + 1),
+    level: text.levels[puzzle.difficulty],
+    marks,
+    time: formatDuration(solve.seconds),
+    score: solve.mistakes === undefined ? undefined : text[type].score(solve.mistakes),
+  });
+  return { shareText, marks };
+}
+
+// The share text as the player sees it. Each line is a span, with the line breaks between the spans,
+// so a copy of the shown text is the same as the share text. The line of squares uses an emoji font,
+// because the text font has plain shapes for some of these characters.
+function ShownText({ shareText, marks }: { shareText: string; marks: string }) {
+  return (
+    <p className={styles.shareText}>
+      {shareText.split("\n").map((line, index) => (
+        // oxlint-disable-next-line react/no-array-index-key -- the lines never move. Two lines can have the same text.
+        <Fragment key={index}>
+          {index > 0 && "\n"}
+          <span className={line === marks ? styles.shareMarks : undefined}>{line}</span>
+        </Fragment>
+      ))}
+    </p>
+  );
+}
+
+// The share part of the result card: the share text, the button to copy or share it,
+// and the link to today's first level of this type that the player did not solve.
+export function ResultShare(props: ResultShareProps) {
+  const { loaded, solved } = props;
+  const name = text[loaded.type].name;
+  const { shareText, marks } = shareTextOf(props);
+  const next = loaded.today.find(({ id }) => id !== loaded.puzzle.id && !solved.includes(id));
+  return (
+    <>
+      <div className={styles.shareBox}>
+        <h3 className={styles.shareHeading}>{words.shareHeading}</h3>
+        <ShownText shareText={shareText} marks={marks} />
+      </div>
+      <div className={styles.solvedActions}>
+        <ShareButton
+          getText={() => shareText}
+          label={prefersShareMenu() ? words.share : words.copy}
+          className={`${shared.button} ${styles.copy}`}
+        />
+        {next !== undefined && (
+          <Link
+            className={`${shared.button} ${shared.boxed} ${styles.nextLink}`}
+            to={`/puzzles/${next.id}`}
+            aria-label={words.nextLabel(name, text.levels[next.difficulty])}
+          >
+            {words.next(text.levels[next.difficulty])}
+          </Link>
+        )}
+      </div>
+    </>
+  );
+}

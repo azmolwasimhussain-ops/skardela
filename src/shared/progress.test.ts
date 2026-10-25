@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   addDays,
   bestOf,
+  bestResult,
   bestTime,
   calendarDays,
+  compareToAverage,
   currentStreak,
   dayKey,
   formatDuration,
@@ -92,6 +94,24 @@ describe("bests", () => {
   it("gives the best time of one puzzle", () => {
     expect(bestTime(results, "guzzle-0001")).toBe(60);
     expect(bestTime(results, "latics-0001")).toBeUndefined();
+  });
+
+  it("gives the best solve of one puzzle, with fewer mistakes for the same time", () => {
+    const slow = { ...solveOn("2026-10-01", 90), mistakes: 0 };
+    const old = solveOn("2026-10-02", 60);
+    const clean = { ...solveOn("2026-10-03", 60), mistakes: 0 };
+    const messy = { ...solveOn("2026-10-04", 60), mistakes: 2 };
+    expect(bestResult([slow, old, messy, clean], "guzzle-0001")).toBe(clean);
+    // A solve without a count of mistakes is not better than a solve with a count.
+    expect(bestResult([old, messy], "guzzle-0001")).toBe(messy);
+    expect(bestResult([slow], "latics-0001")).toBeUndefined();
+  });
+
+  it("compares a solve to the average of the other solves of its type and level", () => {
+    const solve = solveOn("2026-10-04", 45, "guzzle-0009");
+    // The other easy solves have an average of 60 seconds.
+    expect(compareToAverage([...results, solve], solve)).toBe(-15);
+    expect(compareToAverage([solve], solve)).toBeUndefined();
   });
 });
 

@@ -1,8 +1,11 @@
-import type { Rule } from "../../shared/RuleList";
+import type { KeyItem, Rule } from "../../shared/RuleList";
 import { symbols } from "../symbols";
 
+// "miss", "misses". The misses are the score of Latics.
+const missWord = (count: number) => (count === 1 ? "miss" : "misses");
+
 // "1 miss", "2 misses". A miss is a laser shot that does not hit the monster. More than one text in this file uses it.
-const missCount = (count: number) => `${count} ${count === 1 ? "miss" : "misses"}`;
+const missCount = (count: number) => `${count} ${missWord(count)}`;
 
 // "a", "a and b", "a, b and c".
 const listOf = (items: readonly string[]) =>
@@ -12,18 +15,31 @@ const listOf = (items: readonly string[]) =>
 export const latics = {
   name: "Latics",
   summary: "Turn the mirrors and send the laser beam to the monster.",
+  // The three short rules show at all times. The other rules are under "More rules".
+  // It is open only on the first visit. Latics has no rules key.
   rules: [
-    `Hit the monster ${symbols.latics.monster} with the laser beam.`,
-    "The beam goes in a straight line: across, up and down, or diagonally.",
-    "A mirror turns the beam. The angle in is the same as the angle out. A beam that goes along a mirror does not change.",
-    "A wall stops the beam. The beam also stops when it goes off the board or back into the laser.",
-    "Select a mirror to turn it 45° clockwise.",
-    "Easy: the beam shows at all times.",
-    "Medium and hard: plan the path, then fire the laser. Each shot that does not hit the monster is a miss.",
-    "Medium and hard: select an empty square to put a mirror from the tray there. A tray mirror goes back to the tray after four turns.",
-    "Hard: select the laser to turn it 45° clockwise.",
-    "Make the fewest misses.",
+    `Send the laser beam to the monster ${symbols.latics.monster}.`,
+    "Select a mirror to turn it. Walls stop the beam.",
+    "Medium and hard: plan the path, then fire the laser. Each miss counts.",
   ] satisfies Rule[],
+  rulesKey: [] satisfies KeyItem[],
+  moreRules: {
+    label: "More rules: the tray, turning the laser, the beam path",
+    rules: [
+      "The beam goes in a straight line: across, up and down, or diagonally.",
+      "A mirror turns the beam. The angle in is the same as the angle out. A beam that goes along a mirror does not change.",
+      "The beam also stops when it goes off the board or back into the laser.",
+      "Each select turns a mirror 45° clockwise.",
+      "Easy: the beam shows at all times.",
+      "Medium and hard: a shot that does not hit the monster is a miss. Make the fewest misses.",
+      "Medium and hard: select an empty square to put a mirror from the tray there. A tray mirror goes back to the tray after four turns.",
+      "Hard: select the laser to turn it 45° clockwise.",
+      '"Path of the beam" under the board tells the path of the beam in words.',
+    ] satisfies Rule[],
+  },
+  // The score of a solve: the number of misses. The home page and the result card show it.
+  score: missCount,
+  scoreWord: missWord,
   boardLabel: "Latics board",
   symbols: symbols.latics,
   // The direction of the beam in words. "The beam goes up and right 3 squares."

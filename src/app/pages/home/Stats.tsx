@@ -2,7 +2,7 @@ import { currentStreak, dayKey, longestStreak, solvesPerDay } from "../../../sha
 import { useAppStore } from "../../../shared/store";
 import { useNow } from "../../../shared/useNow";
 import { text } from "../../../text/en";
-import type { PuzzleType } from "../../puzzle-types/registry";
+import type { TodayCard } from "../../puzzles";
 import { DataActions } from "./DataActions";
 import styles from "./HomePage.module.css";
 import { PersonalBests } from "./PersonalBests";
@@ -11,11 +11,19 @@ import { StatsCalendar } from "./StatsCalendar";
 const words = text.home.stats;
 
 // The stats of the player. They come from the solves that the browser saved. There is no account.
-export function Stats({ types }: { types: readonly PuzzleType[] }) {
+// The cards of today give the puzzle types, and the first puzzle for a player without solves.
+export function Stats({ cards }: { cards: readonly TodayCard[] }) {
   const results = useAppStore((state) => state.results);
   const solved = useAppStore((state) => state.solved);
   // The clock changes each minute, so the streak and the calendar are correct after midnight.
   const today = dayKey(new Date(useNow(60_000)));
+  const types = cards.map((card) => card.type);
+  const [firstCard] = cards;
+  const firstLevel = firstCard?.levels[0];
+  const first =
+    firstCard === undefined || firstLevel === undefined
+      ? undefined
+      : { id: firstLevel.id, type: firstCard.type, difficulty: firstLevel.difficulty };
   const numbers = [
     { label: words.kpis.streak, value: currentStreak(results, today), isMain: true },
     { label: words.kpis.longest, value: longestStreak(results), isMain: false },
@@ -40,7 +48,7 @@ export function Stats({ types }: { types: readonly PuzzleType[] }) {
       </ul>
       <div className={styles.statsGrid}>
         <StatsCalendar results={results} today={today} />
-        <PersonalBests results={results} types={types} />
+        <PersonalBests results={results} types={types} first={first} />
       </div>
       <DataActions />
     </section>

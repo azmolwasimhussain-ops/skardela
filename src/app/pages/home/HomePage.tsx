@@ -20,7 +20,7 @@ export function HomePage() {
       <title>{text.siteName}</title>
       <DailyHero cards={cards} />
       <TodayPuzzles cards={cards} />
-      <Stats types={cards.map((card) => card.type)} />
+      <Stats cards={cards} />
       <HowItWorks />
       <Faq />
     </>

@@ -1,5 +1,5 @@
 import type { Square } from "./puzzle";
-import { count, lines } from "./rules-check";
+import { brokenRuleAt } from "./rules-check";
 
 type Colour = "R" | "B";
 
@@ -13,29 +13,20 @@ export type Hint = {
 
 const other: Record<Colour, Colour> = { R: "B", B: "R" };
 
+// The rule that one colour in an empty square breaks, without the colour.
 function brokenRule(
   squares: readonly Square[],
   index: number,
   colour: Colour,
 ): Pick<Hint, "reason" | "line" | "number"> | undefined {
-  const size = Math.sqrt(squares.length);
-  const all = lines(squares.with(index, colour));
-  const row = Math.floor(index / size);
-  const column = index % size;
-  const own = [
-    { line: "row", number: row + 1, text: all[row] ?? "" },
-    { line: "column", number: column + 1, text: all[size + column] ?? "" },
-  ] as const;
-  const broken = own.flatMap(
-    ({ line, number, text }): Pick<Hint, "reason" | "line" | "number">[] => {
-      if (count(text, colour) > size / 2) return [{ reason: "half", line, number }];
-      if (text.includes(colour.repeat(3))) return [{ reason: "three", line, number }];
-      return [];
-    },
-  );
-  return broken[0];
+  const broken = brokenRuleAt(squares.with(index, colour), index);
+  if (broken === undefined) return undefined;
+  const { reason, line, number } = broken;
+  return { reason, line, number };
 }
 
+// The first empty square where one colour breaks a rule and the other colour does not.
+// Thus that square must have the other colour.
 export function findHint(squares: readonly Square[]): Hint | undefined {
   for (const [index, square] of squares.entries()) {
     if (square !== ".") continue;

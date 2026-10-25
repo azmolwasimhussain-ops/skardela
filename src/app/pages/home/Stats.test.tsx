@@ -57,12 +57,36 @@ describe("home page stats", () => {
     const calendar = screen.getByRole("list", { name: stats.calendar.heading });
     expect(within(calendar).getByText(stats.calendar.day(today, 2))).toBeInTheDocument();
     const table = screen.getByRole("table", { name: stats.bests.heading });
-    const row = within(table).getByRole("row", { name: /^Guzzle · Easy/u });
+    // One row for each puzzle type, and one column for each level.
+    expect(within(table).getAllByRole("row")).toHaveLength(4);
+    const row = within(table).getByRole("row", { name: /^Guzzle/u });
     expect(
       within(row)
         .getAllByRole("cell")
         .map((cell) => cell.textContent),
-    ).toEqual(["1:15", "0:30"]);
+    ).toEqual(["0:30", `—${stats.bests.noTime}`, `—${stats.bests.noTime}`]);
+  });
+
+  it("shows the average times of a row after a select on the name of the puzzle type", async () => {
+    solveOnDays();
+    const user = userEvent.setup();
+    await renderHome();
+    const toggle = screen.getByRole("button", { name: text.guzzle.name });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText(stats.bests.average("1:15"))).toBeNull();
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText(stats.bests.average("1:15"))).toBeInTheDocument();
+  });
+
+  it("shows one message and a link to a puzzle before the first solve", async () => {
+    await renderHome();
+    expect(screen.queryByRole("table", { name: stats.bests.heading })).toBeNull();
+    expect(screen.getByText(stats.bests.empty)).toBeInTheDocument();
+    const link = screen.getByRole("link", {
+      name: stats.bests.play(text["colour-binary"].name, text.levels.easy),
+    });
+    expect(link.getAttribute("href")).toMatch(/^\/puzzles\/colour-binary-\d{4}$/u);
   });
 });
 

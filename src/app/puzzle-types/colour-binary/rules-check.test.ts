@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import example from "./examples/colour-binary-0000.json";
 import { toRows, toSquares } from "./puzzle";
-import { count, isPossible, lines, nextSquare, obeysRules } from "./rules-check";
+import { brokenRuleAt, count, isPossible, lines, nextSquare, obeysRules } from "./rules-check";
 
 // The example board from rules.md.
 const answer = toSquares(example.answer);
@@ -34,5 +34,38 @@ describe("colour-binary rules check", () => {
 
   it("turns squares back into rows", () => {
     expect(toRows(answer)).toEqual(example.answer);
+  });
+});
+
+describe("colour-binary broken rule of a square", () => {
+  it("gives no rule for an empty square or a square that obeys the rules", () => {
+    const board = toSquares(["RB..", "....", "....", "...."]);
+    expect(brokenRuleAt(board, 2)).toBeUndefined();
+    expect(brokenRuleAt(board, 0)).toBeUndefined();
+  });
+
+  it("tells a line with more than half of its squares in one colour, first in the row", () => {
+    expect(brokenRuleAt(toSquares(["R.RR", "....", "....", "...."]), 3)).toEqual({
+      reason: "half",
+      line: "row",
+      number: 1,
+      colour: "R",
+    });
+    expect(brokenRuleAt(toSquares(["...B", "...B", "....", "...B"]), 7)).toEqual({
+      reason: "half",
+      line: "column",
+      number: 4,
+      colour: "B",
+    });
+  });
+
+  it("tells three squares of one colour next to each other", () => {
+    const board = toSquares(["BBB...", "......", "......", "......", "......", "......"]);
+    expect(brokenRuleAt(board, 1)).toEqual({
+      reason: "three",
+      line: "row",
+      number: 1,
+      colour: "B",
+    });
   });
 });

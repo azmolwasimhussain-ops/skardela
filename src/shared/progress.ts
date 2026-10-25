@@ -93,10 +93,41 @@ export function bestOf(
   return { average: total / times.length, best: Math.min(...times), solves: times.length };
 }
 
+// The mistakes of a solve. A solve without a count of mistakes is not better than a solve with a count.
+const mistakesOf = (result: SolveResult) => result.mistakes ?? Number.POSITIVE_INFINITY;
+
+// The solve of one puzzle with the best time, or undefined when the player did not solve it.
+// When two solves have the same time, the solve with fewer mistakes is better.
+export function bestResult(
+  results: readonly SolveResult[],
+  puzzleId: string,
+): SolveResult | undefined {
+  let best: SolveResult | undefined;
+  for (const result of results) {
+    if (result.puzzleId !== puzzleId) continue;
+    const isBetter =
+      best === undefined ||
+      result.seconds < best.seconds ||
+      (result.seconds === best.seconds && mistakesOf(result) < mistakesOf(best));
+    if (isBetter) best = result;
+  }
+  return best;
+}
+
 // The best time of one puzzle, or undefined when the player did not solve it.
 export function bestTime(results: readonly SolveResult[], puzzleId: string): number | undefined {
-  const times = results.filter((result) => result.puzzleId === puzzleId).map((r) => r.seconds);
-  return times.length === 0 ? undefined : Math.min(...times);
+  return bestResult(results, puzzleId)?.seconds;
+}
+
+// The time of one solve minus the average time of the other solves of the same puzzle type and level.
+// A negative number is faster than the average. Undefined: the player has no other solve of this level.
+export function compareToAverage(
+  results: readonly SolveResult[],
+  solve: SolveResult,
+): number | undefined {
+  const others = results.filter((result) => result !== solve);
+  const average = bestOf(others, solve.type, solve.difficulty)?.average;
+  return average === undefined ? undefined : solve.seconds - average;
 }
 
 // A time as minutes and seconds, for example "4:37". From one hour, the hours show too, for example "1:02:09".

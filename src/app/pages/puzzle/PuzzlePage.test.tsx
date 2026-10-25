@@ -22,7 +22,7 @@ function renderAt(path: string) {
 // This helper finds a colour-binary square by its row and column and its colour.
 function square(row: number, column: number, colour: string) {
   return screen.findByRole("button", {
-    name: new RegExp(`^Row ${row}, column ${column}, ${colour}`, "u"),
+    name: new RegExp(`^Row ${row}, column ${column}: ${colour}`, "u"),
   });
 }
 
@@ -42,7 +42,7 @@ async function allSolvedButOne() {
 async function aloneInItsLevel() {
   const [puzzle] = await puzzleTypes.latics.loadPuzzles();
   if (puzzle === undefined) throw new Error("The Latics file has no puzzle.");
-  return { type: "latics" as const, puzzle, others: [] };
+  return { type: "latics" as const, puzzle, others: [], today: [] };
 }
 
 // The buttons of the restart question. Their labels tell what each answer does.
@@ -73,7 +73,7 @@ describe("puzzle page restart", () => {
   // On a wide screen, the CSS puts the bar and the rules in the column on the left.
   it("puts the bar after the board and above the rules", async () => {
     renderAt("/puzzles/colour-binary-0001");
-    const board = await screen.findByRole("group", { name: text["colour-binary"].boardLabel });
+    const board = await screen.findByRole("grid", { name: /^Colour Binary, \d+ by \d+$/u });
     const rules = screen.getByRole("region", { name: page.rulesHeading });
     expect(follows(board, restartButton())).toBe(true);
     expect(follows(restartButton(), rules)).toBe(true);
@@ -178,5 +178,28 @@ describe("puzzle page restart question and other puzzles", () => {
     expect(router.state.location.pathname).toBe("/puzzles/colour-binary-0001");
     expect(await screen.findByRole("button", { name: page.restart })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: page.restartYes.label })).toBeNull();
+  });
+});
+
+describe("puzzle page rules", () => {
+  it("shows three short rules, and opens More rules on the first visit of a puzzle type", async () => {
+    renderAt("/puzzles/guzzle-0001");
+    const rules = await screen.findByRole("region", { name: page.rulesHeading });
+    const [short] = within(rules).getAllByRole("list");
+    expect(within(short as HTMLElement).getAllByRole("listitem")).toHaveLength(3);
+    expect(within(rules).getByRole("list", { name: page.keyLabel })).toBeInTheDocument();
+    const more = within(rules).getByText(text.guzzle.moreRules.label).closest("details");
+    expect(more).toHaveAttribute("open");
+    expect(useAppStore.getState().seenRules).toEqual(["guzzle"]);
+  });
+
+  it("closes More rules on the next visit of the same puzzle type", async () => {
+    useAppStore.getState().seeRules("latics");
+    renderAt("/puzzles/latics-0001");
+    const rules = await screen.findByRole("region", { name: page.rulesHeading });
+    const more = within(rules).getByText(text.latics.moreRules.label).closest("details");
+    expect(more).not.toHaveAttribute("open");
+    // Latics has no key.
+    expect(within(rules).queryByRole("list", { name: page.keyLabel })).toBeNull();
   });
 });

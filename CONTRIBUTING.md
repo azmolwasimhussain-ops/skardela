@@ -47,6 +47,7 @@ src/
     storage-format.ts        The stored text and the export file. The lists of solves are compressed.
     playSession.ts           The game that the player plays now: the timer and the saving of a solve.
     progress.ts              Pure functions for the stats: streaks, the calendar and personal bests.
+    share.ts                 The squares of a share text, and the copy or the share menu. See ShareButton.tsx.
   text/
     en/                      All UI text. "index.ts" puts the parts together. One file for each page and puzzle type.
     es/                      Spanish text, with the same structure. The app does not use it yet.
@@ -74,21 +75,18 @@ parts into their own files. See `guzzle/` for an example: `useGame.ts`, `Grid.ts
 1. Make the folder `src/app/puzzle-types/<type>/` with the files above. Start with `rules.md`.
 2. In `puzzle.ts`, make the puzzle type with `PuzzleBase & { readonly type: "<type>"; ... }`.
 3. Add your puzzles to `puzzles/<type>.json`. Add at least one puzzle for each level.
-   Put the answer in the field `answer` as readable rows. A Vite plugin in `vite.config.ts` ciphers `answer`,
-   so the browser does not get a readable answer. In `registry.ts`, use `decipherPuzzles` to load the file.
-   A puzzle type that checks the moves with its rules can have no `answer`, for example `latics`.
-   Then the plugin does not change the file, and the type does not need `decipherPuzzles`.
+   Put the answer in the field `answer` as readable rows. A Vite plugin in `vite.config.ts` ciphers `answer`, so the browser does not get a readable answer. In `registry.ts`, use `decipherPuzzles` to load the file. A puzzle type that checks the moves with its rules can have no `answer`, for example `latics`. Then the plugin does not change the file, and the type does not need `decipherPuzzles`.
 4. In `src/app/puzzle-types/registry.ts`, add your type to `PuzzleMap` and to `puzzleTypes`.
 5. Run `npm run typecheck`. TypeScript then shows each place that needs your type:
    - `src/app/puzzle-types/boards.ts`: your board component.
    - `src/text/en/index.ts`: your UI text. Put it in a new file `src/text/en/<type>.ts`, with `name`,
-     `summary` and `rules`. Then add it to `index.ts` with the name of your type.
+     `summary`, `rules`, `rulesKey`, `moreRules`, `score` and `scoreWord`. Then add it to `index.ts` with the name of your type. `rules` has three short rules. `rulesKey` is a list of sample squares and their meaning, or an empty list. `moreRules` has a label and the other rules. `score` gives the score of a solve as text, for example "2 mistakes".
    - `src/app/pages/home/PuzzleIcon.tsx`: the small icon of your type on the home page.
    - `tools/puzzles.test.ts`: your example and your data check.
 6. Put emoji symbols in `src/text/symbols.ts`, not in other files.
 7. In the lifecycle hook of your board, call `useLifecycleLog` and `usePlayTracking` from `src/shared/`.
    `usePlayTracking` starts the timer and saves each solve, for the stats and for "Random puzzle".
-   See the lifecycle hook in `log.ts` of an existing type, for example `latics/log.ts`.
+   Give it the score to keep low as `mistakes`, for example the misses of Latics. The result card and the share text show it. See the lifecycle hook in `log.ts` of an existing type, for example `latics/log.ts`.
 8. Add tests for your rule logic and your board.
 9. Run `npm run fix && npm run check`.
 

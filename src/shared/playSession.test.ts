@@ -69,7 +69,7 @@ describe("usePlayTracking", () => {
   it("starts the timer when the game starts, and saves the solve one time, also in strict mode", () => {
     const { rerender } = renderHook(
       ({ isStarted, isSolved }: { isStarted: boolean; isSolved: boolean }) => {
-        usePlayTracking(meta, isSolved, isStarted);
+        usePlayTracking(meta, { isSolved, isStarted, mistakes: 2 });
       },
       { initialProps: { isStarted: false, isSolved: false }, wrapper: StrictMode },
     );
@@ -79,5 +79,7 @@ describe("usePlayTracking", () => {
     rerender({ isStarted: true, isSolved: true });
     rerender({ isStarted: true, isSolved: true });
     expect(useAppStore.getState().results).toHaveLength(1);
+    // The solve keeps the mistakes of the board.
+    expect(useAppStore.getState().results[0]?.mistakes).toBe(2);
   });
 });
