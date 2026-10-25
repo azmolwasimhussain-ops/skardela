@@ -19,8 +19,8 @@
     "check": "npm run format:check && npm run lint:check && npm run typecheck && npm run build && npm run test && npm run validate"
   },
   "dependencies": {
-    "@fontsource-variable/bricolage-grotesque": "5.3.0",
-    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource-variable/funnel-display": "5.3.0",
+    "@fontsource-variable/ubuntu-sans-mono": "5.3.0",
     "@utk09/ui-observability": "0.8.0",
     "lz-string": "1.5.0",
     "react": "19.3.1",

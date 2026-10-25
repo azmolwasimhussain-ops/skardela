@@ -70,8 +70,8 @@
   --ring: var(--text-h);
 
   /* The fonts are in the app (see "src/main.tsx"), so the page sends no request to a font service. */
-  --sans: "Bricolage Grotesque Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "Funnel Display Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "Ubuntu Sans Mono Variable", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   /* The width of the content. The header, the main content and the footer use it. */
   --content-width: 1120px;
   --gutter: clamp(1rem, 4vw, 2rem);
