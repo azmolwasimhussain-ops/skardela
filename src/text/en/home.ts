@@ -180,7 +180,10 @@ export const home = {
         question: "Can I help to make Skardela?",
         answer:
           "Yes. Skardela is open source. You can add puzzles, fix problems or add a new puzzle type.",
-        link: { label: "Skardela on GitHub", href: "https://github.com/azmolwasimhussain-ops/skardela" },
+        link: {
+          label: "Skardela on GitHub",
+          href: "https://github.com/azmolwasimhussain-ops/skardela",
+        },
       },
     ],
   },

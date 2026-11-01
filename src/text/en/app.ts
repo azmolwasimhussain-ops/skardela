@@ -82,7 +82,10 @@ export const app = {
   // The analytics line is for returning players. New players see the analytics notice.
   footer: {
     tagline: "Skardela · free daily puzzles · no account, no download",
-    source: { label: "Source on GitHub", href: "https://github.com/azmolwasimhussain-ops/skardela" },
+    source: {
+      label: "Source on GitHub",
+      href: "https://github.com/azmolwasimhussain-ops/skardela",
+    },
     content: (year: number) => `© ${year} Skardela. This website uses analytics without cookies.`,
   },
   // The message when the browser cannot save data. See "src/app/StorageNotice.tsx".
