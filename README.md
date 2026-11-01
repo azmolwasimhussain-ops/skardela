@@ -3,7 +3,8 @@
 A browser-only daily puzzle site. No server, no accounts, no database.
 Play four different puzzle types every day and track your streaks and personal bests.
 
-🔗 **Live site:** https://skardela-01.vercel.app/
+- **Live site:** [skardela-01.vercel.app](https://skardela-01.vercel.app/)
+- **GitHub repository:** [github.com/azmolwasimhussain-ops/skardela](https://github.com/azmolwasimhussain-ops/skardela)
 
 ---
 
@@ -55,7 +56,7 @@ Run `npm run fix && npm run check` before you open a pull request. CI runs the s
 - **React Router 8** — page routing
 - **Zustand 5** — state and `localStorage` persistence
 - **Vite 8** — build tool (with a custom plugin that ciphers puzzle answers)
-- **TypeScript 6** — strict typing throughout
+- **TypeScript 7** — strict typing throughout
 - **Vitest 5** — unit and data validation tests
 - **oxlint + oxfmt** — linting and formatting
 
