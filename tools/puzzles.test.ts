@@ -2,10 +2,12 @@
 /* oxlint-disable import/max-dependencies */
 import { describe, expect, it } from "vitest";
 import colourBinaryExample from "../src/app/puzzle-types/colour-binary/examples/colour-binary-0000.json";
-import { findPuzzleProblems as findColourBinaryProblems } from "../src/app/puzzle-types/colour-binary/puzzle";
+import {
+  findPuzzleProblems as findColourBinaryProblems,
+  toSquares,
+} from "../src/app/puzzle-types/colour-binary/puzzle";
 import { obeysRules } from "../src/app/puzzle-types/colour-binary/rules-check";
 import { countSolutions } from "../src/app/puzzle-types/colour-binary/solver";
-import { toSquares } from "../src/app/puzzle-types/colour-binary/puzzle";
 import guzzleExample from "../src/app/puzzle-types/guzzle/examples/guzzle-0000.json";
 import { findPuzzleProblems as findGuzzleProblems } from "../src/app/puzzle-types/guzzle/puzzle";
 import laticsExample from "../src/app/puzzle-types/latics/examples/latics-0000.json";

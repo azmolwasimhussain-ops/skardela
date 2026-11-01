@@ -1,9 +1,9 @@
-import { type RouteObject } from "react-router";
+import type { RouteObject } from "react-router";
+import { text } from "../text/en";
 import { Layout } from "./Layout";
 import { RouteError } from "./RouteError";
 import { HomePage } from "./pages/home/HomePage";
 import { NotFoundPage } from "./pages/NotFoundPage";
-import { text } from "../text/en";
 import { PuzzlePage } from "./pages/puzzle/PuzzlePage";
 import { homeLoader, puzzleLoader } from "./puzzles";
 
