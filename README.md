@@ -3,7 +3,7 @@
 A browser-only daily puzzle site. No server, no accounts, no database.
 Play four different puzzle types every day and track your streaks and personal bests.
 
-- **Live site:** [skardela-01.vercel.app](https://skardela-01.vercel.app/)
+- **Live site:** https://skardela-00.vercel.app/
 - **GitHub repository:** [github.com/azmolwasimhussain-ops/skardela](https://github.com/azmolwasimhussain-ops/skardela)
 
 ---
